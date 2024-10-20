@@ -17,25 +17,15 @@ export const router = createBrowserRouter([
             {
                 path: '/ScheduleATask',
                 element: <ScheduleATask />
-            }
-        ]
+            },
+            {
+                path: "/register",
+                element: <RegisterPage />,
+            },
+            {
+                path: "/login",
+                element: <LoginPage />,
+            },
+        ],
     },
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/register",
-        element: <RegisterPage />,
-      },
-      {
-        path: "/login",
-        element: <LoginPage />,
-      },
-    ],
-  },
 ]);
