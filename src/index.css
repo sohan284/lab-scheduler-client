@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    @apply text-[#515151]
+}
+
 *{
     font-family: "Kumbh Sans", sans-serif !important;
 }
