@@ -8,8 +8,8 @@ const TabNav = () => {
     const location = useLocation();
 
     const tabs = [
-        { id: 'schedule', label: '+ SCHEDULE A TASK', path: '/' },
-        { id: 'tasks', label: 'SCHEDULED TASKS', path: '/ScheduleATask' },
+        { id: 'schedule', label: '+ SCHEDULE A TASK', path: '/ScheduleATask' },
+        { id: 'tasks', label: 'SCHEDULED TASKS', path: '/scheduleTask' },
         { id: 'tutorials', label: 'TUTORIALS', path: '/tutorials' }
     ];
 
