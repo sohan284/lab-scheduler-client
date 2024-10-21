@@ -1,14 +1,14 @@
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth();
+  const token = localStorage.getItem("token");
 
-  // If not authenticated, redirect to login page
-  return isAuthenticated ? element : <Navigate to="/login" />;
+  return token ? element : <Navigate to="/login" />;
 };
+
 ProtectedRoute.propTypes = {
   element: PropTypes.any,
 };
+
 export default ProtectedRoute;

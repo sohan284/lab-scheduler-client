@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
         path: "/addedTasks",
         element: <ProtectedRoute element={<AddedTasks />} />,
       },
-     
+
       {
         path: "/register",
         element: <RegisterPage />,
