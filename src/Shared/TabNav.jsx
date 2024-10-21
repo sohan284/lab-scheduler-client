@@ -8,8 +8,8 @@ const TabNav = () => {
     const location = useLocation();
 
     const tabs = [
-        { id: 'schedule', label: '+ SCHEDULE A TASK', path: '/' },
-        { id: 'tasks', label: 'SCHEDULED TASKS', path: '/ScheduleATask' },
+        { id: 'schedule', label: '+ SCHEDULE A TASK', path: '/ScheduleATask' },
+        { id: 'tasks', label: 'SCHEDULED TASKS', path: '/addedTasks' },
         { id: 'tutorials', label: 'TUTORIALS', path: '/tutorials' }
     ];
 
@@ -18,7 +18,7 @@ const TabNav = () => {
     };
 
     return (
-        <nav className="max-w-7xl mx-auto px-4 py-2 mt-4 md:mt-16">
+        <nav className="max-w-6xl mx-auto px-4 py-2 mt-4 md:mt-16">
             <div className="sm:hidden flex justify-end mb-4">
                 <button
                     onClick={toggleMenu}

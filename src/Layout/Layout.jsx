@@ -5,7 +5,7 @@ import TabNav from '../Shared/TabNav';
 
 const Layout = () => {
     return (
-        <div>
+        <div className='max-w-[1280px] mx-auto'>
             <Navbar />
             <TabNav />
             <Outlet />
