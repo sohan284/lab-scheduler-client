@@ -6,7 +6,7 @@ import RegisterPage from "../Pages/auth/registerPage";
 import LoginPage from "../Pages/auth/LoginPage";
 import ScheduleATask from "../Pages/SCHEDULETask/ScheduleATask";
 import ProtectedRoute from "./ProtectedRoute";
-import ScheduledTask from "../Pages/ScheduledTask/ScheduledTask";
+import AddedTasks from "../Pages/AddedTasks/AddedTasks";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +25,11 @@ export const router = createBrowserRouter([
         path: "/ScheduleATask",
         element: <ProtectedRoute element={<ScheduleATask />} />,
       },
+      {
+        path: "/addedTasks",
+        element: <ProtectedRoute element={<AddedTasks />} />,
+      },
+     
       {
         path: "/register",
         element: <RegisterPage />,

@@ -9,7 +9,7 @@ const TabNav = () => {
 
     const tabs = [
         { id: 'schedule', label: '+ SCHEDULE A TASK', path: '/ScheduleATask' },
-        { id: 'tasks', label: 'SCHEDULED TASKS', path: '/scheduleTask' },
+        { id: 'tasks', label: 'SCHEDULED TASKS', path: '/addedTasks' },
         { id: 'tutorials', label: 'TUTORIALS', path: '/tutorials' }
     ];
 
