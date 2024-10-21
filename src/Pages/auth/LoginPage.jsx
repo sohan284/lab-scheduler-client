@@ -71,6 +71,7 @@ const LoginPage = () => {
             </h1>
             <TextField
               size="small"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyPress={handleKeyPress}
