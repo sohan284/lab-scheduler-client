@@ -8,8 +8,8 @@ const ScheduledTasks = () => {
     ];
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className='text-xl font-bold uppercase mb-6'>Scheduled Tasks</h1>
+        <div className="h-screen mx-auto px-4 py-8">
+            <h1 className='md:text-xl font-bold uppercase mb-6 '>Scheduled Tasks</h1>
             <div className="overflow-x-auto px-5">
                 <table className="w-full border-collapse">
                     <thead className="text-sm bg-gray-50">

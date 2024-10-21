@@ -5,31 +5,38 @@ import Tutorials from "../Pages/Tutorials/Tutorials";
 import RegisterPage from "../Pages/auth/registerPage";
 import LoginPage from "../Pages/auth/LoginPage";
 import ScheduleATask from "../Pages/SCHEDULETask/ScheduleATask";
+import ProtectedRoute from "./ProtectedRoute";
+import AddedTasks from "../Pages/AddedTasks/AddedTasks";
 
 export const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
         path: "/",
-        element: <Layout />,
-        children: [
-            {
-                path: '/',
-                element: <Home />
-            },
-            {
-                path: '/tutorials',
-                element: <Tutorials />
-            },{
-                path: '/ScheduleATask',
-                element: <ScheduleATask />
-            },
-            {
-                path: "/register",
-                element: <RegisterPage />,
-            },
-            {
-                path: "/login",
-                element: <LoginPage />,
-            },
-        ],
-    },
+        element: <ProtectedRoute element={<Home />} />,
+      },
+      {
+        path: "/tutorials",
+        element: <ProtectedRoute element={<Tutorials />} />,
+      },
+      {
+        path: "/ScheduleATask",
+        element: <ProtectedRoute element={<ScheduleATask />} />,
+      },
+      {
+        path: "/addedTasks",
+        element: <ProtectedRoute element={<AddedTasks />} />,
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+    ],
+  },
 ]);
