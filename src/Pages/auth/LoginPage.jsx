@@ -22,6 +22,7 @@ const LoginPage = () => {
       if (response && response.token) {
         localStorage.setItem("token", response.token);
         navigate("/");
+        window.location.reload();
       } else {
         setErrorMsg("Invalid username or password.");
       }

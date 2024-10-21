@@ -1,10 +1,12 @@
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ element }) => {
-  const token = localStorage.getItem("token");
+  const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated);
 
-  return token ? element : <Navigate to="/login" />;
+  return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 ProtectedRoute.propTypes = {

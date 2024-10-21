@@ -1,11 +1,9 @@
 import axios from "axios";
+import baseUrl from "../api/apiConfig";
 
 const upsertUser = async (userData) => {
   try {
-    const response = await axios.post(
-      `https://lab-scheduler-server.vercel.app/users`,
-      userData
-    );
+    const response = await axios.post(`${baseUrl.users}`, userData);
     return response.data;
   } catch (error) {
     // Handle errors
@@ -15,13 +13,10 @@ const upsertUser = async (userData) => {
 };
 const loginUser = async (username, password) => {
   try {
-    const response = await axios.post(
-      `https://lab-scheduler-server.vercel.app/login`,
-      {
-        username,
-        password,
-      }
-    );
+    const response = await axios.post(`${baseUrl.login}`, {
+      username,
+      password,
+    });
     if (response.data?.token) {
       localStorage.setItem("token", response.data.token);
     }

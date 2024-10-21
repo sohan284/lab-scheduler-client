@@ -5,27 +5,31 @@ import { jwtDecode } from "jwt-decode";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [username, setUsername] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        setUsername(decodedToken.username);
+        setIsAuthenticated(true);
+        setUser(decodedToken.username);
       } catch (error) {
         console.error("Invalid token:", error);
-        localStorage.removeItem("token");
+        setIsAuthenticated(false);
       }
     } else {
-      localStorage.removeItem("token");
+      setIsAuthenticated(false);
     }
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        username,
-        setUsername,
+        user,
+        setUser,
+        isAuthenticated,
+        setIsAuthenticated,
       }}
     >
       {children}
