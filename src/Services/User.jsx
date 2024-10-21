@@ -2,7 +2,10 @@ import axios from "axios";
 
 const upsertUser = async (userData) => {
   try {
-    const response = await axios.post(`http://localhost:5000/users`, userData);
+    const response = await axios.post(
+      `https://lab-scheduler-server.vercel.app/users`,
+      userData
+    );
     return response.data;
   } catch (error) {
     // Handle errors
@@ -12,10 +15,13 @@ const upsertUser = async (userData) => {
 };
 const loginUser = async (username, password) => {
   try {
-    const response = await axios.post(`http://localhost:5000/login`, {
-      username,
-      password,
-    });
+    const response = await axios.post(
+      `https://lab-scheduler-server.vercel.app/login`,
+      {
+        username,
+        password,
+      }
+    );
     if (response.data?.token) {
       localStorage.setItem("token", response.data.token);
     }
