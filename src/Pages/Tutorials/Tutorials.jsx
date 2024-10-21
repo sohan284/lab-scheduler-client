@@ -35,13 +35,14 @@ const Tutorials = () => {
                                 </div>
                                 {/* video div */}
                                 <div className='bg-gray-300 w-[270px] h-40 mt-1'>
+                                    <VideoPlayer />
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
-            <VideoPlayer />
+
         </div>
     )
 }
