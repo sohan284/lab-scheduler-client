@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
@@ -11,7 +11,8 @@ const ScheduleATask = () => {
     const [taskName, setTaskName] = useState('');
     const [course, setCourse] = useState('');
     const [email, setEmail] = useState('');
-    const [selectedMachine, setselectedMachine] = useState([]);
+    const [selectedMachine, setSelectedMachine] = useState([]);
+    const [scheduledTasks, setScheduledTasks] = useState([]);
     const filteredOptions = OPTIONS.filter((o) => !selectedMachine.includes(o));
     const [duration, setDuration] = useState('30 minutes');
 
@@ -30,11 +31,11 @@ const ScheduleATask = () => {
         '15 minutes': 1,
         '30 minutes': 2,
         '45 minutes': 3,
-        '1 hour': 5,
-        '2 hours': 10,
-        '3 hours': 15,
-        '4 hours': 20,
-        '5 hours': 25,
+        '1 hour': 4,
+        '2 hours': 8,
+        '3 hours': 12,
+        '4 hours': 16,
+        '5 hours': 20,
     };
 
     const formatDuration = (duration) => {
@@ -65,25 +66,79 @@ const ScheduleATask = () => {
         setSelectedTimeSlots(newSelectedSlots);
     };
 
+    const isMachineBooked = (machine, timeSlots) => {
+        return scheduledTasks.some(task => {
+            if (task.selectedMachine.includes(machine)) {
+                const bookedStartTime = new Date(task.startDate);
+                const durationInMinutes = (durationMapping[duration] || 0) * 15; // Assuming each slot is 15 minutes
+                const bookedEndTime = new Date(bookedStartTime.getTime() + durationInMinutes * 60000);
+
+                return timeSlots.some(slot => {
+                    const slotTime = new Date(startDate);
+                    const [hours, minutes] = slot.split(':');
+                    slotTime.setHours(hours);
+                    slotTime.setMinutes(minutes);
+
+                    return slotTime >= bookedStartTime && slotTime < bookedEndTime;
+                });
+            }
+            return false;
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!taskName || !course || !duration || selectedTimeSlots.length === 0) {
             alert("Please fill in all fields and select time slots.");
             return;
         }
-
         const formData = {
             taskName,
             course,
             startDate: startDate.toISOString(),
-            selectedTimeSlots,
+            selectedTimeSlots: selectedTimeSlots.length > 0 ? selectedTimeSlots : [],
             selectedMachine,
             email,
+            approve: false   
+        };
+    
+        try {
+            const response = await fetch('http://localhost:5000/scheduledtasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const result = await response.json();
+            console.log('Success:', result);
+            alert('Task scheduled successfully!');
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was a problem scheduling the task.');
+        }
+    };
+    
+    
+
+    useEffect(() => {
+        const fetchScheduledTasks = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/scheduledtasks');
+                const data = await response.json();
+                setScheduledTasks(data);
+            } catch (error) {
+                console.error('Error fetching scheduled tasks:', error);
+            }
         };
 
-        console.log(formData);
-        // Handle the API call here...
-    };
+        fetchScheduledTasks();
+    }, []);
 
     return (
         <div className='max-w-[1200px] mx-auto mt-5 p-6 bg-white rounded-lg'>
@@ -121,7 +176,7 @@ const ScheduleATask = () => {
                                 mode="multiple"
                                 placeholder="Inserted are removed"
                                 value={selectedMachine}
-                                onChange={setselectedMachine}
+                                onChange={setSelectedMachine}
                                 style={{ width: '400px' }}
                                 options={filteredOptions.map((item) => ({
                                     value: item,
@@ -171,16 +226,19 @@ const ScheduleATask = () => {
                             </div>
                             <div className='flex-1 flex items-center justify-center'>
                                 <div className='grid grid-cols-4 gap-3 place-items-center'>
-                                    {timeSlots.map((slot, index) => (
-                                        <div
-                                            key={index}
-                                            className={`px-2 py-1 text-xs cursor-pointer rounded transition-all duration-200 
-                                            ${selectedTimeSlots.includes(slot) ? 'bg-blue-200 text-black' : 'hover:bg-blue-300'}`}
-                                            onClick={() => handleTimeSlotClick(slot)}
-                                        >
-                                            {slot}
-                                        </div>
-                                    ))}
+                                    {timeSlots.map((slot, index) => {
+                                        const isDisabled = selectedMachine.some(machine => isMachineBooked(machine, [slot]));
+                                        return (
+                                            <div
+                                                key={index}
+                                                className={`px-2 py-1 text-xs cursor-pointer rounded transition-all duration-200 
+                                                ${selectedTimeSlots.includes(slot) ? 'bg-blue-200 text-black' : (isDisabled ? 'bg-gray-300 cursor-not-allowed' : 'hover:bg-blue-300')}`}
+                                                onClick={() => !isDisabled && handleTimeSlotClick(slot)}
+                                            >
+                                                {slot}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                             <div className="flex-1">
