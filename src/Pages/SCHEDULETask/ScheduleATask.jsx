@@ -74,59 +74,61 @@ const ScheduleATask = () => {
     };
 
     return (
-        <div className='container mx-auto mt-5 p-6 bg-white shadow-md rounded-lg'>
+        <div className='max-w-[1200px] mx-auto mt-5 p-6 bg-white   rounded-lg'>
             <h4 className='text-xl font-bold text-[#515151]'>SCHEDULE A TASK</h4>
-            <div className='px-6 mt-6'>
+            <div className='  mt-6'>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Task Name */}
-                    <div>
-                        <label htmlFor="taskName" className="block font-medium text-lg">Task Name</label>
+                    <div className='flex items-center gap-20 px-10'>
+                        <label htmlFor="taskName" className="block font-medium text-xs min-w-[71px]">Task Name</label>
                         <input
                             type="text"
                             name='taskName'
                             id="taskName"
                             value={taskName}
                             onChange={(e) => setTaskName(e.target.value)}
-                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="border text-xs w-[235px] h-6 border-gray-300   focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
                     {/* Course */}
-                    <div>
-                        <label htmlFor="course" className="block font-medium text-lg">Course</label>
+                    <div className='flex items-center gap-20 px-10 bg-[#FAFAFA] py-5'>
+                        <label htmlFor="course" className="block font-medium text-xs min-w-[71px]">Course</label>
                         <input
                             type="text"
                             name='course'
                             id="course"
                             value={course}
                             onChange={(e) => setCourse(e.target.value)}
-                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="border text-xs w-[235px] h-6 border-gray-300   focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
                     {/* Machine */}
-                    <div>
-                        <label htmlFor="machine" className="block font-medium text-lg">Machine</label>
-                        <input
-                            type="text"
-                            name='machine'
-                            id="machine"
-                            value={machine}
-                            onChange={(e) => setMachine(e.target.value)}
-                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
+                    <div className='flex flex-col   '>
+                        <div className='flex items-center gap-20 px-10'>
+                            <label htmlFor="machine" className="block font-medium text-xs min-w-[71px]">Machine</label>
+                            <input
+                                type="text"
+                                name='machine'
+                                id="machine"
+                                value={machine}
+                                onChange={(e) => setMachine(e.target.value)}
+                                className="border text-xs w-[235px] h-6 border-gray-300   focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
                         <button type="button" className="mt-2 text-blue-500 hover:underline">+ Add more</button>
                     </div>
                     {/* Estimated Time */}
                     <div className='flex items-center gap-5'>
-                        <label htmlFor="estimatedTime" className="block font-medium text-lg">Estimated Time Required:</label>
+                        <label htmlFor="estimatedTime" className="block font-medium text-xs px-10">Estimated Time Required:</label>
                         <select
                             name='estimatedTime'
                             id="estimatedTime"
                             value={estimatedTime}
                             onChange={(e) => setEstimatedTime(e.target.value)}
-                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="border text-xs border-gray-300   focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         >
                             <option value="">Select Time</option>
@@ -140,8 +142,8 @@ const ScheduleATask = () => {
                     </div>
                     {/* Estimate Checkbox */}
                     <div className='flex items-center gap-10'>
-                        <div className='flex items-center gap-5'>
-                            <p className='text-lg'>Estimate it for me</p>
+                        <div className='flex items-center gap-5 px-10'>
+                            <p className='text-xs'>Estimate it for me</p>
                             <input
                                 type="checkbox"
                                 checked={estimateCheckbox}
@@ -149,11 +151,11 @@ const ScheduleATask = () => {
                                 className="focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
-                        <p>{formatEstimatedTime(estimatedTime)}</p>
+                        <p className=' text-xs'>{formatEstimatedTime(estimatedTime)}</p>
                     </div>
                     {/* Date and Time Slots */}
-                    <div>
-                        <h2 className='text-lg font-semibold'>Available Time Slot</h2>
+                    <div className='px-10'>
+                        <h2 className='text-xs font-semibold'>Available Time Slot</h2>
                         <div className='flex'>
                             <div className='flex-1 border-gray-300 rounded p-4 mt-2'>
                                 <DatePicker
@@ -161,7 +163,7 @@ const ScheduleATask = () => {
                                     onChange={(date) => setStartDate(date)}
                                     inline
                                     minDate={new Date()}
-                                    className="border border-gray-300 rounded w-full"
+                                    className="  border-gray-300 rounded "
                                 />
                             </div>
                             <div className='flex-1 flex items-center justify-center'>
@@ -169,8 +171,8 @@ const ScheduleATask = () => {
                                     {timeSlots.map((slot, index) => (
                                         <div
                                             key={index}
-                                            className={`text-base cursor-pointer rounded transition-all duration-200 
-                                            ${selectedTimeSlot === slot ? 'bg-blue-200 text-black' : 'hover:bg-blue-300'}`}
+                                            className={` px-2 py-1 text-xs cursor-pointer rounded transition-all duration-200 
+                                            ${selectedTimeSlot === slot ? 'bg-blue-200 text-black ' : 'hover:bg-blue-300'}`}
                                             onClick={() => handleTimeSlotClick(slot)}
                                         >
                                             {slot}
@@ -179,38 +181,38 @@ const ScheduleATask = () => {
                                 </div>
                             </div>
                             <div className="flex-1">
-                                <p>{startDate ? startDate.toLocaleDateString(undefined, options) : 'Date not available'}</p>
+                                <p className=' text-xs'>{startDate ? startDate.toLocaleDateString(undefined, options) : 'Date not available'}</p>
                             </div>
                         </div>
                     </div>
                     {/* Additional Checkboxes */}
-                    <div>
-                        <div className="flex items-center gap-4">
-                            <p>This machine requires faculty permission/availability. Send for approval?</p>
+                    <div className=''>
+                        <div className="flex items-center gap-4 bg-[#F2F4F6] px-10 py-5">
+                            <p>This machine requires faculty permission/availability. <br /> Send for approval?</p>
                             <input type="checkbox" />
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 px-10  py-5">
                             <p>I need a tutorial for this job</p>
                             <input type="checkbox" />
                         </div>
                     </div>
                     {/* Submit Button */}
-                    <div className="mt-4">
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition">SCHEDULE</button>
+                    <div className="mt-4  px-10">
+                        <button type="submit" className="bg-[#522C80] text-white px-4 py-2 rounded shadow hover:bg-[#754da7] transition">SCHEDULE</button>
                     </div>
                 </form>
-                <p className="mt-6 text-lg font-semibold">Share</p>
-                <div className="flex items-center mt-2">
+                <p className="mt-6 text-xs font-semibold px-10">Share</p>
+                <div className="flex items-center mt-2  px-10">
                     <p>Type email:</p>
-                    <input 
-                        type="email" 
+                    <input
+                        type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)} 
-                        className="border border-gray-300 rounded p-2 ml-2" 
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="border border-gray-300  ml-2"
                     />
-                    <button className="ml-2 bg-blue-500 text-white px-3 py-1 rounded">+Add More</button>
+                    <button className="ml-2 text-black   px-3 py-1 rounded">+Add More</button>
                 </div>
-                <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition">SHARE</button>
+                <button className="mt-2 ml-10 bg-[#522C80] text-white px-4 py-2 rounded shadow  hover:bg-[#673c9c] transition">SHARE</button>
             </div>
         </div>
     );
