@@ -13,7 +13,9 @@ const LoginPage = () => {
     const userEmail = username.includes("@g.clemson.edu")
       ? username
       : `${username}@g.clemson.edu`;
+
     setErrorMsg(null);
+
     try {
       const response = await UserManagement.loginUser(userEmail, password);
 
