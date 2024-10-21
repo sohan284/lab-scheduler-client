@@ -8,7 +8,7 @@ const Tutorials = () => {
   return (
     <div className='container mx-auto'>
             {/* Make a custom scroll for this dev section and make it scroll, disable full page scroll */}
-            <div className='custom-scroll overflow-y-auto h-[50rem]'>
+            <div className='custom-scroll overflow-y-auto h-[75vh]'>
             <div className='text-xl font-bold text-[#515151] uppercase my-10 mx-4 md:mx-0'>
                 Tutorials
             </div>
