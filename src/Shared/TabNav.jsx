@@ -18,7 +18,7 @@ const TabNav = () => {
     };
 
     return (
-        <nav className="max-w-7xl mx-auto px-4 py-2 mt-4 md:mt-16">
+        <nav className="max-w-6xl mx-auto px-4 py-2 mt-4 md:mt-16">
             <div className="sm:hidden flex justify-end mb-4">
                 <button
                     onClick={toggleMenu}
