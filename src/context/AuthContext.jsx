@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         username,
+        setUsername,
       }}
     >
       {children}

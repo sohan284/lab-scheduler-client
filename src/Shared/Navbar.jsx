@@ -1,11 +1,9 @@
-import React from "react";
 import logo from "./../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { PiSignOutBold } from "react-icons/pi";
-import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { username } = useAuth();
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -19,7 +17,7 @@ const Navbar = () => {
           <img src={logo} alt="" className="w-32 md:w-[180px]" />
         </Link>
       </div>
-      {username ? (
+      {token ? (
         <div className="flex gap-5 items-center">
           <button
             onClick={handleLogout}
