@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import VerifyToken from '../../utils/VerifyToken';
 import Loader from '../Loader/Loader';
+import VerifyToken from '../../utils/VerifyToken';
 
 const ScheduledTasks = () => {
     const user = VerifyToken();
@@ -81,7 +81,7 @@ const ScheduledTasks = () => {
                                             {task?.selectedTimeSlots[0]}
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            {task?.approve === "Pending" ? "Pending" : task?.approve}
+                                            <p className={`${task?.approve === "Pending" && "bg-purple-600 text-white rounded-xl"} ${task?.approve === "Approved" && "bg-green-600 text-white rounded-xl"} ${task?.approve === "Rejected" && "bg-red-600 text-white rounded-xl"}`}> {task?.approve === "Pending" ? "Pending" : task?.approve}</p>
                                         </td>
                                     </tr>
                                 ))
