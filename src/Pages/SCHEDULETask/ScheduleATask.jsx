@@ -146,16 +146,13 @@ const ScheduleATask = () => {
     };
 
     try {
-      const response = await fetch(
-        "https://lab-scheduler-server.vercel.app/scheduledtasks",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("http://localhost:5000/scheduledtasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -173,13 +170,11 @@ const ScheduleATask = () => {
   useEffect(() => {
     const fetchScheduledTasks = async () => {
       try {
-        const response = await fetch(
-          "https://lab-scheduler-server.vercel.app/scheduledtasks"
-        );
+        const response = await fetch("http://localhost:5000/scheduledtasks");
         const data = await response.json();
         console.log(data);
 
-        setScheduledTasks(data);
+        setScheduledTasks(data.data);
       } catch (error) {
         console.error("Error fetching scheduled tasks:", error);
       }

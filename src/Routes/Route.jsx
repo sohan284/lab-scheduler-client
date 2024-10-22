@@ -7,6 +7,8 @@ import LoginPage from "../Pages/auth/LoginPage";
 import ScheduleATask from "../Pages/SCHEDULETask/ScheduleATask";
 import ProtectedRoute from "./ProtectedRoute";
 import AddedTasks from "../Pages/AddedTasks/AddedTasks";
+import ApproveStatusPage from "../Pages/ApproveStatusPage";
+import RejectStatusPage from "../Pages/RejectStatusPage";
 
 export const router = createBrowserRouter([
   {
@@ -38,5 +40,13 @@ export const router = createBrowserRouter([
         element: <LoginPage />,
       },
     ],
+  },
+  {
+    path: "/tasks/approve/:taskId",
+    element: <ApproveStatusPage />,
+  },
+  {
+    path: "/tasks/reject/:taskId",
+    element: <RejectStatusPage />,
   },
 ]);
