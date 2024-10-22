@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 
 const ApproveStatusPage = () => {
   const { taskId } = useParams();
-  console.log(taskId);
 
   useEffect(() => {
     TaskManagement.approveStatus(taskId);
