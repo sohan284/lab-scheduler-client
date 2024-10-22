@@ -2,13 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import Home from "../Pages/Home/Home";
 import Tutorials from "../Pages/Tutorials/Tutorials";
-import RegisterPage from "../Pages/auth/registerPage";
 import LoginPage from "../Pages/auth/LoginPage";
 import ScheduleATask from "../Pages/SCHEDULETask/ScheduleATask";
 import ProtectedRoute from "./ProtectedRoute";
 import AddedTasks from "../Pages/AddedTasks/AddedTasks";
 import ApproveStatusPage from "../Pages/ApproveStatusPage";
 import RejectStatusPage from "../Pages/RejectStatusPage";
+import RegisterPage from "../Pages/auth/RegisterPage";
 
 export const router = createBrowserRouter([
   {
