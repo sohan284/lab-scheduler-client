@@ -21,6 +21,25 @@ const ScheduleATask = () => {
   const [scheduledTasks, setScheduledTasks] = useState([]);
   const filteredOptions = OPTIONS.filter((o) => !selectedMachine.includes(o));
   const [duration, setDuration] = useState("30 minutes");
+  const user = VerifyToken();
+  const taskCratedBy = user?.username;
+
+  const OPTIONS = [
+    "Nilpeter Press",
+    "Comco Press",
+    "New Press",
+    "New Press 2",
+    "Nilpeter Press 3",
+  ];
+  const [startDate, setStartDate] = useState(new Date());
+  const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
+  const [taskName, setTaskName] = useState("");
+  const [course, setCourse] = useState("");
+  const [email, setEmail] = useState("");
+  const [selectedMachine, setSelectedMachine] = useState([]);
+  const [scheduledTasks, setScheduledTasks] = useState([]);
+  const filteredOptions = OPTIONS.filter((o) => !selectedMachine.includes(o));
+  const [duration, setDuration] = useState("30 minutes");
 
   const timeSlots = [
     "08:30",
@@ -146,13 +165,16 @@ const ScheduleATask = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/scheduledtasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://lab-scheduler-server.vercel.app/scheduledtasks",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -170,11 +192,11 @@ const ScheduleATask = () => {
   useEffect(() => {
     const fetchScheduledTasks = async () => {
       try {
-        const response = await fetch("http://localhost:5000/scheduledtasks");
+        const response = await fetch(
+          "https://lab-scheduler-server.vercel.app/scheduledtasks"
+        );
         const data = await response.json();
-        console.log(data);
-
-        setScheduledTasks(data.data);
+        setScheduledTasks(data);
       } catch (error) {
         console.error("Error fetching scheduled tasks:", error);
       }
