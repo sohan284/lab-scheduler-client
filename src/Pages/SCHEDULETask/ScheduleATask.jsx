@@ -103,7 +103,7 @@ const ScheduleATask = () => {
         };
     
         try {
-            const response = await fetch('http://localhost:5000/scheduledtasks', {
+            const response = await fetch('https://lab-scheduler-server.vercel.app/scheduledtasks', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const ScheduleATask = () => {
     useEffect(() => {
         const fetchScheduledTasks = async () => {
             try {
-                const response = await fetch('http://localhost:5000/scheduledtasks');
+                const response = await fetch('https://lab-scheduler-server.vercel.app/scheduledtasks');
                 const data = await response.json();
                 setScheduledTasks(data);
             } catch (error) {
