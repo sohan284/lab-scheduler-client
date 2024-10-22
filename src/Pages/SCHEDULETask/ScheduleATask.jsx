@@ -3,8 +3,12 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 import { Select } from 'antd';
+import VerifyToken from '../../utils/VerifyToken';
 
 const ScheduleATask = () => {
+    const user = VerifyToken();
+    const taskCratedBy = user?.username;
+
     const OPTIONS = ['Nilpeter Press', 'Comco Press', 'New Press', 'New Press 2', "Nilpeter Press 3"];
     const [startDate, setStartDate] = useState(new Date());
     const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
@@ -66,21 +70,18 @@ const ScheduleATask = () => {
         setSelectedTimeSlots(newSelectedSlots);
     };
 
-    const isMachineBooked = (machine, timeSlots) => {
+    // Function to check if a time slot is already booked based on the data from backend
+    const isSlotBooked = (timeSlot) => {
         return scheduledTasks.some(task => {
-            if (task.selectedMachine.includes(machine)) {
+            // Check if the task overlaps with the selected time slot for any machine
+            if (task.selectedMachine.some(machine => selectedMachine.includes(machine))) {
+                // Check if the timeSlot overlaps with the task's startDate and selectedTimeSlots
                 const bookedStartTime = new Date(task.startDate);
-                const durationInMinutes = (durationMapping[duration] || 0) * 15; // Assuming each slot is 15 minutes
-                const bookedEndTime = new Date(bookedStartTime.getTime() + durationInMinutes * 60000);
+                const bookedTimeSlots = task.selectedTimeSlots;
+                const slotIndex = timeSlots.indexOf(timeSlot);
 
-                return timeSlots.some(slot => {
-                    const slotTime = new Date(startDate);
-                    const [hours, minutes] = slot.split(':');
-                    slotTime.setHours(hours);
-                    slotTime.setMinutes(minutes);
-
-                    return slotTime >= bookedStartTime && slotTime < bookedEndTime;
-                });
+                // If the selected time slot is within the range of the task's time slots, it's booked
+                return bookedTimeSlots.includes(timeSlot) && bookedStartTime.toDateString() === startDate.toDateString();
             }
             return false;
         });
@@ -99,9 +100,11 @@ const ScheduleATask = () => {
             selectedTimeSlots: selectedTimeSlots.length > 0 ? selectedTimeSlots : [],
             selectedMachine,
             email,
-            approve: false   
+            estimatedTime: duration,
+            approve: "Pending",
+            taskCratedBy: taskCratedBy
         };
-    
+
         try {
             const response = await fetch('https://lab-scheduler-server.vercel.app/scheduledtasks', {
                 method: 'POST',
@@ -110,11 +113,11 @@ const ScheduleATask = () => {
                 },
                 body: JSON.stringify(formData),
             });
-    
+
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-    
+
             const result = await response.json();
             console.log('Success:', result);
             alert('Task scheduled successfully!');
@@ -123,15 +126,14 @@ const ScheduleATask = () => {
             alert('There was a problem scheduling the task.');
         }
     };
-    
-    
 
+    // Fetch scheduled tasks from backend on component mount
     useEffect(() => {
         const fetchScheduledTasks = async () => {
             try {
                 const response = await fetch('https://lab-scheduler-server.vercel.app/scheduledtasks');
                 const data = await response.json();
-                setScheduledTasks(data);
+                setScheduledTasks(data.data);
             } catch (error) {
                 console.error('Error fetching scheduled tasks:', error);
             }
@@ -227,7 +229,8 @@ const ScheduleATask = () => {
                             <div className='flex-1 flex items-center justify-center'>
                                 <div className='grid grid-cols-4 gap-3 place-items-center'>
                                     {timeSlots.map((slot, index) => {
-                                        const isDisabled = selectedMachine.some(machine => isMachineBooked(machine, [slot]));
+                                        // Check if the slot is already booked for any of the selected machines
+                                        const isDisabled = isSlotBooked(slot);
                                         return (
                                             <div
                                                 key={index}
@@ -260,18 +263,6 @@ const ScheduleATask = () => {
                         <button type="submit" className="bg-[#522C80] text-white px-4 py-2 rounded shadow text-xs hover:bg-[#754da7] transition">SCHEDULE</button>
                     </div>
                 </form>
-                <p className="mt-6 text-xs font-semibold px-10">Share</p>
-                <div className="flex items-center mt-2 mx-10 text-xs px-10">
-                    <p>Type email:</p>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="border border-gray-300 ml-2"
-                    />
-                    <button className="ml-2 text-black px-3 py-1 rounded">+Add More</button>
-                </div>
-                <button className="mt-2 ml-10 bg-[#522C80] text-white px-4 py-2 rounded shadow hover:bg-[#673c9c] text-xs transition">SHARE</button>
             </div>
         </div>
     );
