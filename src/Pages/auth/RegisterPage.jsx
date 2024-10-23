@@ -1,5 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material"; // Import icons
 import UserManagement from "../../Services/User";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +10,8 @@ const RegisterPage = () => {
     username: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
+
   const handleRegister = () => {
     const userEmail = formData.username.includes("@g.clemson.edu")
       ? formData.username
@@ -19,9 +22,10 @@ const RegisterPage = () => {
     };
     UserManagement.upsertUser(data).then(() => navigate("/login"));
   };
+
   return (
     <div className="flex justify-center">
-      <div className=" pt-20  text-[#515151]">
+      <div className="pt-20 text-[#515151]">
         <p className="uppercase text-center lg:text-start font-bold text-[20px] mb-12">
           Register
         </p>
@@ -48,17 +52,17 @@ const RegisterPage = () => {
               }}
               className="text-sm"
             />
-            <h1 className=" text-nowrap font-medium text-[14px] ml-[10px]">
+            <h1 className="text-nowrap font-medium text-[14px] ml-[10px]">
               @g.clemson.edu
             </h1>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center mb-4">
             <h1 className="uppercase text-nowrap font-medium text-[14px] mr-[20px]">
               Password
             </h1>
             <TextField
               size="small"
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
@@ -71,6 +75,19 @@ const RegisterPage = () => {
                 },
               }}
               className="text-sm"
+              InputProps={{
+                endAdornment: (
+                  <Button
+                    onClick={() => setShowPassword(!showPassword)} // Toggle function
+                    style={{
+                      backgroundColor: "transparent",
+                      color: "#522C80",
+                    }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />} {/* Show/Hide icon */}
+                  </Button>
+                ),
+              }}
             />
           </div>
         </div>
@@ -85,7 +102,6 @@ const RegisterPage = () => {
                 paddingInline: 20,
                 color: "white",
               }}
-              className=""
               onClick={handleRegister}
             >
               Register
