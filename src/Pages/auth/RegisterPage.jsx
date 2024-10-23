@@ -6,13 +6,36 @@ import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
 
-  const handleRegister = () => {
+  const validateForm = () => {
+    if (!formData.username) {
+      setErrorMsg("Username is required.");
+      setLoading(false);
+      return false;
+    }
+    if (!formData.password) {
+      setErrorMsg("Password is required.");
+      setLoading(false);
+      return false;
+    } else if (formData.password.length < 6) {
+      setErrorMsg("Password must be at least 6 characters long.");
+      setLoading(false);
+      return false;
+    }
+    setErrorMsg(null);
+    return true;
+  };
+
+  const handleRegister = async () => {
+    setLoading(true);
+    if (!validateForm()) return; // Stop if form is invalid
     const userEmail = formData.username.includes("@g.clemson.edu")
       ? formData.username
       : `${formData.username}@g.clemson.edu`;
@@ -20,7 +43,20 @@ const RegisterPage = () => {
       username: userEmail,
       password: formData.password,
     };
-    UserManagement.upsertUser(data).then(() => navigate("/login"));
+
+    try {
+      const res = await UserManagement.upsertUser(data);
+      if (res.success) {
+        navigate("/login");
+        setLoading(false);
+      } else {
+        setErrorMsg(res.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      setErrorMsg("An unexpected error occurred. Please try again later.");
+    }
   };
 
   return (
@@ -84,13 +120,17 @@ const RegisterPage = () => {
                       color: "#522C80",
                     }}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />} {/* Show/Hide icon */}
+                    {showPassword ? <VisibilityOff /> : <Visibility />}{" "}
+                    {/* Show/Hide icon */}
                   </Button>
                 ),
               }}
             />
           </div>
         </div>
+        {errorMsg && (
+          <p className="text-center mt-3 text-red-600 text-xs">{errorMsg}</p>
+        )}
         <div className="flex justify-center text-center">
           <div>
             <Button
@@ -104,8 +144,8 @@ const RegisterPage = () => {
               }}
               onClick={handleRegister}
             >
-              Register
-            </Button>
+              {loading ? "Loading..." : " Register"}
+            </Button>{" "}
             <p
               onClick={() => navigate("/login")}
               className="uppercase cursor-pointer underline text-[11px] mt-3"

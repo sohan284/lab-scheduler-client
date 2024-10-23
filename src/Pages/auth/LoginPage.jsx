@@ -11,7 +11,24 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
   const navigate = useNavigate();
 
+  // Validation function
+  const validateForm = () => {
+    if (!username) {
+      setErrorMsg("Username cannot be empty.");
+      return false;
+    }
+
+    if (!password) {
+      setErrorMsg("Password cannot be empty.");
+      return false;
+    }
+
+    return true; // Return true if all validations pass
+  };
+
   const handleLogin = async () => {
+    if (!validateForm()) return; // Stop if form is invalid
+
     const userEmail = username.includes("@g.clemson.edu")
       ? username
       : `${username}@g.clemson.edu`;
@@ -20,7 +37,6 @@ const LoginPage = () => {
 
     try {
       const response = await UserManagement.loginUser(userEmail, password);
-
       if (response && response.token) {
         localStorage.setItem("token", response.token);
         console.log(response);
@@ -101,7 +117,8 @@ const LoginPage = () => {
                       color: "#522C80",
                     }}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />} {/* Show/Hide icon */}
+                    {showPassword ? <VisibilityOff /> : <Visibility />}{" "}
+                    {/* Show/Hide icon */}
                   </Button>
                 ),
               }}
