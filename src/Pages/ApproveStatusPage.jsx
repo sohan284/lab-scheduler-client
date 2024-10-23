@@ -10,7 +10,7 @@ const ApproveStatusPage = () => {
   }, [taskId]);
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-green-900">
+    <div className="flex flex-col justify-center items-center h-screen bg-green-900 px-5">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
         <h1 className="text-green-800 font-bold text-3xl mb-4">
           Task Approved!

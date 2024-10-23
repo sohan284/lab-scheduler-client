@@ -8,7 +8,7 @@ const RejectStatusPage = () => {
     TaskManagement.rejectStatus(taskId);
   }, []);
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-red-900">
+    <div className="flex flex-col justify-center items-center h-screen bg-red-900 px-5">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
         <h1 className="text-red-800 font-bold text-3xl mb-4">Task Rejected!</h1>
         <p className="text-gray-600 mb-6">
