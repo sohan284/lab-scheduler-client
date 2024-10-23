@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./styles.css";
 import { Select } from "antd";
 import VerifyToken from "../../utils/VerifyToken";
+import { Toaster, toast } from "react-hot-toast";
 
 const ScheduleATask = () => {
     const user = VerifyToken();
@@ -12,7 +13,7 @@ const ScheduleATask = () => {
     const OPTIONS = [
         "Nilpeter Press",
         "Comco Press",
-        "New Press",
+        "Sohn flexo machine",
         "New Press 2",
         "Nilpeter Press 3",
     ];
@@ -65,15 +66,11 @@ const ScheduleATask = () => {
     const handleTimeSlotClick = (slot) => {
         const selectedIndex = timeSlots.indexOf(slot);
         const durationInSlots = durationMapping[duration] || 0;
-
-        // Check if any of the time slots in the selected duration are already booked
         const isConflict = isSlotBooked(slot, durationInSlots);
-
-        if (isConflict) {
-            alert("The selected time slot overlaps with an already booked slot.");
-            return; // Prevent selection if there's a conflict
+        if (isConflict) { 
+            toast.error("The selected time slot overlaps with an already booked slot.");
+            return;
         }
-
         const newSelectedSlots = [];
         for (let i = selectedIndex; i < selectedIndex + durationInSlots; i++) {
             if (i < timeSlots.length) {
@@ -84,23 +81,19 @@ const ScheduleATask = () => {
         setSelectedTimeSlots(newSelectedSlots); // Update the selected time slots
     };
 
-    // Function to check if a time slot overlaps with an already booked time slot
     const isSlotBooked = (startSlot, durationInSlots) => {
         const startIndex = timeSlots.indexOf(startSlot);
         const endIndex = startIndex + durationInSlots - 1;
 
         return scheduledTasks.some((task) => {
-            // Check if the task overlaps with the selected time slot for any machine
             if (task.selectedMachine.some((machine) => selectedMachine.includes(machine))) {
                 const bookedStartTime = new Date(task.startDate);
                 const bookedTimeSlots = task.selectedTimeSlots;
 
-                // If the task overlaps with the selected time slot, return true
                 if (bookedStartTime.toDateString() === startDate.toDateString()) {
                     const taskStartIndex = timeSlots.indexOf(bookedTimeSlots[0]);
                     const taskEndIndex = taskStartIndex + bookedTimeSlots.length - 1;
 
-                    // Check if there is an overlap in time slots
                     if (
                         (startIndex >= taskStartIndex && startIndex <= taskEndIndex) ||
                         (endIndex >= taskStartIndex && endIndex <= taskEndIndex) ||
@@ -114,13 +107,13 @@ const ScheduleATask = () => {
         });
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!taskName || !course || !duration || selectedTimeSlots.length === 0) {
-            alert("Please fill in all fields and select time slots.");
+        if (!taskName || !course || !duration || selectedTimeSlots.length === 0 || selectedMachine.length === 0) {
+            toast.error("Please fill in all fields, select time slots, and choose at least one machine.");
             return;
         }
+
         const formData = {
             taskName,
             course,
@@ -151,14 +144,13 @@ const ScheduleATask = () => {
 
             const result = await response.json();
             console.log("Success:", result);
-            alert("Task scheduled successfully!");
+            toast.success("Task scheduled successfully!");
         } catch (error) {
             console.error("Error:", error);
-            alert("There was a problem scheduling the task.");
+            toast.error("There was a problem scheduling the task.");
         }
     };
 
-    // Fetch scheduled tasks from backend on component mount
     useEffect(() => {
         const fetchScheduledTasks = async () => {
             try {
@@ -178,14 +170,12 @@ const ScheduleATask = () => {
 
     return (
         <div className="max-w-[1200px] mx-auto mt-5 p-6 bg-white rounded-lg">
+            <Toaster position="top-center" reverseOrder={false} />
             <h4 className="text-xl font-bold text-[#515151]">SCHEDULE A TASK</h4>
             <div className="mt-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="flex items-center gap-20 px-10">
-                        <label
-                            htmlFor="taskName"
-                            className="block font-medium text-xs min-w-[71px]"
-                        >
+                        <label htmlFor="taskName" className="block font-medium text-xs min-w-[71px]">
                             Task Name
                         </label>
                         <input
@@ -199,10 +189,7 @@ const ScheduleATask = () => {
                         />
                     </div>
                     <div className="flex items-center gap-20 px-10 bg-[#FAFAFA] py-5">
-                        <label
-                            htmlFor="course"
-                            className="block font-medium text-xs min-w-[71px]"
-                        >
+                        <label htmlFor="course" className="block font-medium text-xs min-w-[71px]">
                             Course
                         </label>
                         <input
@@ -217,18 +204,15 @@ const ScheduleATask = () => {
                     </div>
                     <div className="flex flex-col relative w-fit">
                         <div className="flex items-center gap-20 px-10">
-                            <label
-                                htmlFor="machine"
-                                className="block font-medium text-xs min-w-[71px]"
-                            >
+                            <label htmlFor="machine" className="block font-medium text-xs min-w-[71px]">
                                 Machine
                             </label>
                             <Select
                                 mode="multiple"
-                                placeholder="Inserted are removed"
+                                placeholder="Please select machines"
                                 value={selectedMachine}
                                 onChange={setSelectedMachine}
-                                style={{ width: "400px" }}
+                                style={{ width: "400px", borderColor: selectedMachine.length === 0 ? 'red' : undefined }}
                                 options={filteredOptions.map((item) => ({
                                     value: item,
                                     label: item,
@@ -237,10 +221,7 @@ const ScheduleATask = () => {
                         </div>
                     </div>
                     <div className="flex items-center gap-5">
-                        <label
-                            htmlFor="duration"
-                            className="block font-medium text-xs px-10"
-                        >
+                        <label htmlFor="duration" className="block font-medium text-xs px-10">
                             Duration:
                         </label>
                         <select
@@ -265,16 +246,10 @@ const ScheduleATask = () => {
                         </select>
                     </div>
                     <div className="flex items-center gap-5">
-                        <label
-                            htmlFor="estimatedTime"
-                            className="block font-medium text-xs px-10"
-                        >
+                        <label htmlFor="estimatedTime" className="block font-medium text-xs px-10">
                             Estimated Time Required:
                         </label>
-                        <span
-                            className={`ml-2 text-xs ${selectedTimeSlots.length > 0 ? "text-blue-600" : "text-gray-500"
-                                }`}
-                        >
+                        <span className={`ml-2 text-xs ${selectedTimeSlots.length > 0 ? "text-blue-600" : "text-gray-500"}`}>
                             {duration ? formatDuration(duration) : "00:00"}
                         </span>
                     </div>
@@ -290,23 +265,24 @@ const ScheduleATask = () => {
                                     className="border-gray-300 rounded"
                                 />
                             </div>
-                            <div className="flex-1 flex items-center justify-center">
+                            <div className="flex-1 flex items-center justify-center relative">
+                            <div className="flex flex-col items-start    gap-1 text-xs   absolute -top-12 left-16">
+                                   <div className="flex gap-2"> <div className="h-4 w-4 bg-gray-400 rounded-md"></div><p> Scheduled by others</p></div>
+                                    <div className="flex gap-2"><div className="h-4 w-4 bg-white border  border-black rounded-md"></div><p> Available time slot</p></div>
+                                </div>
                                 <div className="grid grid-cols-4 gap-3 place-items-center">
                                     {timeSlots.map((slot, index) => {
-                                        // Check if the slot is already booked for any of the selected machines
                                         const isDisabled = isSlotBooked(slot);
                                         return (
                                             <div
                                                 key={index}
                                                 className={`px-2 py-1 text-xs cursor-pointer rounded transition-all duration-200 
-                                                ${selectedTimeSlots.includes(
-                                                    slot
-                                                )
-                                                        ? "bg-blue-200 text-black"
-                                                        : isDisabled
-                                                            ? "bg-gray-300 cursor-not-allowed"
-                                                            : "hover:bg-blue-300"
-                                                    }`}
+                                                ${selectedTimeSlots.includes(slot)
+                                                    ? "bg-blue-200 text-black"
+                                                    : isDisabled
+                                                        ? "bg-gray-300 cursor-not-allowed"
+                                                        : "hover:bg-blue-300"
+                                                }`}
                                                 onClick={() => !isDisabled && handleTimeSlotClick(slot)}
                                             >
                                                 {slot}
