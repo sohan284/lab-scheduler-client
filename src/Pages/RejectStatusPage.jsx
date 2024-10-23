@@ -4,8 +4,6 @@ import { useParams } from "react-router-dom";
 
 const RejectStatusPage = () => {
   const { taskId } = useParams();
-  console.log(taskId);
-
   useEffect(() => {
     TaskManagement.rejectStatus(taskId);
   }, []);
