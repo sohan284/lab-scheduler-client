@@ -62,7 +62,7 @@ const RegisterPage = () => {
             </h1>
             <TextField
               size="small"
-              type={showPassword ? "text" : "password"} // Toggle password visibility
+              type={showPassword ? "text" : "password"}
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
@@ -78,13 +78,15 @@ const RegisterPage = () => {
               InputProps={{
                 endAdornment: (
                   <Button
-                    onClick={() => setShowPassword(!showPassword)} // Toggle function
+                    onClick={() => setShowPassword(!showPassword)}  
                     style={{
+                      padding: 0,
                       backgroundColor: "transparent",
                       color: "#522C80",
+                      minWidth: "0", // Ensure no default width
                     }}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />} {/* Show/Hide icon */}
+                    {showPassword ? <VisibilityOff /> : <Visibility />} 
                   </Button>
                 ),
               }}

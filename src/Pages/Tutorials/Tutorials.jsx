@@ -1,10 +1,14 @@
 import React from 'react';
 import { CiSearch } from 'react-icons/ci';
 import tutorialsJson from './tutorials.json';
+import TabNav from '../../Shared/TabNav';
 
 const Tutorials = () => {
     
     return (
+        <>
+        
+        <TabNav/>
         <div className='max-w-[1200px] mx-auto'>
 
             <div className='   '>
@@ -23,7 +27,7 @@ const Tutorials = () => {
                     </div>
                 </div>
                 {/* Custom scroll area */}
-                <div className='md:grid grid-cols-3 my-12 px-4'>
+                <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1  my-12 px-4'>
                     {tutorialsJson.map(tutorial => (
                         <div key={tutorial.id} className='mt-12 md:mt-20'>
                             <div className='grid justify-center'>
@@ -41,7 +45,7 @@ const Tutorials = () => {
                                             allowFullScreen
                                             className="rounded-lg shadow-md"
                                             style={{ aspectRatio: '16 / 9' }} 
-                                        ></iframe>
+                                            ></iframe>
                                     </div>
                                 </div>
 
@@ -52,6 +56,7 @@ const Tutorials = () => {
             </div>
 
         </div>
+                    </>
     )
 }
 

@@ -5,7 +5,8 @@ import "./styles.css";
 import { Select } from "antd";
 import VerifyToken from "../../utils/VerifyToken";
 import { Toaster, toast } from "react-hot-toast";
-import Loader from "../../components/Loader/Loader"; 
+import Loader from "../../components/Loader/Loader";
+import TabNav from "../../Shared/TabNav";
 
 
 
@@ -119,7 +120,7 @@ const ScheduleATask = () => {
             return false;
         });
     };
- 
+
 
     const handleSubmit = async (e) => {
         setLoading(true);
@@ -170,14 +171,14 @@ const ScheduleATask = () => {
             console.log("Success:", result);
             toast.success("Task Sent to Faculty successfully! Wait for their Approval.");
 
-           
+
             setTaskName("");
             setCourse("");
             setEmail("");
             setSelectedMachine([]);
             setSelectedTimeSlots([]);
             setStartDate(new Date());
-            setDuration("30 minutes"); 
+            setDuration("30 minutes");
         } catch (error) {
             console.error("Error:", error);
             toast.error("There was a problem scheduling the task.");
@@ -207,213 +208,217 @@ const ScheduleATask = () => {
     }, []);
 
     return (
-        <div className="max-w-[1200px] mx-auto mt-5 p-6 bg-white rounded-lg">
-            <Toaster position="top-center" reverseOrder={false} />
+        <>
 
-            {Loading && <Loader text={"Your Task is sending to faculty"} />}
+            <TabNav />
+            <div className="max-w-[1200px] mx-auto mt-5 lg:p-6 bg-white rounded-lg">
+                <Toaster position="top-center" reverseOrder={false} />
 
-            {!Loading && (
-                <div>
-                    <h4 className="text-xl font-bold text-[#515151]">SCHEDULE A TASK</h4>
-                    <div className="mt-6">
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="flex items-center gap-20 px-10">
-                                <label
-                                    htmlFor="taskName"
-                                    className="block font-medium text-xs min-w-[71px]"
-                                >
-                                    Task Name
-                                </label>
-                                <input
-                                    type="text"
-                                    name="taskName"
-                                    id="taskName"
-                                    value={taskName}
-                                    onChange={(e) => setTaskName(e.target.value)}
-                                    className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    required
-                                />
-                            </div>
-                            <div className="flex items-center gap-20 px-10 bg-[#FAFAFA] py-5">
-                                <label
-                                    htmlFor="course"
-                                    className="block font-medium text-xs min-w-[71px]"
-                                >
-                                    Course
-                                </label>
-                                <input
-                                    type="text"
-                                    name="course"
-                                    id="course"
-                                    value={course}
-                                    onChange={(e) => setCourse(e.target.value)}
-                                    className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    required
-                                />
-                            </div>
-                            <div className="flex flex-col relative w-fit">
-                                <div className="flex items-center gap-20 px-10">
+                {Loading && <Loader text={"Your Task is sending to faculty"} />}
+
+                {!Loading && (
+                    <div>
+                        <h4 className="text-xl font-bold text-[#515151]">SCHEDULE A TASK</h4>
+                        <div className="mt-6">
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="flex items-center gap-20 lg:px-10">
                                     <label
-                                        htmlFor="machine"
+                                        htmlFor="taskName"
                                         className="block font-medium text-xs min-w-[71px]"
                                     >
-                                        Machine
+                                        Task Name
                                     </label>
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Please select machines"
-                                        value={selectedMachine}
-                                        onChange={setSelectedMachine}
-                                        style={{
-                                            width: "400px",
-                                            borderColor: selectedMachine.length === 0 ? "red" : undefined,
-                                        }}
-                                        options={filteredOptions.map((item) => ({
-                                            value: item,
-                                            label: item,
-                                        }))}
+                                    <input
+                                        type="text"
+                                        name="taskName"
+                                        id="taskName"
+                                        value={taskName}
+                                        onChange={(e) => setTaskName(e.target.value)}
+                                        className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required
                                     />
                                 </div>
-                            </div>
-                            <div className="flex flex-col gap-3 bg-[#FAFAFA] py-3  ">
-                                <div className="flex items-center gap-5  ">
+                                <div className="flex items-center gap-20 px-10 bg-[#FAFAFA] py-5">
                                     <label
-                                        htmlFor="duration"
-                                        className="block font-medium text-xs px-10"
+                                        htmlFor="course"
+                                        className="block font-medium text-xs min-w-[71px]"
                                     >
-                                        Duration:
+                                        Course
                                     </label>
-                                    <select
-                                        name="duration"
-                                        id="duration"
-                                        value={duration}
-                                        onChange={(e) => setDuration(e.target.value)}
-                                        className="border text-xs border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    <input
+                                        type="text"
+                                        name="course"
+                                        id="course"
+                                        value={course}
+                                        onChange={(e) => setCourse(e.target.value)}
+                                        className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         required
-                                    >
-                                        <option value="">Select Duration</option>
-                                        <option value="15 minutes">15 minutes</option>
-                                        <option selected="selected" value="30 minutes">
-                                            30 minutes
-                                        </option>
-                                        <option value="45 minutes">45 minutes</option>
-                                        <option value="1 hour">1 hour</option>
-                                        <option value="2 hours">2 hours</option>
-                                        <option value="3 hours">3 hours</option>
-                                        <option value="4 hours">4 hours</option>
-                                        <option value="5 hours">5 hours</option>
-                                    </select>
+                                    />
                                 </div>
-                                <div className="flex items-center gap-5 bg-[#FAFAFA] ">
-                                    <label
-                                        htmlFor="estimatedTime"
-                                        className=" flex items-center gap-5 font-medium text-xs px-10"
-                                    >
-                                        Estimate it for me <input type="checkbox" required name="" id="" />
-                                    </label>
-                                    <span
-                                        className={`ml-2 text-xs ${selectedTimeSlots.length > 0 ? "text-blue-600" : "text-gray-500"
-                                            }`}
-                                    >
-                                        {duration ? formatDuration(duration) : "00:00"}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="px-10 pt-6">
-                                <h2 className="text-xs font-semibold">Available Time Slot</h2>
-                                <div className="flex">
-                                    <div className="flex-1 border-gray-300 rounded p-4 mt-2">
-                                        <DatePicker
-                                            selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
-                                            inline
-                                            minDate={new Date()}
-                                            className="border-gray-300 rounded"
+                                <div className="flex flex-col relative w-fit">
+                                    <div className="flex items-center gap-20 px-10">
+                                        <label
+                                            htmlFor="machine"
+                                            className="block font-medium text-xs min-w-[71px]"
+                                        >
+                                            Machine
+                                        </label>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Please select machines"
+                                            value={selectedMachine}
+                                            onChange={setSelectedMachine}
+                                            style={{
+                                                width: "400px",
+                                                borderColor: selectedMachine.length === 0 ? "red" : undefined,
+                                            }}
+                                            options={filteredOptions.map((item) => ({
+                                                value: item,
+                                                label: item,
+                                            }))}
                                         />
                                     </div>
-                                    <div className="flex-1 flex items-center justify-center relative">
-                                        <div className="flex flex-col items-start gap-1 text-xs absolute -top-12 left-16">
-                                            <div className="flex gap-2">
-                                                <div className="h-4 w-4 bg-gray-400 rounded-md"></div>
-                                                <p> Scheduled by others</p>
-                                            </div>
-                                            <div className="flex gap-2">
-                                                <div className="h-4 w-4 bg-white border border-black rounded-md"></div>
-                                                <p> Available time slot</p>
-                                            </div>
+                                </div>
+                                <div className="flex flex-col gap-3 bg-[#FAFAFA] py-3  ">
+                                    <div className="flex items-center gap-5  ">
+                                        <label
+                                            htmlFor="duration"
+                                            className="block font-medium text-xs px-10"
+                                        >
+                                            Duration:
+                                        </label>
+                                        <select
+                                            name="duration"
+                                            id="duration"
+                                            value={duration}
+                                            onChange={(e) => setDuration(e.target.value)}
+                                            className="border text-xs border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        >
+                                            <option value="">Select Duration</option>
+                                            <option value="15 minutes">15 minutes</option>
+                                            <option selected="selected" value="30 minutes">
+                                                30 minutes
+                                            </option>
+                                            <option value="45 minutes">45 minutes</option>
+                                            <option value="1 hour">1 hour</option>
+                                            <option value="2 hours">2 hours</option>
+                                            <option value="3 hours">3 hours</option>
+                                            <option value="4 hours">4 hours</option>
+                                            <option value="5 hours">5 hours</option>
+                                        </select>
+                                    </div>
+                                    <div className="flex items-center gap-5 bg-[#FAFAFA] ">
+                                        <label
+                                            htmlFor="estimatedTime"
+                                            className=" flex items-center gap-5 font-medium text-xs px-10"
+                                        >
+                                            Estimate it for me <input type="checkbox" required name="" id="" />
+                                        </label>
+                                        <span
+                                            className={`ml-2 text-xs ${selectedTimeSlots.length > 0 ? "text-blue-600" : "text-gray-500"
+                                                }`}
+                                        >
+                                            {duration ? formatDuration(duration) : "00:00"}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="lg:px-10 pt-6">
+                                    <h2 className="text-xs font-semibold">Available Time Slot</h2>
+                                    <div className="flex">
+                                        <div className="flex-1 border-gray-300 rounded p-4 mt-2">
+                                            <DatePicker
+                                                selected={startDate}
+                                                onChange={(date) => setStartDate(date)}
+                                                inline
+                                                minDate={new Date()}
+                                                className="border-gray-300 rounded"
+                                            />
                                         </div>
-                                        <div className="grid grid-cols-4 gap-3 place-items-center">
-                                            {timeSlots.map((slot, index) => {
-                                                const isDisabled = isSlotBooked(slot);
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        className={`px-2 py-1 text-xs cursor-pointer rounded transition-all duration-200 
+                                        <div className="flex-1 flex items-center justify-center relative">
+                                            <div className="flex flex-col items-start gap-1 text-xs absolute -top-12 lg:left-16">
+                                                <div className="flex gap-2">
+                                                    <div className="h-4 w-4 bg-gray-400 rounded-md"></div>
+                                                    <p> Scheduled by others</p>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <div className="h-4 w-4 bg-white border border-black rounded-md"></div>
+                                                    <p> Available time slot</p>
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-4 gap-3 place-items-center">
+                                                {timeSlots.map((slot, index) => {
+                                                    const isDisabled = isSlotBooked(slot);
+                                                    return (
+                                                        <div
+                                                            key={index}
+                                                            className={`px-2 py-1 text-xs cursor-pointer rounded transition-all duration-200 
                                                         ${selectedTimeSlots.includes(slot)
-                                                                ? "bg-blue-200 text-black"
-                                                                : isDisabled
-                                                                    ? "bg-gray-300 cursor-not-allowed"
-                                                                    : "hover:bg-blue-300"
-                                                            }`}
-                                                        onClick={() => !isDisabled && handleTimeSlotClick(slot)}
-                                                    >
-                                                        {slot}
-                                                    </div>
-                                                );
-                                            })}
+                                                                    ? "bg-blue-200 text-black"
+                                                                    : isDisabled
+                                                                        ? "bg-gray-300 cursor-not-allowed"
+                                                                        : "hover:bg-blue-300"
+                                                                }`}
+                                                            onClick={() => !isDisabled && handleTimeSlotClick(slot)}
+                                                        >
+                                                            {slot}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-xs">
+                                                {startDate
+                                                    ? startDate.toLocaleDateString(undefined, {
+                                                        year: "numeric",
+                                                        month: "long",
+                                                        day: "numeric",
+                                                    })
+                                                    : "Date not available"}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="flex-1">
-                                        <p className="text-xs">
-                                            {startDate
-                                                ? startDate.toLocaleDateString(undefined, {
-                                                    year: "numeric",
-                                                    month: "long",
-                                                    day: "numeric",
-                                                })
-                                                : "Date not available"}
+                                </div>
+                                <div className="">
+                                    <div className="flex items-center gap-4 bg-[#F2F4F6] px-10 py-5">
+                                        <p>
+                                            This machine requires faculty permission/availability. <br />{" "}
+                                            Send for approval?
                                         </p>
+                                        <input required type="checkbox" />
+                                    </div>
+                                    <div className="flex items-center gap-4 px-10 py-5">
+                                        <p>I need a tutorial for this job</p>
+                                        <input type="checkbox" />
                                     </div>
                                 </div>
-                            </div>
-                            <div className="">
-                                <div className="flex items-center gap-4 bg-[#F2F4F6] px-10 py-5">
-                                    <p>
-                                        This machine requires faculty permission/availability. <br />{" "}
-                                        Send for approval?
-                                    </p>
-                                    <input required type="checkbox" />
+                                <div className="mt-4 px-10">
+                                    <button
+                                        type="submit"
+                                        className="bg-[#522C80] text-white px-4 py-2 rounded shadow text-xs hover:bg-[#754da7] transition"
+                                    >
+                                        SCHEDULE
+                                    </button>
                                 </div>
-                                <div className="flex items-center gap-4 px-10 py-5">
-                                    <p>I need a tutorial for this job</p>
-                                    <input type="checkbox" />
+                            </form>
+                            <div className="mt-4 flex flex-col w-fit gap-5 px-10">
+                                <p className="border-b w-fit">Share</p>
+                                <div className="flex gap-5">
+                                    <p className="ml-10">Type email:</p> <input className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" />
                                 </div>
-                            </div>
-                            <div className="mt-4 px-10">
                                 <button
                                     type="submit"
-                                    className="bg-[#522C80] text-white px-4 py-2 rounded shadow text-xs hover:bg-[#754da7] transition"
+                                    className="bg-[#522C80] text-white px-4 py-2 w-fit rounded shadow text-xs hover:bg-[#754da7] transition"
                                 >
-                                    SCHEDULE
+                                    SHARE
                                 </button>
                             </div>
-                        </form>
-                        <div className="mt-4 flex flex-col w-fit gap-5 px-10">
-                            <p className="border-b w-fit">Share</p>
-                            <div className="flex gap-5">
-                                <p className="ml-10">Type email:</p> <input className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" />
-                            </div>
-                            <button
-                                type="submit"
-                                className="bg-[#522C80] text-white px-4 py-2 w-fit rounded shadow text-xs hover:bg-[#754da7] transition"
-                            >
-                                SHARE
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 };
 

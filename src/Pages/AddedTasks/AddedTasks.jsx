@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import VerifyToken from "../../utils/VerifyToken";
 import Loader from "../../components/Loader/Loader";
+import TabNav from "../../Shared/TabNav";
 
 const AddedTasks = () => {
   const user = VerifyToken();
@@ -36,6 +37,8 @@ const AddedTasks = () => {
   };
 
   return (
+  <>
+    <TabNav/>
     <div className="px-4 py-10">
       <h1 className="md:text-xl font-bold uppercase mb-6">Scheduled Tasks</h1>
       {loading ? (
@@ -87,6 +90,7 @@ const AddedTasks = () => {
         </div>
       )}
     </div>
+  </>
   );
 };
 
