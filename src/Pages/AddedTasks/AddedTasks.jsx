@@ -39,11 +39,11 @@ const AddedTasks = () => {
     <div className="px-4 py-10">
       <h1 className="md:text-xl font-bold uppercase mb-6">Scheduled Tasks</h1>
       {loading ? (
-        <Loader />
+        <Loader text={"Collecting Your Data"} />
       ) : (
         <div>
           {tasks.length > 0 ? (
-            <div className="custom-scroll overflow-auto h-[35rem]">
+            <div className="   ">
               {tasks.map((task, index) => (
                 <div key={index} className="flex justify-between mb-20">
                   <div className="w-1/2">
@@ -73,9 +73,8 @@ const AddedTasks = () => {
                     <p className="py-4 px-10">{task.estimatedTime}</p>
                     <p className="bg-zinc-50 py-4 px-10 font-bold">
                       {task?.startDate
-                        ? `${formatDate(task.startDate)}, ${
-                            task.selectedTimeSlots[0]
-                          }`
+                        ? `${formatDate(task.startDate)}, ${task.selectedTimeSlots[0]
+                        }`
                         : "N/A"}
                     </p>
                   </div>

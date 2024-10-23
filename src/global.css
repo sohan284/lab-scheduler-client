@@ -1,21 +1,16 @@
-.custom-scroll {
-    /* scrollbar-width: thin; */
-    scrollbar-color: #c0c0c0 ;
-}
-
-.custom-scroll::-webkit-scrollbar {
-    width: 4px;
-}
-
-.custom-scroll::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb {
-    background-color: #c0c0c0;
-    border-radius: 10px;
-}
-*{
-    color: black ;
-    font-weight: 400;
-}
+/* Hide the title */
+.ytp-title {
+    display: none !important;
+  }
+  
+  /* Hide the channel logo */
+  .ytp-channel-logo {
+    display: none !important;
+  }
+  
+  /* General text styling */
+  * {
+    color: black !important;
+    font-weight: 400 !important;
+  }
+  

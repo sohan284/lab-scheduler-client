@@ -1,15 +1,13 @@
 import React from 'react';
 import { CiSearch } from 'react-icons/ci';
 import tutorialsJson from './tutorials.json';
-import '../../global.css'
-import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
 
 const Tutorials = () => {
-    console.log('tutorialsJson', tutorialsJson)
+    
     return (
-        <div className='container mx-auto'>
-            {/* Make a custom scroll for this dev section and make it scroll, disable full page scroll */}
-            <div className='custom-scroll overflow-y-auto h-[50rem]'>
+        <div className='max-w-[1200px] mx-auto'>
+
+            <div className='   '>
                 <div className='text-xl font-bold text-[#515151] uppercase my-10 mx-4 md:mx-0'>
                     Tutorials
                 </div>
@@ -34,9 +32,19 @@ const Tutorials = () => {
                                     <div className='text-xs font-bold text-gray-600'>{tutorial.duration}</div>
                                 </div>
                                 {/* video div */}
-                                <div className='bg-gray-300 w-[270px] h-40 mt-1'>
-                                    <VideoPlayer />
+                                <div className="mt-4 flex justify-center">
+                                    <div className="relative" style={{ width: '100%', maxWidth: '300px' }}>
+                                        <iframe
+                                            width="100%"
+                                            height="auto"
+                                            src="https://www.youtube.com/embed/BlLeQ-oWfiA?si=tf0TbjHsp8wikVQX" 
+                                            allowFullScreen
+                                            className="rounded-lg shadow-md"
+                                            style={{ aspectRatio: '16 / 9' }} 
+                                        ></iframe>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     ))}

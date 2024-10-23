@@ -2,11 +2,13 @@ import { Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import UserManagement from "../../Services/User";
+import { Visibility, VisibilityOff } from "@mui/icons-material"; // Import icons
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -68,17 +70,17 @@ const LoginPage = () => {
               }}
               className="text-sm"
             />
-            <h1 className=" text-nowrap font-medium text-[14px] ml-[10px]">
+            <h1 className="text-nowrap font-medium text-[14px] ml-[10px]">
               @g.clemson.edu
             </h1>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center mb-4">
             <h1 className="uppercase text-nowrap font-medium text-[14px] mr-[20px]">
               Password
             </h1>
             <TextField
               size="small"
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -90,6 +92,19 @@ const LoginPage = () => {
                 },
               }}
               className="text-sm"
+              InputProps={{
+                endAdornment: (
+                  <Button
+                    onClick={() => setShowPassword(!showPassword)} // Toggle function
+                    style={{
+                      backgroundColor: "transparent",
+                      color: "#522C80",
+                    }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />} {/* Show/Hide icon */}
+                  </Button>
+                ),
+              }}
             />
           </div>
         </div>
@@ -107,7 +122,6 @@ const LoginPage = () => {
                 paddingInline: 20,
                 color: "white",
               }}
-              className=""
               onClick={handleLogin}
             >
               Login

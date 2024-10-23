@@ -35,7 +35,7 @@ const ScheduledTasks = () => {
       <div className="overflow-x-auto px-5">
         {loading ? (
           <div className="">
-            <Loader />
+            <Loader text={"Getting Data"} />
           </div>
         ) : (
           <table className="w-full border-collapse text-xs">
@@ -81,16 +81,13 @@ const ScheduledTasks = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <p
-                        className={`${
-                          task?.approve === "Pending" &&
+                        className={`${task?.approve === "Pending" &&
                           "bg-purple-600 text-white rounded-xl"
-                        } ${
-                          task?.approve === "Approved" &&
+                          } ${task?.approve === "Approved" &&
                           "bg-green-600 text-white rounded-xl"
-                        } ${
-                          task?.approve === "Rejected" &&
+                          } ${task?.approve === "Rejected" &&
                           "bg-red-600 text-white rounded-xl"
-                        }`}
+                          }`}
                       >
                         {" "}
                         {task?.approve === "Pending"
