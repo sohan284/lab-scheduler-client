@@ -122,8 +122,6 @@ const RegisterPage = () => {
                       minWidth: "0", // Ensure no default width
                     }}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}{" "}
-                    {/* Show/Hide icon */}
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </Button>
                 ),
