@@ -10,6 +10,13 @@ const Layout = () => {
       <Outlet />
     </div>
   );
+  return (
+    <div className="max-w-[1280px] mx-auto">
+      <Navbar />
+
+      <Outlet />
+    </div>
+  );
 };
 
 export default Layout;

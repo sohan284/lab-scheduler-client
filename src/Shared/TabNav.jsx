@@ -17,7 +17,7 @@ const TabNav = () => {
   };
 
   return (
-    <nav className="max-w-6xl mx-auto px-4 py-2 mt-4 md:mt-16">
+    <nav className="max-w-[1200px] mx-auto px-4 py-2  mt-7">
       <div className="sm:hidden flex justify-end mb-4">
         <button onClick={toggleMenu} className="text-gray-500">
           {isMenuOpen ? <IoClose size={24} /> : <FaBars size={24} />}
@@ -32,7 +32,7 @@ const TabNav = () => {
               className={({ isActive }) => `
                 w-full sm:w-auto text-xs sm:text-sm text-center
                 px-2 sm:px-4 py-2 uppercase font-semibold rounded-md transition-colors duration-200
-                ${isActive ? "text-white bg-orange-500" : "hover:text-gray-400"}
+                ${isActive ? "text-white bg-orange-500" : "hover:text-gray-700 hover:outline hover:shadow-xl"}
               `}
               onClick={() => setIsMenuOpen(false)} // Close menu on click
             >

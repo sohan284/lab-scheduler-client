@@ -13,7 +13,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className=" flex justify-between items-center mt-5 md:mt-10 px-4 xl:px-0 ">
+    <nav className=" flex justify-between items-center mt-5 md:mt-5 px-4 xl:px-0 ">
       <div>
         <Link to="/">
           <img src={logo} alt="" className="w-32 md:w-[180px]" />
