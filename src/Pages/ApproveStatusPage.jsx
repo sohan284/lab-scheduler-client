@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TaskManagement from "../Services/Task";
 import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { CancelOutlined } from "@mui/icons-material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { CircularProgress } from "@mui/material";
 
 const ApproveStatusPage = () => {
@@ -59,17 +59,19 @@ const ApproveStatusPage = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center h-screen bg-red-900 px-5">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
-            <h1 className="text-red-800 font-bold text-3xl mb-4">
-              Approval Failed
-            </h1>
-            <p className="text-gray-600 mb-6">
-              Task must be Pending to approve.
-            </p>
+        <div className="flex flex-col justify-center items-center h-screen px-5">
+          <div className="bg-white rounded-lg p-8 max-w-md text-center">
             <div className="flex justify-center mb-4">
-              <CancelOutlined style={{ color: "green", fontSize: "100px" }} />
+              <ErrorOutlineIcon
+                style={{
+                  fontSize: "50px",
+                  backgroundColor: "#fb923c",
+                  padding: "5px",
+                  borderRadius: "100px",
+                }}
+              />
             </div>
+            <p className="text-orange-400 mb-6">Link has been expired!!</p>
           </div>
         </div>
       )}
