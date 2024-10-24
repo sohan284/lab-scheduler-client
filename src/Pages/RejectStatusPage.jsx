@@ -12,14 +12,15 @@ const RejectStatusPage = () => {
   useEffect(() => {
     const rejectTask = async () => {
       try {
-        const res = await TaskManagement.rejectStatus(taskId);
-        if (res.status === 200) {
-          setIsSuccess("Success"); // Set to true if successful
+        const res = await TaskManagement.approveStatus(taskId);
+
+        if (res.status === 200 || res.status === 201 || res.data.success) {
+          setIsSuccess("Success");
         } else {
-          setIsSuccess("Failed"); // Set to false for other statuses
+          setIsSuccess("Failed");
         }
       } catch (error) {
-        setIsSuccess("Failed"); // Handle errors by setting to false
+        setIsSuccess("Failed");
       }
     };
 

@@ -13,7 +13,8 @@ const ApproveStatusPage = () => {
     const approveTask = async () => {
       try {
         const res = await TaskManagement.approveStatus(taskId);
-        if (res.status === 200) {
+
+        if (res.status === 200 || res.status === 201 || res.data.success) {
           setIsSuccess("Success");
         } else {
           setIsSuccess("Failed");
@@ -25,6 +26,7 @@ const ApproveStatusPage = () => {
 
     approveTask();
   }, [taskId]);
+
   if (isSuccess === "Pending") {
     return (
       <div className="flex flex-col justify-center items-center h-screen">
@@ -34,6 +36,7 @@ const ApproveStatusPage = () => {
       </div>
     );
   }
+
   return (
     <>
       {isSuccess === "Success" ? (
