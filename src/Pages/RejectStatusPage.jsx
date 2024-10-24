@@ -7,19 +7,19 @@ import { CircularProgress } from "@mui/material";
 
 const RejectStatusPage = () => {
   const { taskId } = useParams();
-  const [isSuccess, setIsSuccess] = useState(null); // Initialize to null
+  const [isSuccess, setIsSuccess] = useState("Pending"); // Initialize to null
 
   useEffect(() => {
     const rejectTask = async () => {
       try {
         const res = await TaskManagement.rejectStatus(taskId);
         if (res.status === 200) {
-          setIsSuccess(true); // Set to true if successful
+          setIsSuccess("Success"); // Set to true if successful
         } else {
-          setIsSuccess(false); // Set to false for other statuses
+          setIsSuccess("Failed"); // Set to false for other statuses
         }
       } catch (error) {
-        setIsSuccess(false); // Handle errors by setting to false
+        setIsSuccess("Failed"); // Handle errors by setting to false
       }
     };
 
@@ -27,7 +27,7 @@ const RejectStatusPage = () => {
   }, [taskId]);
 
   // Show loading while isSuccess is null
-  if (isSuccess === null) {
+  if (isSuccess === "Pending") {
     return (
       <div className="flex flex-col justify-center items-center h-screen">
         <h1 className="text-white font-bold text-4xl mb-4">
@@ -40,7 +40,7 @@ const RejectStatusPage = () => {
   // Render success or failure message based on isSuccess
   return (
     <>
-      {isSuccess ? (
+      {isSuccess === "Success" ? (
         <div className="flex flex-col justify-center items-center h-screen bg-green-900 px-5">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
             <h1 className="text-green-800 font-bold text-3xl mb-4">

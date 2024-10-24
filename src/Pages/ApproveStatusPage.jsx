@@ -7,25 +7,25 @@ import { CircularProgress } from "@mui/material";
 
 const ApproveStatusPage = () => {
   const { taskId } = useParams();
-  const [isSuccess, setIsSuccess] = useState(null);
+  const [isSuccess, setIsSuccess] = useState("Pending");
 
   useEffect(() => {
     const approveTask = async () => {
       try {
         const res = await TaskManagement.approveStatus(taskId);
         if (res.status === 200) {
-          setIsSuccess(true);
+          setIsSuccess("Success");
         } else {
-          setIsSuccess(false);
+          setIsSuccess("Failed");
         }
       } catch (error) {
-        setIsSuccess(false);
+        setIsSuccess("Failed");
       }
     };
 
     approveTask();
   }, [taskId]);
-  if (isSuccess === null) {
+  if (isSuccess === "Pending") {
     return (
       <div className="flex flex-col justify-center items-center h-screen">
         <h1 className="text-white font-bold text-4xl mb-4">
@@ -36,7 +36,7 @@ const ApproveStatusPage = () => {
   }
   return (
     <>
-      {isSuccess ? (
+      {isSuccess === "Success" ? (
         <div className="flex flex-col justify-center items-center h-screen bg-green-900 px-5">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
             <>
