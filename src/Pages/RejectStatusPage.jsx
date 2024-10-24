@@ -4,7 +4,26 @@ import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { CircularProgress } from "@mui/material";
+import CryptoJS from "crypto-js";
 
+const secret = "ae54bdedb30fef052ffcf05adffd3449";
+
+function decrypt(encryptedText) {
+  const parts = encryptedText.split(":");
+  const iv = CryptoJS.enc.Hex.parse(parts[0]);
+  const encrypted = parts[1];
+  const decrypted = CryptoJS.AES.decrypt(
+    encrypted,
+    CryptoJS.enc.Hex.parse(secret),
+    {
+      iv: iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    }
+  );
+
+  return decrypted.toString(CryptoJS.enc.Utf8);
+}
 const RejectStatusPage = () => {
   const { taskId } = useParams();
   const [isSuccess, setIsSuccess] = useState("Pending"); // Initialize to null
@@ -12,7 +31,8 @@ const RejectStatusPage = () => {
   useEffect(() => {
     const rejectTask = async () => {
       try {
-        const res = await TaskManagement.approveStatus(taskId);
+        const decryptedTaskId = decrypt(taskId); // Decrypt the task ID
+        const res = await TaskManagement.rejectStatus(decryptedTaskId); // Use the decrypted ID in your API call
 
         if (res.status === 200 || res.status === 201 || res.data.success) {
           setIsSuccess("Success");
