@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import Home from "../Pages/Home/Home";
+import Tutorials from "../Pages/Tutorials/Tutorials";
 import RegisterPage from "../Pages/auth/registerPage";
 import LoginPage from "../Pages/auth/LoginPage";
 import ScheduleATask from "../Pages/SCHEDULETask/ScheduleATask";
@@ -15,6 +16,9 @@ export const router = createBrowserRouter([
                 element: <Home />
             },
             {
+                path: '/tutorials',
+                element: <Tutorials />
+            },{
                 path: '/ScheduleATask',
                 element: <ScheduleATask />
             },
