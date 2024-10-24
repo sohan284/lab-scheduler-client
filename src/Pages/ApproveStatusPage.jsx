@@ -8,7 +8,6 @@ import { CircularProgress } from "@mui/material";
 const ApproveStatusPage = () => {
   const { taskId } = useParams();
   const [isSuccess, setIsSuccess] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const approveTask = async () => {
@@ -16,26 +15,22 @@ const ApproveStatusPage = () => {
         const res = await TaskManagement.approveStatus(taskId);
         if (res.status === 200) {
           setIsSuccess(true);
-          setLoading(false);
         } else {
           setIsSuccess(false);
-          setLoading(false);
         }
       } catch (error) {
         setIsSuccess(false);
-        setLoading(false);
       }
     };
 
     approveTask();
   }, [taskId]);
-  if (loading) {
+  if (isSuccess === null) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen ">
+      <div className="flex flex-col justify-center items-center h-screen">
         <h1 className="text-white font-bold text-4xl mb-4">
-          <CircularProgress size="100px" />
+          <CircularProgress size="70px" />
         </h1>
-        {/* Optionally, you can add a spinner here */}
       </div>
     );
   }

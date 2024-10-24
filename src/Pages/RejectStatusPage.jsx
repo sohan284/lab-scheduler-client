@@ -7,63 +7,60 @@ import { CircularProgress } from "@mui/material";
 
 const RejectStatusPage = () => {
   const { taskId } = useParams();
-  const [isSuccess, setIsSuccess] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(null); // Initialize to null
+
   useEffect(() => {
     const rejectTask = async () => {
       try {
         const res = await TaskManagement.rejectStatus(taskId);
         if (res.status === 200) {
-          setIsSuccess(true);
-          setLoading(false);
+          setIsSuccess(true); // Set to true if successful
         } else {
-          setIsSuccess(false);
-          setLoading(false);
+          setIsSuccess(false); // Set to false for other statuses
         }
       } catch (error) {
-        setIsSuccess(false);
-        setLoading(false);
+        setIsSuccess(false); // Handle errors by setting to false
       }
     };
 
     rejectTask();
   }, [taskId]);
-  if (loading) {
+
+  // Show loading while isSuccess is null
+  if (isSuccess === null) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen ">
+      <div className="flex flex-col justify-center items-center h-screen">
         <h1 className="text-white font-bold text-4xl mb-4">
-          <CircularProgress size="100px" />
+          <CircularProgress size="70px" />
         </h1>
-        {/* Optionally, you can add a spinner here */}
       </div>
     );
   }
+
+  // Render success or failure message based on isSuccess
   return (
     <>
       {isSuccess ? (
         <div className="flex flex-col justify-center items-center h-screen bg-green-900 px-5">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
-            <>
-              <h1 className="text-green-800 font-bold text-3xl mb-4">
-                Task Approved!
-              </h1>
-              <p className="text-gray-600 mb-6">
-                {" "}
-                You have successfully rejected this task. Thank you!
-              </p>
-              <div className="flex justify-center mb-4">
-                <CheckCircleOutlineIcon
-                  style={{ color: "green", fontSize: "100px" }}
-                />
-              </div>
-            </>
+            <h1 className="text-green-800 font-bold text-3xl mb-4">
+              Task Rejected!
+            </h1>
+            <p className="text-gray-600 mb-6">
+              You have successfully rejected this task. Thank you!
+            </p>
+            <div className="flex justify-center mb-4">
+              <CheckCircleOutlineIcon
+                style={{ color: "green", fontSize: "100px" }}
+              />
+            </div>
           </div>
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-screen bg-red-900 px-5">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
             <h1 className="text-red-800 font-bold text-3xl mb-4">
-              Rejected Failed
+              Rejection Failed
             </h1>
             <p className="text-gray-600 mb-6">
               Task must be Pending to reject.
