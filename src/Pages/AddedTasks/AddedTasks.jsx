@@ -48,7 +48,10 @@ const AddedTasks = () => {
             {tasks.length > 0 ? (
               <div className="   ">
                 {tasks.map((task, index) => (
-                  <div key={index} className="flex justify-between mb-10 border-b-2 border-dashed border-gray-300">
+                  <div
+                    key={index}
+                    className="flex justify-between mb-10 border-b-2 border-dashed border-gray-300"
+                  >
                     <div className="w-1/2">
                       <h1 className="py-4 px-10 font-bold">Task Name</h1>
                       <h1 className="bg-zinc-50 py-4 px-10">Machine</h1>
@@ -76,8 +79,9 @@ const AddedTasks = () => {
                       <p className="py-4 px-10">{task.estimatedTime}</p>
                       <p className="bg-zinc-50 py-4 px-10 font-bold">
                         {task?.startDate
-                          ? `${formatDate(task.startDate)}, ${task.selectedTimeSlots[0]
-                          }`
+                          ? `${formatDate(task.startDate)}, ${
+                              task.selectedTimeSlots[0]
+                            }`
                           : "N/A"}
                       </p>
                     </div>

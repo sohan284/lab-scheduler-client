@@ -81,18 +81,23 @@ const ScheduledTasks = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <p
-                        className={`${task?.approve === "Pending" &&
-                          "bg-purple-600 text-white rounded-xl"
-                          } ${task?.approve === "Approved" &&
+                        className={`text-nowrap px-2 p-0.5 ${
+                          task?.approve === "Pending" &&
+                          "bg-orange-600 text-white rounded-xl"
+                        } ${
+                          task?.approve === "Approved" &&
                           "bg-green-600 text-white rounded-xl"
-                          } ${task?.approve === "Rejected" &&
+                        } ${
+                          task?.approve === "Rejected" &&
                           "bg-red-600 text-white rounded-xl"
-                          }`}
+                        }`}
                       >
                         {" "}
                         {task?.approve === "Pending"
-                          ? "Pending"
-                          : task?.approve}
+                          ? "In Progress"
+                          : task?.approve === "Approved"
+                          ? "Scheduled"
+                          : "Rejected"}
                       </p>
                     </td>
                   </tr>
