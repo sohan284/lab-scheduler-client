@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Loader from "../Loader/Loader";
 import VerifyToken from "../../utils/VerifyToken";
+import baseUrl from "../../api/apiConfig";
 
 const ScheduledTasks = () => {
   const user = VerifyToken();
@@ -9,7 +10,7 @@ const ScheduledTasks = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://lab-scheduler-server.vercel.app/scheduledtasks")
+    fetch(`${baseUrl.scheduledtasks}`)
       .then((res) => res.json())
       .then((data) => {
         const filteredTasks = data.data.filter(

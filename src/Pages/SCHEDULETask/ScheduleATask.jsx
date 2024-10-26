@@ -7,6 +7,7 @@ import VerifyToken from "../../utils/VerifyToken";
 import { Toaster, toast } from "react-hot-toast";
 import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
+import baseUrl from "../../api/apiConfig";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
@@ -180,16 +181,13 @@ const ScheduleATask = () => {
     };
 
     try {
-      const response = await fetch(
-        "https://lab-scheduler-server.vercel.app/scheduledtasks",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${baseUrl.scheduledtasks}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -219,9 +217,7 @@ const ScheduleATask = () => {
   useEffect(() => {
     const fetchScheduledTasks = async () => {
       try {
-        const response = await fetch(
-          "https://lab-scheduler-server.vercel.app/scheduledtasks"
-        );
+        const response = await fetch(`${baseUrl.scheduledtasks}`);
         const data = await response.json();
         const approvedData = data.data.filter(
           (item) => item.approve === "Approved"

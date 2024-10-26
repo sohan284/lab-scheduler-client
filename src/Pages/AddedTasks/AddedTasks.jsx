@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import VerifyToken from "../../utils/VerifyToken";
 import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
+import baseUrl from "../../api/apiConfig";
 
 const AddedTasks = () => {
   const user = VerifyToken();
@@ -10,7 +11,7 @@ const AddedTasks = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://lab-scheduler-server.vercel.app/scheduledtasks")
+    fetch(`${baseUrl.scheduledtasks}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data.data);
