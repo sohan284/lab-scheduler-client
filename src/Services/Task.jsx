@@ -14,10 +14,10 @@ const approveStatus = async (id) => {
 const rejectStatus = async (id) => {
   try {
     const response = await axios.put(`${baseUrl.task}/reject/${id}`);
-    return response.data;
+    return response; // Return the entire response object
   } catch (error) {
     // Handle errors
-    console.error("Error creating the user:", error);
+    console.error("Error rejecting the task:", error);
     throw error;
   }
 };
