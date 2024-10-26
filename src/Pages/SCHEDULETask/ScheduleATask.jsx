@@ -254,10 +254,10 @@ const ScheduleATask = () => {
             </h4>
             <div className="mt-6">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="flex items-center gap-20 lg:px-10">
+                <div className="flex items-center lg:px-10">
                   <label
                     htmlFor="taskName"
-                    className="block p-1 font-medium text-xs min-w-[71px]"
+                    className="block p-1 mr-[39px] font-medium text-[15px] min-w-[71px]"
                   >
                     Task Name
                   </label>
@@ -267,14 +267,14 @@ const ScheduleATask = () => {
                     id="taskName"
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
-                    className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border text-[15px] w-[235px] h-8 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
-                <div className="flex items-center gap-20 lg:px-10 bg-[#FAFAFA] py-5">
+                <div className="flex items-center lg:px-10 bg-[#FAFAFA] py-5">
                   <label
                     htmlFor="course"
-                    className="block p-1 font-medium text-xs min-w-[71px]"
+                    className="block p-1 mr-[57px] font-medium text-[15px] min-w-[71px]"
                   >
                     Course
                   </label>
@@ -284,15 +284,15 @@ const ScheduleATask = () => {
                     id="course"
                     value={course}
                     onChange={(e) => setCourse(e.target.value)}
-                    className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border rounded-md text-[15px] w-[235px] h-8 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
                 <div className="flex flex-col relative w-fit">
-                  <div className="flex items-center gap-20 lg:px-10">
+                  <div className="flex items-center lg:px-10">
                     <label
                       htmlFor="machine"
-                      className="block p-1 font-medium text-xs min-w-[71px]"
+                      className="block p-1 mr-[58px] font-medium text-[15px] min-w-[71px]"
                     >
                       Machine
                     </label>
@@ -317,7 +317,7 @@ const ScheduleATask = () => {
                   <div className="flex items-center gap-5  ">
                     <label
                       htmlFor="duration"
-                      className="block font-medium text-xs px-10"
+                      className="block font-medium text-[15px] px-10"
                     >
                       Duration:
                     </label>
@@ -327,7 +327,7 @@ const ScheduleATask = () => {
                       disabled={isEstimate}
                       value={duration}
                       onChange={(e) => setDuration(e.target.value)}
-                      className="border text-xs border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border text-[15px] border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     >
                       <option value="">Select Duration</option>
@@ -346,7 +346,7 @@ const ScheduleATask = () => {
                   <div className="flex items-center gap-5 bg-[#FAFAFA] ">
                     <label
                       htmlFor="estimatedTime"
-                      className=" flex items-center gap-5 font-medium text-xs px-10"
+                      className=" flex items-center gap-5 font-medium text-[15px] px-10"
                     >
                       Estimate it for me{" "}
                       <input
@@ -358,7 +358,7 @@ const ScheduleATask = () => {
                       />
                     </label>
                     <span
-                      className={`ml-2 text-xs ${
+                      className={`ml-2 text-[15px] ${
                         selectedTimeSlots.length > 0
                           ? "text-blue-600"
                           : "text-gray-500"
@@ -369,7 +369,7 @@ const ScheduleATask = () => {
                   </div>
                 </div>
                 <div className="lg:px-10 pt-6">
-                  <h2 className="text-md text-center lg:text-start font-semibold">
+                  <h2 className="text-[15px] text-center lg:text-start font-semibold">
                     Available Time Slot
                   </h2>
                   <div className="flex flex-col lg:flex-row">
@@ -388,7 +388,7 @@ const ScheduleATask = () => {
                       </div>
                     </div>
                     <div className="flex-1 text-center lg:hidden lg:text-start mb-20 lg:mt-0 font-semibold">
-                      <p className="text-xs">
+                      <p className="text-[15px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
                               year: "numeric",
@@ -398,24 +398,24 @@ const ScheduleATask = () => {
                           : "Date not available"}
                       </p>
                     </div>
-                    <div className="flex-1 flex items-center justify-center relative">
-                      <div className="flex flex-col items-start gap-1 text-xs absolute -top-12 lg:left-16">
-                        <div className="flex gap-2">
-                          <div className="h-4 w-4 bg-gray-400 rounded-md"></div>
-                          <p> Scheduled by others</p>
+                    <div className="flex-1 flex items-center justify-center relative ">
+                      <div className="flex flex-col items-start gap-1 text-[15px] absolute -top-12 lg:left-20">
+                        <div className="flex gap-2 ">
+                          <div className="h-4 w-4 mt-1 bg-gray-400 rounded-md"></div>
+                          <p className="text-[15px]"> Scheduled by others</p>
                         </div>
                         <div className="flex gap-2">
-                          <div className="h-4 w-4 bg-white border border-black rounded-md"></div>
-                          <p> Available time slot</p>
+                          <div className="h-4 w-4 mt-1 bg-white border border-black rounded-md"></div>
+                          <p className="text-[15px]"> Available time slot</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-4 gap-3 place-items-center">
+                      <div className="grid grid-cols-4 gap-3 place-items-center mt-5">
                         {timeSlots.map((slot, index) => {
                           const isDisabled = isSlotBooked(slot);
                           return (
                             <div
                               key={index}
-                              className={`px-2 py-1 text-xs cursor-pointer rounded transition-all duration-200 
+                              className={`px-2 py-1 text-[15px] cursor-pointer rounded transition-all duration-200 
                                                         ${
                                                           selectedTimeSlots.includes(
                                                             slot
@@ -436,7 +436,7 @@ const ScheduleATask = () => {
                       </div>
                     </div>
                     <div className="flex-1 hidden lg:flex text-center lg:text-start mt-5 lg:mt-0 font-semibold">
-                      <p className="text-xs">
+                      <p className="text-[15px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
                               year: "numeric",
@@ -464,7 +464,7 @@ const ScheduleATask = () => {
                 <div className="mt-4 px-10">
                   <button
                     type="submit"
-                    className="bg-[#522C80] text-white px-4 py-2 rounded shadow text-xs hover:bg-[#754da7] transition"
+                    className="bg-[#522C80] text-white px-4 py-2 rounded shadow text-[15px] hover:bg-[#754da7] transition"
                   >
                     SCHEDULE
                   </button>
@@ -473,11 +473,11 @@ const ScheduleATask = () => {
               {/* <div className="mt-4 flex flex-col w-fit gap-5 px-10">
                                 <p className="border-b w-fit">Share</p>
                                 <div className="flex gap-5">
-                                    <p className="ml-10">Type email:</p> <input className="border text-xs w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" />
+                                    <p className="ml-10">Type email:</p> <input className="border text-[15px] w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" />
                                 </div>
                                 <button
                                     type="submit"
-                                    className="bg-[#522C80] text-white px-4 py-2 w-fit rounded shadow text-xs hover:bg-[#754da7] transition"
+                                    className="bg-[#522C80] text-white px-4 py-2 w-fit rounded shadow text-[15px] hover:bg-[#754da7] transition"
                                 >
                                     SHARE
                                 </button>

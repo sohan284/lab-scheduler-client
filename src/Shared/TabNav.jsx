@@ -30,9 +30,13 @@ const TabNav = () => {
               key={tab.path}
               to={tab.path}
               className={({ isActive }) => `
-                w-full sm:w-auto text-xs sm:text-sm text-center
+                w-full sm:w-auto text-[15px] sm:text-sm text-center
                 px-2 sm:px-4 py-2 uppercase font-semibold rounded-md transition-colors duration-200
-                ${isActive ? "text-white bg-orange-500" : "hover:text-gray-700 hover:outline hover:shadow-xl"}
+                ${
+                  isActive
+                    ? "text-white bg-orange-500"
+                    : "hover:text-gray-700 hover:outline hover:shadow-xl"
+                }
               `}
               onClick={() => setIsMenuOpen(false)} // Close menu on click
             >

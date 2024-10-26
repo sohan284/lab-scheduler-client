@@ -32,15 +32,17 @@ const ScheduledTasks = () => {
 
   return (
     <div className="h-screen mx-auto px-4 py-8">
-      <h1 className="md:text-xs font-bold uppercase mb-6">Scheduled Tasks</h1>
+      <h1 className="md:text-[15px] text-xl font-bold uppercase mb-6">
+        Scheduled Tasks
+      </h1>
       <div className="overflow-x-auto px-5">
         {loading ? (
           <div className="">
             <Loader text={"Getting Data"} />
           </div>
         ) : (
-          <table className="w-full text-center border-collapse text-xs">
-            <thead className="text-sm bg-gray-50">
+          <table className="w-full text-center border-collapse text-[15px]">
+            <thead className="text-[15px] bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Task Name
@@ -66,7 +68,7 @@ const ScheduledTasks = () => {
               {/* Render tasks only for the current user */}
               {tasks.length > 0 ? (
                 tasks.map((task) => (
-                  <tr key={task?._id} className="bg-white border-b text-xs">
+                  <tr key={task?._id} className="bg-white border-b text-[15px]">
                     <td className="px-6 py-4 text-left">{task?.taskName}</td>
                     <td className="px-6 py-4 text-left">
                       {task?.selectedMachine?.join(", ")}

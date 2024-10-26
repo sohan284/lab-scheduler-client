@@ -40,7 +40,7 @@ const AddedTasks = () => {
   return (
     <>
       <TabNav />
-      <div className="px-4 py-10 text-xs">
+      <div className="px-4 py-10 text-[15px]">
         <h1 className="text-xl  font-bold uppercase mb-6">Scheduled Tasks</h1>
         {loading ? (
           <Loader text={"Collecting Your Data"} />
@@ -53,15 +53,37 @@ const AddedTasks = () => {
                     key={index}
                     className="flex justify-between mb-10 border-b-2 border-dashed border-gray-300"
                   >
-                    <div className="w-1/2">
-                      <h1 className="py-4 px-10 font-bold">Task Name</h1>
-                      <h1 className="bg-zinc-50 py-4 px-10">Machine</h1>
-                      <h1 className="py-4 px-10">
-                        Estimated time required to finish the task
-                      </h1>
-                      <h1 className="bg-zinc-50 py-4 px-10 font-bold">
-                        Scheduled time slot
-                      </h1>
+                    <div className="">
+                      <div className="grid grid-cols-2">
+                        <h1 className="py-4 px-10 font-bold">Task Name</h1>
+                        <p className="py-4 px-10">{task.taskName}</p>
+                      </div>
+                      <div className="grid bg-zinc-50 grid-cols-2">
+                        <h1 className="py-4 px-10 font-bold">Machine</h1>
+                        <p className="py-4 px-10">
+                          {" "}
+                          {task.selectedMachine.join(", ")}
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-2">
+                        <h1 className="py-4 px-10 font-bold">
+                          Estimated time required to finish the task
+                        </h1>
+                        <p className="py-4 px-10"> {task.estimatedTime}</p>
+                      </div>
+                      <div className="grid bg-zinc-50 grid-cols-2">
+                        <h1 className="py-4 px-10 font-bold">
+                          Scheduled time slot
+                        </h1>
+                        <p className="py-4 px-10">
+                          {" "}
+                          {task?.startDate
+                            ? `${formatDate(task.startDate)}, ${
+                                task.selectedTimeSlots[0]
+                              }`
+                            : "N/A"}
+                        </p>
+                      </div>
                       <h1 className="py-4 px-10">
                         This machine requires faculty permission/availability.
                       </h1>
@@ -71,20 +93,6 @@ const AddedTasks = () => {
                       <button className="block py-4 px-10 underline underline-offset-4">
                         Share
                       </button>
-                    </div>
-                    <div className="w-1/2">
-                      <p className="py-4 px-10">{task.taskName}</p>
-                      <p className="bg-zinc-50 py-4 px-10">
-                        {task.selectedMachine.join(", ")}
-                      </p>
-                      <p className="py-4 px-10">{task.estimatedTime}</p>
-                      <p className="bg-zinc-50 py-4 px-10 font-bold">
-                        {task?.startDate
-                          ? `${formatDate(task.startDate)}, ${
-                              task.selectedTimeSlots[0]
-                            }`
-                          : "N/A"}
-                      </p>
                     </div>
                   </div>
                 ))}
