@@ -12,7 +12,7 @@ const RejectStatusPage = () => {
   useEffect(() => {
     const rejectTask = async () => {
       try {
-        const res = await TaskManagement.approveStatus(taskId);
+        const res = await TaskManagement.rejectStatus(taskId);
 
         if (res.status === 200 || res.status === 201 || res.data.success) {
           setIsSuccess("Success");
