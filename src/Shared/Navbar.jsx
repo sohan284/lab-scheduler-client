@@ -78,7 +78,7 @@ const Navbar = () => {
       </Dialog>
 
       {user?.username ? (
-        <div className="flex flex-col-reverse lg:flex-row gap-3 lg:gap-5 items-center">
+        <div className="flex flex-col lg:flex-row gap-3 lg:gap-5 items-center">
           <button
             onClick={handleClickOpen}
             className="font-medium flex items-center gap-3 border border-white p-1 text-[#999999] hover:bg-zinc-50 text-nowrap hover:border hover:border-zinc-100 text-[15px] duration-500 ease-in-out rounded"

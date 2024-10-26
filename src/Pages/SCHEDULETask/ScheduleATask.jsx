@@ -268,17 +268,18 @@ const ScheduleATask = () => {
                   <input
                     type="text"
                     name="taskName"
+                    placeholder="Enter Task Name"
                     id="taskName"
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
-                    className="border text-[15px] w-[235px] h-8 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border text-[15px] w-[235px] h-8 p-1 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
                 <div className="flex items-center lg:px-10 bg-[#FAFAFA] py-5">
                   <label
                     htmlFor="course"
-                    className="block p-1 mr-[57px] font-medium text-[15px] min-w-[71px]"
+                    className="block p-1 mr-[54px] font-medium text-[15px] min-w-[71px]"
                   >
                     Course
                   </label>
@@ -286,9 +287,10 @@ const ScheduleATask = () => {
                     type="text"
                     name="course"
                     id="course"
+                    placeholder="Enter Course"
                     value={course}
                     onChange={(e) => setCourse(e.target.value)}
-                    className="border rounded-md text-[15px] w-[235px] h-8 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border rounded-md text-[15px] w-[235px] p-1 h-8 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -296,7 +298,7 @@ const ScheduleATask = () => {
                   <div className="flex items-center lg:px-10">
                     <label
                       htmlFor="machine"
-                      className="block p-1 mr-[58px] font-medium text-[15px] min-w-[71px]"
+                      className="block p-1 mr-[54px] font-medium text-[15px] min-w-[71px]"
                     >
                       Machine
                     </label>
@@ -420,7 +422,7 @@ const ScheduleATask = () => {
                           return (
                             <div
                               key={index}
-                              className={`px-2 py-1 text-[15px] cursor-pointer rounded transition-all duration-200 
+                              className={`px-2 py-1 text-[14px] cursor-pointer rounded transition-all duration-200 
                                                         ${
                                                           selectedTimeSlots.includes(
                                                             slot
@@ -454,14 +456,14 @@ const ScheduleATask = () => {
                   </div>
                 </div>
                 <div className="">
-                  <div className="flex items-center gap-4 bg-[#F2F4F6] px-10 py-5">
+                  <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
                     <p>
                       This machine requires faculty permission/availability.{" "}
                       <br /> Send for approval?
                     </p>
                     <input required type="checkbox" />
                   </div>
-                  <div className="flex items-center gap-4 px-10 py-5">
+                  <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
                     <input type="checkbox" />
                   </div>
