@@ -13,21 +13,14 @@ const ScheduleATask = () => {
   const user = VerifyToken();
   const taskCratedBy = user?.username;
 
-  const OPTIONS = [
-    "Hp Indigo",
-    "Ryobi 3304HA Offset printer",
-    "Nilpeter FA LINE",
-    "Comco Captain Flexo",
-    "Other",
-  ];
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
   const [course, setCourse] = useState("");
   const [email, setEmail] = useState("");
   const [selectedMachine, setSelectedMachine] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState([]);
   const [scheduledTasks, setScheduledTasks] = useState([]);
-  const filteredOptions = OPTIONS.filter((o) => !selectedMachine.includes(o));
   const [duration, setDuration] = useState("30 minutes");
   const [Loading, setLoading] = useState(false);
   const [isEstimate, setIsEstimate] = useState(false);
@@ -76,7 +69,56 @@ const ScheduleATask = () => {
     "18:45",
     "19:00",
   ];
+  const mechines = [
+    "Bosslaser",
+    "Polar78 cutter",
+    "Konica Minolta digital press",
+    "Protopic III-540 Sleeking unit",
+    "Aerocut",
+    "1800S Auto Air Suction Paper Folder",
+    "HP Indigo",
+    "Ryobi 3304HA Offset printer",
+    "Fastbind book binder",
+    "Uperpad padding press",
+    "Pad press",
+    "Casematic XT Paper edge cutter",
+    "Duralam integra",
+    "Rotatrim Professional M42",
+    "Epson SureColor P7570 SpectroProofer",
+    "Mimaki CG-130SR III Cutting Plotter",
+    "Mimaki JV150-160",
+    "Mimaki UJF-6042 MKII Dye Sub",
+    "Nordson UV Curing",
+    "Mimaki CFL-605RT",
+    "Kompac EZ Koat 20",
+    "Comco Captain Flexo Press",
+    "Nilpeter FA LINE Flexo Press",
+    "jmheaford Mounting & Proofing Solutions",
+    "Esko CDI Spark 2530",
+    "DU PONT Cyrel FAST Image processor",
+    "DU PONT Cyrel FAST post processor",
+    "IDEAL 1038 Cutter",
+    "Ricoh Pro C651EX",
+    "Triumph 5260 VRCUT",
+    "Mimaki UJF-6042 UV Printer",
+    "Riso Goccopro QS2536",
+    "DragonAir",
+    "Sohn 4400 Rotary Die Cutting and Label Printing Machine",
+    "Orbital X",
+    "Kodak Flexcel NX Laminator",
+    "Trendsetter NX Mid Squarespot image processor",
+    "Ryobi RP520-220F plate cutter",
+    "Other",
+  ];
 
+  const courses = [
+    "GC 1041",
+    "GC 2071",
+    "GC 3401",
+    "GC 3461",
+    "GC 4061",
+    "GC 4401",
+  ];
   const durationMapping = {
     "15 minutes": 1,
     "30 minutes": 2,
@@ -86,8 +128,10 @@ const ScheduleATask = () => {
     "3 hours": 12,
     "4 hours": 16,
     "5 hours": 20,
+    "6 hours": 24,
   };
-
+  const filteredOptions = mechines.filter((o) => !selectedMachine.includes(o));
+  const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
       "15 minutes": "00:15",
@@ -98,6 +142,7 @@ const ScheduleATask = () => {
       "3 hours": "03:00",
       "4 hours": "04:00",
       "5 hours": "05:00",
+      "6 hours": "06:00",
     };
     return durationFormatMapping[duration] || "00:00";
   };
@@ -157,8 +202,8 @@ const ScheduleATask = () => {
     e.preventDefault();
     if (
       !taskName ||
-      !course ||
       !duration ||
+      selectedCourse.length === 0 ||
       selectedTimeSlots.length === 0 ||
       selectedMachine.length === 0
     ) {
@@ -171,7 +216,7 @@ const ScheduleATask = () => {
 
     const formData = {
       taskName,
-      course,
+      selectedCourse,
       startDate: startDate.toISOString(),
       selectedTimeSlots: selectedTimeSlots.length > 0 ? selectedTimeSlots : [],
       selectedMachine,
@@ -201,7 +246,7 @@ const ScheduleATask = () => {
       );
 
       setTaskName("");
-      setCourse("");
+      setSelectedCourse("");
       setEmail("");
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
@@ -276,23 +321,30 @@ const ScheduleATask = () => {
                     required
                   />
                 </div>
-                <div className="flex items-center lg:px-10 bg-[#FAFAFA] py-5">
-                  <label
-                    htmlFor="course"
-                    className="block p-1 mr-[54px] font-medium text-[15px] min-w-[71px]"
-                  >
-                    Course
-                  </label>
-                  <input
-                    type="text"
-                    name="course"
-                    id="course"
-                    placeholder="Enter Course"
-                    value={course}
-                    onChange={(e) => setCourse(e.target.value)}
-                    className="border rounded-md text-[15px] w-[235px] p-1 h-8 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
+                <div className="flex flex-col relative w-fit">
+                  <div className="flex items-center lg:px-10">
+                    <label
+                      htmlFor="course"
+                      className="block p-1 mr-[54px] font-medium text-[15px] min-w-[71px]"
+                    >
+                      Course
+                    </label>
+                    <Select
+                      mode="multiple"
+                      placeholder="Please select Course"
+                      value={selectedCourse}
+                      onChange={setSelectedCourse}
+                      style={{
+                        width: "235px",
+                        borderColor:
+                          selectedCourse.length === 0 ? "red" : undefined,
+                      }}
+                      options={filteredCourse.map((item) => ({
+                        value: item,
+                        label: item,
+                      }))}
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-col relative w-fit">
                   <div className="flex items-center lg:px-10">
@@ -347,6 +399,7 @@ const ScheduleATask = () => {
                       <option value="3 hours">3 hours</option>
                       <option value="4 hours">4 hours</option>
                       <option value="5 hours">5 hours</option>
+                      <option value="6 hours">6 hours</option>
                     </select>
                   </div>
                   <div className="flex items-center gap-5 bg-[#FAFAFA] ">
@@ -358,7 +411,6 @@ const ScheduleATask = () => {
                       <input
                         onClick={(e) => handleEstimate(e)}
                         type="checkbox"
-                        required
                         name=""
                         id=""
                       />
