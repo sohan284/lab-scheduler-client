@@ -239,6 +239,10 @@ const ScheduleATask = () => {
       setIsEstimate(false);
     }
   };
+  const isWeekday = (date) => {
+    const day = date.getDay();
+    return day !== 0 && day !== 6;
+  };
   return (
     <>
       <TabNav />
@@ -383,6 +387,7 @@ const ScheduleATask = () => {
                           onChange={(date) => setStartDate(date)}
                           inline
                           minDate={new Date()}
+                          filterDate={isWeekday}
                           className="border-gray-300 rounded"
                         />
                       </div>
