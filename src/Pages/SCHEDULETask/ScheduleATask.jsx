@@ -13,11 +13,10 @@ const ScheduleATask = () => {
   const taskCratedBy = user?.username;
 
   const OPTIONS = [
-    "Nilpeter Press",
-    "Comco Press",
-    "Sohn flexo machine",
-    "New Press 2",
-    "Nilpeter Press 3",
+    "Hp Indigo",
+    "Ryobi 3304HA Offset printer",
+    "Nilpeter FA LINE",
+    "Comco Captain Flexo",
   ];
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);

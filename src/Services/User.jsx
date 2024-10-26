@@ -7,11 +7,10 @@ const upsertUser = async (userData) => {
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 409) {
-      // Custom handling for status code 409 (Conflict)
       return { success: false, message: "Username already exists." };
     }
     console.error("Error creating the user:", error);
-    throw error; // re-throw the error to catch other errors elsewhere
+    throw error;
   }
 };
 
@@ -30,10 +29,20 @@ const loginUser = async (username, password) => {
     throw error;
   }
 };
+const removeAccount = async (username) => {
+  try {
+    const response = await axios.delete(`${baseUrl.users}/${username}`);
+    return response.data;
+  } catch (error) {
+    console.error("Account Removed:", error);
+    throw error;
+  }
+};
 
 const UserManagement = {
   upsertUser,
   loginUser,
+  removeAccount,
 };
 
 // Export the object
