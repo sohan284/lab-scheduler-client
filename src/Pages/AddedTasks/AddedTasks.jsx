@@ -41,7 +41,7 @@ const AddedTasks = () => {
     <>
       <TabNav />
       <div className="px-4 py-10 text-xs">
-        <h1 className="  font-bold uppercase mb-6">Scheduled Tasks</h1>
+        <h1 className="text-xl  font-bold uppercase mb-6">Scheduled Tasks</h1>
         {loading ? (
           <Loader text={"Collecting Your Data"} />
         ) : (
@@ -60,14 +60,14 @@ const AddedTasks = () => {
                         Estimated time required to finish the task
                       </h1>
                       <h1 className="bg-zinc-50 py-4 px-10 font-bold">
-                        Available time slot
+                        Scheduled time slot
                       </h1>
                       <h1 className="py-4 px-10">
                         This machine requires faculty permission/availability.
                       </h1>
-                      <button className="py-4 px-10 underline underline-offset-4">
+                      {/* <button className="py-4 px-10 underline underline-offset-4">
                         Tutorial
-                      </button>
+                      </button> */}
                       <button className="block py-4 px-10 underline underline-offset-4">
                         Share
                       </button>

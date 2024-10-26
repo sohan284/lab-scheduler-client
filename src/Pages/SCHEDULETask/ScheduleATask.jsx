@@ -18,6 +18,7 @@ const ScheduleATask = () => {
     "Ryobi 3304HA Offset printer",
     "Nilpeter FA LINE",
     "Comco Captain Flexo",
+    "Other",
   ];
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
@@ -29,7 +30,7 @@ const ScheduleATask = () => {
   const filteredOptions = OPTIONS.filter((o) => !selectedMachine.includes(o));
   const [duration, setDuration] = useState("30 minutes");
   const [Loading, setLoading] = useState(false);
-
+  const [isEstimate, setIsEstimate] = useState(false);
   const timeSlots = [
     "08:30",
     "08:45",
@@ -230,7 +231,14 @@ const ScheduleATask = () => {
 
     fetchScheduledTasks();
   }, []);
-
+  const handleEstimate = (e) => {
+    if (e.target.checked) {
+      setDuration("30 minutes");
+      setIsEstimate(true);
+    } else {
+      setIsEstimate(false);
+    }
+  };
   return (
     <>
       <TabNav />
@@ -316,6 +324,7 @@ const ScheduleATask = () => {
                     <select
                       name="duration"
                       id="duration"
+                      disabled={isEstimate}
                       value={duration}
                       onChange={(e) => setDuration(e.target.value)}
                       className="border text-xs border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -340,7 +349,13 @@ const ScheduleATask = () => {
                       className=" flex items-center gap-5 font-medium text-xs px-10"
                     >
                       Estimate it for me{" "}
-                      <input type="checkbox" required name="" id="" />
+                      <input
+                        onClick={(e) => handleEstimate(e)}
+                        type="checkbox"
+                        required
+                        name=""
+                        id=""
+                      />
                     </label>
                     <span
                       className={`ml-2 text-xs ${
@@ -361,7 +376,7 @@ const ScheduleATask = () => {
                     <div className="flex justify-center">
                       <div
                         className="max-w-[350px] border-gray-300
-                     rounded p-4 mt-2 mb-14"
+                     rounded p-4 mt-2 mb-5"
                       >
                         <DatePicker
                           selected={startDate}
@@ -371,6 +386,17 @@ const ScheduleATask = () => {
                           className="border-gray-300 rounded"
                         />
                       </div>
+                    </div>
+                    <div className="flex-1 text-center lg:hidden lg:text-start mb-20 lg:mt-0 font-semibold">
+                      <p className="text-xs">
+                        {startDate
+                          ? startDate.toLocaleDateString(undefined, {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
+                          : "Date not available"}
+                      </p>
                     </div>
                     <div className="flex-1 flex items-center justify-center relative">
                       <div className="flex flex-col items-start gap-1 text-xs absolute -top-12 lg:left-16">
@@ -409,7 +435,7 @@ const ScheduleATask = () => {
                         })}
                       </div>
                     </div>
-                    <div className="flex-1 text-center lg:text-start mt-5 lg:mt-0 font-semibold">
+                    <div className="flex-1 hidden lg:flex text-center lg:text-start mt-5 lg:mt-0 font-semibold">
                       <p className="text-xs">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {

@@ -39,25 +39,25 @@ const ScheduledTasks = () => {
             <Loader text={"Getting Data"} />
           </div>
         ) : (
-          <table className="w-full border-collapse text-xs">
+          <table className="w-full text-center border-collapse text-xs">
             <thead className="text-sm bg-gray-50">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left">
+                <th scope="col" className="px-6 py-3">
                   Task Name
                 </th>
-                <th scope="col" className="px-6 py-3 text-left">
+                <th scope="col" className="px-6 py-3">
                   Machine
                 </th>
-                <th scope="col" className="px-6 py-3 text-left">
+                <th scope="col" className="px-6 py-3">
                   Estimated time of completion
                 </th>
-                <th scope="col" className="px-6 py-3 text-left">
+                <th scope="col" className="px-6 py-3">
                   Scheduled date
                 </th>
-                <th scope="col" className="px-6 py-3 text-left">
+                <th scope="col" className="px-6 py-3">
                   Scheduled time
                 </th>
-                <th scope="col" className="px-6 py-3 text-left">
+                <th scope="col" className="px-6 py-3">
                   Status
                 </th>
               </tr>
