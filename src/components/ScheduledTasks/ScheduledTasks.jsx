@@ -1,63 +1,123 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import Loader from "../Loader/Loader";
+import VerifyToken from "../../utils/VerifyToken";
+import baseUrl from "../../api/apiConfig";
 
 const ScheduledTasks = () => {
-    const tasks = [
-        { id: 1, name: 'Screen printing', machine: '-', estimatedTime: '2 hours', scheduledDate: 'October 20, 2024', scheduledTime: '13:00' },
-        { id: 2, name: 'Flexo Printing', machine: 'Nilpeter Press', estimatedTime: '2 hours', scheduledDate: 'October 22, 2024', scheduledTime: '14:00' },
-        { id: 3, name: 'Flexo printing', machine: 'Comco Press', estimatedTime: '2 hours', scheduledDate: 'October 22, 2024', scheduledTime: '10:00' },
-    ];
+  const user = VerifyToken();
+  const taskCreatedBy = user?.username;
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    return (
-        <div className="h-screen mx-auto px-4 py-8">
-            <h1 className='md:text-xl font-bold uppercase mb-6 '>Scheduled Tasks</h1>
-            <div className="overflow-x-auto px-5">
-                <table className="w-full border-collapse">
-                    <thead className="text-sm bg-gray-50">
-                        <tr>
-                            <th scope="col" className="px-6 py-3 text-left">
-                                Task Name
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left">
-                                Machine
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left">
-                                Estimated time of completion
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left">
-                                Scheduled date
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left">
-                                Scheduled time
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            tasks.map(task => (
-                                <tr key={task.id} className="bg-white border-b">
-                                    <td className="px-6 py-4">
-                                        {task.name}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {task.machine}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {task.estimatedTime}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {task.scheduledDate}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {task.scheduledTime}
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
+  useEffect(() => {
+    fetch(`${baseUrl.scheduledtasks}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filteredTasks = data.data.filter(
+          (task) => task?.taskCratedBy === taskCreatedBy
+        );
+        setTasks(filteredTasks);
+        setLoading(false);
+      });
+  }, [taskCreatedBy]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  return (
+    <div className="h-screen mx-auto px-4 py-8">
+      <h1 className="md:text-[15px] text-xl font-bold uppercase mb-6">
+        Scheduled Tasks
+      </h1>
+      <div className="overflow-x-auto px-5">
+        {loading ? (
+          <div className="">
+            <Loader text={"Getting Data"} />
+          </div>
+        ) : (
+          <table className="w-full text-center border-collapse text-[15px]">
+            <thead className="text-[15px] bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Task Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Machine
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Estimated time of completion
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Scheduled date
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Scheduled time
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Render tasks only for the current user */}
+              {tasks.length > 0 ? (
+                tasks.map((task) => (
+                  <tr key={task?._id} className="bg-white border-b text-[15px]">
+                    <td className="px-6 py-4 text-left">{task?.taskName}</td>
+                    <td className="px-6 py-4 text-left">
+                      {task?.selectedMachine?.join(", ")}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {task?.estimatedTime || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {task?.startDate ? formatDate(task.startDate) : "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {task?.selectedTimeSlots[0]}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <p
+                        className={`text-nowrap px-2 p-0.5 ${
+                          task?.approve === "Pending" &&
+                          "bg-red-600 text-white rounded-xl"
+                        } ${
+                          task?.approve === "Approved" &&
+                          "bg-green-600 text-white rounded-xl"
+                        } ${
+                          task?.approve === "Rejected" &&
+                          "bg-pink-600 text-white rounded-xl"
+                        }`}
+                      >
+                        {" "}
+                        {task?.approve === "Pending"
+                          ? "In Progress"
+                          : task?.approve === "Approved"
+                          ? "Scheduled"
+                          : "Rejected"}
+                      </p>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center px-6 py-4">
+                    No tasks available for {taskCreatedBy}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ScheduledTasks;
