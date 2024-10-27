@@ -2,14 +2,33 @@ import { Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import UserManagement from "../../Services/User";
+import { Visibility, VisibilityOff } from "@mui/icons-material"; // Import icons
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
   const navigate = useNavigate();
 
+  // Validation function
+  const validateForm = () => {
+    if (!username) {
+      setErrorMsg("Username cannot be empty.");
+      return false;
+    }
+
+    if (!password) {
+      setErrorMsg("Password cannot be empty.");
+      return false;
+    }
+
+    return true; // Return true if all validations pass
+  };
+
   const handleLogin = async () => {
+    if (!validateForm()) return; // Stop if form is invalid
+
     const userEmail = username.includes("@g.clemson.edu")
       ? username
       : `${username}@g.clemson.edu`;
@@ -18,10 +37,14 @@ const LoginPage = () => {
 
     try {
       const response = await UserManagement.loginUser(userEmail, password);
-
       if (response && response.token) {
         localStorage.setItem("token", response.token);
-        navigate("/");
+        console.log(response);
+
+        if (response.message === "Login successful") {
+          navigate("/");
+          window.location.reload();
+        }
       } else {
         setErrorMsg("Invalid username or password.");
       }
@@ -46,7 +69,7 @@ const LoginPage = () => {
         </p>
         <div className="lg:ml-24 max-w-[300px] lg:max-w-full">
           <div className="flex items-center mb-[6px]">
-            <h1 className="uppercase text-nowrap font-medium text-[14px] mr-[20px]">
+            <h1 className="uppercase text-nowrap font-medium text-[15px] mr-[20px]">
               User Name
             </h1>
             <TextField
@@ -63,17 +86,17 @@ const LoginPage = () => {
               }}
               className="text-sm"
             />
-            <h1 className=" text-nowrap font-medium text-[14px] ml-[10px]">
+            <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
               @g.clemson.edu
             </h1>
           </div>
-          <div className="flex items-center">
-            <h1 className="uppercase text-nowrap font-medium text-[14px] mr-[20px]">
+          <div className="flex items-center mb-4">
+            <h1 className="uppercase text-nowrap font-medium text-[15px] mr-[20px]">
               Password
             </h1>
             <TextField
               size="small"
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -85,11 +108,29 @@ const LoginPage = () => {
                 },
               }}
               className="text-sm"
+              InputProps={{
+                endAdornment: (
+                  <Button
+                    onClick={() => setShowPassword(!showPassword)} // Toggle function
+                    style={{
+                      padding: 0,
+                      backgroundColor: "transparent",
+                      color: "#522C80",
+                      minWidth: "0", // Ensure no default width
+                    }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}{" "}
+                    {/* Show/Hide icon */}
+                  </Button>
+                ),
+              }}
             />
           </div>
         </div>
         {errorMsg && (
-          <p className="text-center mt-3 text-red-600 text-xs">{errorMsg}</p>
+          <p className="text-center mt-3 text-red-600 text-[15px]">
+            {errorMsg}
+          </p>
         )}
         <div className="flex justify-center text-center">
           <div>
@@ -102,7 +143,6 @@ const LoginPage = () => {
                 paddingInline: 20,
                 color: "white",
               }}
-              className=""
               onClick={handleLogin}
             >
               Login
