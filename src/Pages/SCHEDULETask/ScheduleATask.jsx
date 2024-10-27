@@ -243,9 +243,8 @@ const ScheduleATask = () => {
       toast.success(
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
-
       setTaskName("");
-      setSelectedCourse("");
+      setSelectedCourse([]);
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
       setSendApproval(false);
