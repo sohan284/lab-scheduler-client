@@ -6,11 +6,14 @@ const upsertUser = async (userData) => {
     const response = await axios.post(`${baseUrl.users}`, userData);
     return response.data;
   } catch (error) {
-    // Handle errors
+    if (error.response && error.response.status === 409) {
+      return { success: false, message: "Username already exists." };
+    }
     console.error("Error creating the user:", error);
     throw error;
   }
 };
+
 const loginUser = async (username, password) => {
   try {
     const response = await axios.post(`${baseUrl.login}`, {
@@ -26,10 +29,20 @@ const loginUser = async (username, password) => {
     throw error;
   }
 };
+const removeAccount = async (username) => {
+  try {
+    const response = await axios.delete(`${baseUrl.users}/${username}`);
+    return response.data;
+  } catch (error) {
+    console.error("Account Removed:", error);
+    throw error;
+  }
+};
 
 const UserManagement = {
   upsertUser,
   loginUser,
+  removeAccount,
 };
 
 // Export the object
