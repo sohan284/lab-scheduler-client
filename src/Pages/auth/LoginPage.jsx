@@ -29,9 +29,12 @@ const LoginPage = () => {
   const handleLogin = async () => {
     if (!validateForm()) return; // Stop if form is invalid
 
-    const userEmail = username.includes("@g.clemson.edu")
+    // const userEmail = username.includes("@g.clemson.edu")
+    //   ? username
+    //   : `${username}@g.clemson.edu`;
+    const userEmail = username.includes("@gmail.com")
       ? username
-      : `${username}@g.clemson.edu`;
+      : `${username}@gmail.com`;
 
     setErrorMsg(null);
 

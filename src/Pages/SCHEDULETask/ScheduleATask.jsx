@@ -247,6 +247,7 @@ const ScheduleATask = () => {
       setSelectedCourse([]);
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
+      setIsEstimate(false);
       setSendApproval(false);
       setStartDate(new Date());
       setDuration("30 minutes");
