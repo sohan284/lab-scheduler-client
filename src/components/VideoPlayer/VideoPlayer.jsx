@@ -11,7 +11,7 @@ import {
   Settings,
 } from "lucide-react";
 
-const AdvancedVideoPlayer = () => {
+const VideoPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -242,4 +242,4 @@ const AdvancedVideoPlayer = () => {
   );
 };
 
-export default AdvancedVideoPlayer;
+export default VideoPlayer;
