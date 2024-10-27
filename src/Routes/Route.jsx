@@ -7,6 +7,7 @@ import LoginPage from "../Pages/auth/LoginPage";
 import ScheduleATask from "../Pages/SCHEDULETask/ScheduleATask";
 import ProtectedRoute from "./ProtectedRoute";
 import AddedTasks from "../Pages/AddedTasks/AddedTasks";
+import VideoUpload from "../components/VideoUpload/VideoUpload";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/upload",
+        element: <VideoUpload />,
       },
     ],
   },
