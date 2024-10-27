@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./styles.css";
@@ -16,14 +16,13 @@ const ScheduleATask = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
-  const [course, setCourse] = useState("");
-  const [email, setEmail] = useState("");
   const [selectedMachine, setSelectedMachine] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState([]);
   const [scheduledTasks, setScheduledTasks] = useState([]);
   const [duration, setDuration] = useState("30 minutes");
   const [Loading, setLoading] = useState(false);
   const [isEstimate, setIsEstimate] = useState(false);
+  const [sendApproval, setSendApproval] = useState(false);
   const timeSlots = [
     "08:30",
     "08:45",
@@ -120,15 +119,15 @@ const ScheduleATask = () => {
     "GC 4401",
   ];
   const durationMapping = {
-    "15 minutes": 1,
-    "30 minutes": 2,
-    "45 minutes": 3,
-    "1 hour": 4,
-    "2 hours": 8,
-    "3 hours": 12,
-    "4 hours": 16,
-    "5 hours": 20,
-    "6 hours": 24,
+    "15 minutes": 2,
+    "30 minutes": 3,
+    "45 minutes": 4,
+    "1 hour": 5,
+    "2 hours": 9,
+    "3 hours": 13,
+    "4 hours": 17,
+    "5 hours": 21,
+    "6 hours": 25,
   };
   const filteredOptions = mechines.filter((o) => !selectedMachine.includes(o));
   const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
@@ -220,10 +219,10 @@ const ScheduleATask = () => {
       startDate: startDate.toISOString(),
       selectedTimeSlots: selectedTimeSlots.length > 0 ? selectedTimeSlots : [],
       selectedMachine,
-      email,
       estimatedTime: duration,
       approve: "Pending",
-      taskCratedBy: taskCratedBy,
+      taskCratedBy,
+      sendApproval,
     };
 
     try {
@@ -247,9 +246,9 @@ const ScheduleATask = () => {
 
       setTaskName("");
       setSelectedCourse("");
-      setEmail("");
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
+      setSendApproval(false);
       setStartDate(new Date());
       setDuration("30 minutes");
     } catch (error) {
@@ -279,15 +278,24 @@ const ScheduleATask = () => {
   const handleEstimate = (e) => {
     if (e.target.checked) {
       setDuration("30 minutes");
+      setSelectedTimeSlots([]);
       setIsEstimate(true);
     } else {
       setIsEstimate(false);
+    }
+  };
+  const handleSendApproval = (e) => {
+    if (e.target.checked) {
+      setSendApproval(true);
+    } else {
+      setSendApproval(false);
     }
   };
   const isWeekday = (date) => {
     const day = date.getDay();
     return day !== 0 && day !== 6;
   };
+
   return (
     <>
       <TabNav />
@@ -384,7 +392,9 @@ const ScheduleATask = () => {
                       id="duration"
                       disabled={isEstimate}
                       value={duration}
-                      onChange={(e) => setDuration(e.target.value)}
+                      onChange={(e) => {
+                        setDuration(e.target.value), setSelectedTimeSlots([]);
+                      }}
                       className="border text-[15px] border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     >
@@ -513,7 +523,12 @@ const ScheduleATask = () => {
                       This machine requires faculty permission/availability.{" "}
                       <br /> Send for approval?
                     </p>
-                    <input required type="checkbox" />
+                    <input
+                      disabled={!selectedMachine.includes("HP Indigo")}
+                      required={selectedMachine.includes("HP Indigo")}
+                      onClick={(e) => handleSendApproval(e)}
+                      type="checkbox"
+                    />
                   </div>
                   <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
