@@ -5,21 +5,18 @@ import baseUrl from "../../api/apiConfig";
 
 const ScheduledTasks = () => {
   const user = VerifyToken();
-  const taskCreatedBy = user?.username;
+  const createdBy = user?.username;
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${baseUrl.scheduledtasks}`)
+    fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`)
       .then((res) => res.json())
       .then((data) => {
-        const filteredTasks = data.data.filter(
-          (task) => task?.taskCratedBy === taskCreatedBy
-        );
-        setTasks(filteredTasks);
+        setTasks(data.data);
         setLoading(false);
       });
-  }, [taskCreatedBy]);
+  }, [createdBy]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -86,13 +83,13 @@ const ScheduledTasks = () => {
                       <p
                         className={`text-nowrap px-2 p-0.5 ${
                           task?.approve === "Pending" &&
-                          "bg-orange-600 text-white rounded-xl"
+                          "bg-red-600 text-white rounded-xl"
                         } ${
                           task?.approve === "Approved" &&
                           "bg-green-600 text-white rounded-xl"
                         } ${
                           task?.approve === "Rejected" &&
-                          "bg-red-600 text-white rounded-xl"
+                          "bg-pink-600 text-white rounded-xl"
                         }`}
                       >
                         {" "}
@@ -108,7 +105,7 @@ const ScheduledTasks = () => {
               ) : (
                 <tr>
                   <td colSpan="5" className="text-center px-6 py-4">
-                    No tasks available for {taskCreatedBy}
+                    No tasks available for {createdBy}
                   </td>
                 </tr>
               )}
