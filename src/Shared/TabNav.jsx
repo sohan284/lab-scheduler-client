@@ -17,13 +17,13 @@ const TabNav = () => {
   };
 
   return (
-    <nav className="max-w-[1200px] mx-auto px-4 py-2  mt-7">
+    <nav className="max-w-[1200px] mx-auto px-4 py-2 mt-7">
       <div className="sm:hidden flex justify-end mb-4">
         <button onClick={toggleMenu} className="text-gray-500">
           {isMenuOpen ? <IoClose size={24} /> : <FaBars size={24} />}
         </button>
       </div>
-      <div className={`${isMenuOpen ? "block" : "hidden"} sm:block`}>
+      <div className={`${isMenuOpen ? "block" : "hidden"} sm:block md:mx-20`}>
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
           {tabs.map((tab) => (
             <NavLink
