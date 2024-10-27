@@ -10,7 +10,7 @@ const AddedTasks = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://lab-scheduler-server.vercel.app/scheduledtasks")
+    fetch("http://localhost:5000/scheduledtasks")
       .then((res) => res.json())
       .then((data) => {
         console.log(data.data);

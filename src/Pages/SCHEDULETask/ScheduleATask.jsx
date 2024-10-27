@@ -153,7 +153,7 @@ const ScheduleATask = () => {
 
         try {
             const response = await fetch(
-                "https://lab-scheduler-server.vercel.app/scheduledtasks",
+                "http://localhost:5000/scheduledtasks",
                 {
                     method: "POST",
                     headers: {
@@ -192,7 +192,7 @@ const ScheduleATask = () => {
         const fetchScheduledTasks = async () => {
             try {
                 const response = await fetch(
-                    "https://lab-scheduler-server.vercel.app/scheduledtasks"
+                    "http://localhost:5000/scheduledtasks"
                 );
                 const data = await response.json();
                 const approvedData = data.data.filter(
