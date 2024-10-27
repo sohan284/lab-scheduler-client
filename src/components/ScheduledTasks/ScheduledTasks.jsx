@@ -86,13 +86,13 @@ const ScheduledTasks = () => {
                       <p
                         className={`text-nowrap px-2 p-0.5 ${
                           task?.approve === "Pending" &&
-                          "bg-orange-600 text-white rounded-xl"
+                          "bg-red-600 text-white rounded-xl"
                         } ${
                           task?.approve === "Approved" &&
                           "bg-green-600 text-white rounded-xl"
                         } ${
                           task?.approve === "Rejected" &&
-                          "bg-red-600 text-white rounded-xl"
+                          "bg-pink-600 text-white rounded-xl"
                         }`}
                       >
                         {" "}
