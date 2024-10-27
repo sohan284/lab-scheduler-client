@@ -16,10 +16,10 @@ const AddedTasks = () => {
       .then((data) => {
         console.log(data.data);
 
-        // Filter the tasks based on taskCratedBy and approve field
+        // Filter the tasks based on createdBy and approve field
         const filteredTasks = data.data.filter(
           (task) =>
-            task?.taskCratedBy === taskCreatedBy && task?.approve === "Approved"
+            task?.createdBy === taskCreatedBy && task?.approve === "Approved"
         );
         console.log(filteredTasks);
 

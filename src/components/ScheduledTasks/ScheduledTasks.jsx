@@ -14,7 +14,7 @@ const ScheduledTasks = () => {
       .then((res) => res.json())
       .then((data) => {
         const filteredTasks = data.data.filter(
-          (task) => task?.taskCratedBy === taskCreatedBy
+          (task) => task?.createdBy === taskCreatedBy
         );
         setTasks(filteredTasks);
         setLoading(false);
