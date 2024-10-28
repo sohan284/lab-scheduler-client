@@ -1,11 +1,9 @@
 import React from "react";
 import { CiSearch } from "react-icons/ci";
 import TabNav from "../../Shared/TabNav";
-import { CiSearch } from 'react-icons/ci';
 import tutorialsJson from './tutorials.json';
 import '../../global.css'
 import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
-import video from './../../assets/video.mp4'
 
 const Tutorials = () => {
   return (
