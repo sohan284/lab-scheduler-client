@@ -1,7 +1,9 @@
 import React from "react";
 import { CiSearch } from "react-icons/ci";
-import tutorialsJson from "./tutorials.json";
 import TabNav from "../../Shared/TabNav";
+import tutorialsJson from './tutorials.json';
+import '../../global.css'
+import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
 
 const Tutorials = () => {
   return (

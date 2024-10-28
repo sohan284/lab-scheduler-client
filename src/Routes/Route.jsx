@@ -9,6 +9,8 @@ import AddedTasks from "../Pages/AddedTasks/AddedTasks";
 import ApproveStatusPage from "../Pages/ApproveStatusPage";
 import RejectStatusPage from "../Pages/RejectStatusPage";
 import RegisterPage from "../Pages/auth/RegisterPage";
+import VideoUpload from "../components/VideoUpload/VideoUpload";
+import Dashboard from "../Pages/Dashboard/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +40,14 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/upload",
+        element: <VideoUpload />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
       },
     ],
   },
