@@ -8,11 +8,13 @@ import { Toaster, toast } from "react-hot-toast";
 import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
+import { Tooltip } from "@mui/material";
+import MachineManagement from "../../Services/Machine";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
   const createdBy = user?.username;
-
+  const [machineData, setMachineData] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
@@ -68,47 +70,7 @@ const ScheduleATask = () => {
     "18:45",
     "19:00",
   ];
-  const mechines = [
-    "Bosslaser",
-    "Polar78 cutter",
-    "Konica Minolta digital press",
-    "Protopic III-540 Sleeking unit",
-    "Aerocut",
-    "1800S Auto Air Suction Paper Folder",
-    "HP Indigo",
-    "Ryobi 3304HA Offset printer",
-    "Fastbind book binder",
-    "Uperpad padding press",
-    "Pad press",
-    "Casematic XT Paper edge cutter",
-    "Duralam integra",
-    "Rotatrim Professional M42",
-    "Epson SureColor P7570 SpectroProofer",
-    "Mimaki CG-130SR III Cutting Plotter",
-    "Mimaki JV150-160",
-    "Mimaki UJF-6042 MKII Dye Sub",
-    "Nordson UV Curing",
-    "Mimaki CFL-605RT",
-    "Kompac EZ Koat 20",
-    "Comco Captain Flexo Press",
-    "Nilpeter FA LINE Flexo Press",
-    "jmheaford Mounting & Proofing Solutions",
-    "Esko CDI Spark 2530",
-    "DU PONT Cyrel FAST Image processor",
-    "DU PONT Cyrel FAST post processor",
-    "IDEAL 1038 Cutter",
-    "Ricoh Pro C651EX",
-    "Triumph 5260 VRCUT",
-    "Mimaki UJF-6042 UV Printer",
-    "Riso Goccopro QS2536",
-    "DragonAir",
-    "Sohn 4400 Rotary Die Cutting and Label Printing Machine",
-    "Orbital X",
-    "Kodak Flexcel NX Laminator",
-    "Trendsetter NX Mid Squarespot image processor",
-    "Ryobi RP520-220F plate cutter",
-    "Other",
-  ];
+  const [machines, setMachines] = useState([]);
 
   const courses = [
     "GC 1041",
@@ -129,7 +91,13 @@ const ScheduleATask = () => {
     "5 hours": 21,
     "6 hours": 25,
   };
-  const filteredOptions = mechines.filter((o) => !selectedMachine.includes(o));
+  const filteredMachines = machines.filter(
+    (o) => !selectedMachine?.title?.includes(o.title)
+  );
+  const handleMachine = (e) => {
+    const filtered = machines.filter((machine) => e.includes(machine.title));
+    setMachineData(filtered);
+  };
   const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
@@ -145,7 +113,23 @@ const ScheduleATask = () => {
     };
     return durationFormatMapping[duration] || "00:00";
   };
+  useEffect(() => {
+    MachineManagement.getMachines().then((res) => setMachines(res?.data?.data));
+    const fetchScheduledTasks = async () => {
+      try {
+        const response = await fetch(`${baseUrl.scheduledtasks}`);
+        const data = await response.json();
+        const approvedData = data.data.filter(
+          (item) => item.approve === "Approved"
+        );
+        setScheduledTasks(approvedData);
+      } catch (error) {
+        console.error("Error fetching scheduled tasks:", error);
+      }
+    };
 
+    fetchScheduledTasks();
+  }, []);
   const handleTimeSlotClick = (slot) => {
     const selectedIndex = timeSlots.indexOf(slot);
     const durationInSlots = durationMapping[duration] || 0;
@@ -204,7 +188,7 @@ const ScheduleATask = () => {
       !duration ||
       selectedCourse.length === 0 ||
       selectedTimeSlots.length === 0 ||
-      selectedMachine.length === 0
+      machineData.length === 0
     ) {
       toast.error(
         "Please fill in all fields, select time slots, and choose at least one machine."
@@ -218,7 +202,7 @@ const ScheduleATask = () => {
       selectedCourse,
       startDate: startDate.toISOString(),
       selectedTimeSlots: selectedTimeSlots.length > 0 ? selectedTimeSlots : [],
-      selectedMachine,
+      selectedMachine: machineData,
       estimatedTime: duration,
       approve: "Pending",
       createdBy,
@@ -259,22 +243,6 @@ const ScheduleATask = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchScheduledTasks = async () => {
-      try {
-        const response = await fetch(`${baseUrl.scheduledtasks}`);
-        const data = await response.json();
-        const approvedData = data.data.filter(
-          (item) => item.approve === "Approved"
-        );
-        setScheduledTasks(approvedData);
-      } catch (error) {
-        console.error("Error fetching scheduled tasks:", error);
-      }
-    };
-
-    fetchScheduledTasks();
-  }, []);
   const handleEstimate = (e) => {
     if (e.target.checked) {
       setDuration("30 minutes");
@@ -295,6 +263,7 @@ const ScheduleATask = () => {
     const day = date.getDay();
     return day !== 0 && day !== 6;
   };
+  const isAuthor = machineData?.some((machine) => machine.author);
 
   return (
     <>
@@ -365,16 +334,16 @@ const ScheduleATask = () => {
                     <Select
                       mode="multiple"
                       placeholder="Please select machines"
-                      value={selectedMachine}
-                      onChange={setSelectedMachine}
+                      // value={selectedMachine.title}
+                      onChange={(e) => handleMachine(e)}
                       style={{
                         width: "235px",
                         borderColor:
                           selectedMachine.length === 0 ? "red" : undefined,
                       }}
-                      options={filteredOptions.map((item) => ({
-                        value: item,
-                        label: item,
+                      options={filteredMachines.map((item) => ({
+                        value: item.title,
+                        label: item.title,
                       }))}
                     />
                   </div>
@@ -457,7 +426,7 @@ const ScheduleATask = () => {
                       </div>
                     </div>
                     <div className="flex-1 text-center lg:hidden lg:text-start mb-20 lg:mt-0 font-semibold">
-                      <p className="text-[15px]">
+                      <p className="text-[25px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
                               year: "numeric",
@@ -466,16 +435,26 @@ const ScheduleATask = () => {
                             })
                           : "Date not available"}
                       </p>
+                      <div className="grid grid-cols-3 mt-5 w-[300px] mx-auto">
+                        {selectedTimeSlots.map((time, index) => (
+                          <p
+                            key={index}
+                            className="py-1 m-1 text-sm font-medium rounded-full bg-gray-200"
+                          >
+                            {time}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                     <div className="flex-1 flex items-center justify-center relative ">
                       <div className="flex flex-col items-start gap-1 text-[15px] absolute -top-12 lg:left-20">
                         <div className="flex gap-2 ">
                           <div className="h-4 w-4 mt-1 bg-gray-400 rounded-md"></div>
-                          <p className="text-[15px]"> Scheduled by others</p>
+                          <p className="text-[15px]">Booked</p>
                         </div>
                         <div className="flex gap-2">
                           <div className="h-4 w-4 mt-1 bg-white border border-black rounded-md"></div>
-                          <p className="text-[15px]"> Available time slot</p>
+                          <p className="text-[15px]"> Available</p>
                         </div>
                       </div>
                       <div className="grid grid-cols-4 gap-3 place-items-center mt-5">
@@ -505,31 +484,52 @@ const ScheduleATask = () => {
                       </div>
                     </div>
                     <div className="flex-1 hidden lg:flex text-center lg:text-start mt-5 lg:mt-0 font-semibold">
-                      <p className="text-[15px]">
-                        {startDate
-                          ? startDate.toLocaleDateString(undefined, {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
-                          : "Date not available"}
-                      </p>
+                      <div>
+                        <p className="text-[25px]">
+                          {startDate
+                            ? startDate.toLocaleDateString(undefined, {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })
+                            : "Date not available"}
+                        </p>
+                        <div className="grid text-center mt-5 grid-cols-3 w-[300px] mx-auto">
+                          {selectedTimeSlots.map((time, index) => (
+                            <p
+                              key={index}
+                              className="py-1 m-1 font-medium text-sm rounded-full bg-gray-200"
+                            >
+                              {time}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="">
-                  <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
-                    <p>
-                      This machine requires faculty permission/availability.{" "}
-                      <br /> Send for approval?
-                    </p>
-                    <input
-                      disabled={!selectedMachine.includes("HP Indigo")}
-                      required={selectedMachine.includes("HP Indigo")}
-                      onClick={(e) => handleSendApproval(e)}
-                      type="checkbox"
-                    />
-                  </div>
+                  <Tooltip
+                    title={
+                      isAuthor
+                        ? "Please check this box if you want to proceed"
+                        : "This checkbox is for some specific machine"
+                    }
+                  >
+                    <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
+                      <p>
+                        This machine requires faculty permission/availability.{" "}
+                        <br /> Send for approval?
+                      </p>
+
+                      <input
+                        disabled={!isAuthor}
+                        required={isAuthor}
+                        onClick={(e) => handleSendApproval(e)}
+                        type="checkbox"
+                      />
+                    </div>
+                  </Tooltip>
                   <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
                     <input type="checkbox" />

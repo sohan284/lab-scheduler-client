@@ -20,16 +20,20 @@ const RegisterPage = () => {
   const validateForm = () => {
     if (!formData.username) {
       setErrorMsg("Username is required.");
+      setLoading(false);
       return false;
     }
     if (!formData.password) {
       setErrorMsg("Password is required.");
+      setLoading(false);
       return false;
     } else if (formData.password.length < 6) {
       setErrorMsg("Password must be at least 6 characters long.");
+      setLoading(false);
       return false;
     }
     setErrorMsg(null);
+    setLoading(false);
     return true;
   };
 
@@ -37,7 +41,7 @@ const RegisterPage = () => {
     setLoading(true);
     setErrorMsg(null);
     const { username } = formData;
-
+    if (!validateForm()) return;
     try {
       await UserManagement.sendOtp(`${username}@gmail.com`);
       // await UserManagement.sendOtp(`${username}@g.clemson.edu`);
@@ -95,8 +99,6 @@ const RegisterPage = () => {
 
   const handleRegister = async () => {
     setLoading(true);
-    if (!validateForm()) return;
-
     // const userEmail = formData.username.includes("@g.clemson.edu")
     //   ? formData.username
     //   : `${formData.username}@g.clemson.edu`;
