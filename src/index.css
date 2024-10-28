@@ -2,11 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+.p-text {
     @apply text-[#515151]
 }
 
-*{
+* {
     font-family: "Kumbh Sans", sans-serif !important;
 }
 
+.p-bg {
+    @apply bg-[#FF710F]
+}
+
+.animation {
+    animation: fade-up .8s cubic-bezier(0, .84, .01, 1.4) forwards;
+    opacity: 0;
+}
+
+@keyframes fade-up {
+    0% {
+        opacity: 0;
+        transform: translateY(0rem) scale(.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+;
