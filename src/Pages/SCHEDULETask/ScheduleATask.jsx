@@ -8,6 +8,7 @@ import { Toaster, toast } from "react-hot-toast";
 import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
+import { Tooltip } from "@mui/material";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
@@ -457,7 +458,7 @@ const ScheduleATask = () => {
                       </div>
                     </div>
                     <div className="flex-1 text-center lg:hidden lg:text-start mb-20 lg:mt-0 font-semibold">
-                      <p className="text-[15px]">
+                      <p className="text-[25px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
                               year: "numeric",
@@ -466,16 +467,26 @@ const ScheduleATask = () => {
                             })
                           : "Date not available"}
                       </p>
+                      <div className="grid grid-cols-3 mt-5 w-[300px] mx-auto">
+                        {selectedTimeSlots.map((time, index) => (
+                          <p
+                            key={index}
+                            className="py-1 m-1 text-sm font-medium rounded-full bg-gray-200"
+                          >
+                            {time}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                     <div className="flex-1 flex items-center justify-center relative ">
                       <div className="flex flex-col items-start gap-1 text-[15px] absolute -top-12 lg:left-20">
                         <div className="flex gap-2 ">
                           <div className="h-4 w-4 mt-1 bg-gray-400 rounded-md"></div>
-                          <p className="text-[15px]"> Scheduled by others</p>
+                          <p className="text-[15px]">Booked</p>
                         </div>
                         <div className="flex gap-2">
                           <div className="h-4 w-4 mt-1 bg-white border border-black rounded-md"></div>
-                          <p className="text-[15px]"> Available time slot</p>
+                          <p className="text-[15px]"> Available</p>
                         </div>
                       </div>
                       <div className="grid grid-cols-4 gap-3 place-items-center mt-5">
@@ -505,31 +516,52 @@ const ScheduleATask = () => {
                       </div>
                     </div>
                     <div className="flex-1 hidden lg:flex text-center lg:text-start mt-5 lg:mt-0 font-semibold">
-                      <p className="text-[15px]">
-                        {startDate
-                          ? startDate.toLocaleDateString(undefined, {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
-                          : "Date not available"}
-                      </p>
+                      <div>
+                        <p className="text-[25px]">
+                          {startDate
+                            ? startDate.toLocaleDateString(undefined, {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })
+                            : "Date not available"}
+                        </p>
+                        <div className="grid text-center mt-5 grid-cols-3 w-[300px] mx-auto">
+                          {selectedTimeSlots.map((time, index) => (
+                            <p
+                              key={index}
+                              className="py-1 m-1 font-medium text-sm rounded-full bg-gray-200"
+                            >
+                              {time}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="">
-                  <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
-                    <p>
-                      This machine requires faculty permission/availability.{" "}
-                      <br /> Send for approval?
-                    </p>
-                    <input
-                      disabled={!selectedMachine.includes("HP Indigo")}
-                      required={selectedMachine.includes("HP Indigo")}
-                      onClick={(e) => handleSendApproval(e)}
-                      type="checkbox"
-                    />
-                  </div>
+                  <Tooltip
+                    title={
+                      !selectedMachine.includes("HP Indigo")
+                        ? "This checkbox is for some specific machine"
+                        : "Please check this box if you want to proceed"
+                    }
+                  >
+                    <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
+                      <p>
+                        This machine requires faculty permission/availability.{" "}
+                        <br /> Send for approval?
+                      </p>
+
+                      <input
+                        disabled={!selectedMachine.includes("HP Indigo")}
+                        required={selectedMachine.includes("HP Indigo")}
+                        onClick={(e) => handleSendApproval(e)}
+                        type="checkbox"
+                      />
+                    </div>
+                  </Tooltip>
                   <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
                     <input type="checkbox" />

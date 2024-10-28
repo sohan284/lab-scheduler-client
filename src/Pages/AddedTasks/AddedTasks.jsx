@@ -6,27 +6,18 @@ import baseUrl from "../../api/apiConfig";
 
 const AddedTasks = () => {
   const user = VerifyToken();
-  const taskCreatedBy = user?.username; // Ensure this is correct based on your token
+  const createdBy = user?.username; // Ensure this is correct based on your token
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${baseUrl.scheduledtasks}`)
+    fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.data);
-
-        // Filter the tasks based on createdBy and approve field
-        const filteredTasks = data.data.filter(
-          (task) =>
-            task?.createdBy === taskCreatedBy && task?.approve === "Approved"
-        );
-        console.log(filteredTasks);
-
-        setTasks(filteredTasks);
+        setTasks(data.data);
         setLoading(false);
       });
-  }, [taskCreatedBy]);
+  }, [createdBy]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -37,23 +28,40 @@ const AddedTasks = () => {
     });
   };
 
+  const handleShare = (task) => {
+    const subject = encodeURIComponent(`Task: ${task.taskName}`);
+    const body = encodeURIComponent(`
+      Task Name: ${task.taskName}
+      Machine: ${task.selectedMachine.join(", ")}
+      Estimated Time: ${task.estimatedTime}
+      Scheduled Time Slot: ${
+        task?.startDate
+          ? `${formatDate(task.startDate)}, ${task.selectedTimeSlots[0]}`
+          : "N/A"
+      }
+    `);
+    const gmailLink = `https://mail.google.com/mail/u/0/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
+
+    window.open(gmailLink, "_blank");
+  };
+
   return (
     <>
       <TabNav />
       <div className="px-4 py-10 text-[15px]">
-        <h1 className="text-xl  font-bold uppercase mb-6">Scheduled Tasks</h1>
+        <h1 className="text-xl font-bold uppercase mb-6">Scheduled Tasks</h1>
         {loading ? (
           <Loader text={"Collecting Your Data"} />
         ) : (
           <div>
             {tasks.length > 0 ? (
-              <div className="   ">
+              <div>
                 {tasks.map((task, index) => (
                   <div
                     key={index}
                     className="flex justify-between mb-10 border-b-2 border-dashed border-gray-300"
                   >
-                    <div className="">
+                    <div>
                       <div className="grid grid-cols-2">
                         <h1 className="py-4 px-10 font-bold">Task Name</h1>
                         <p className="py-4 px-10">{task.taskName}</p>
@@ -61,7 +69,6 @@ const AddedTasks = () => {
                       <div className="grid bg-zinc-50 grid-cols-2">
                         <h1 className="py-4 px-10 font-bold">Machine</h1>
                         <p className="py-4 px-10">
-                          {" "}
                           {task.selectedMachine.join(", ")}
                         </p>
                       </div>
@@ -69,14 +76,13 @@ const AddedTasks = () => {
                         <h1 className="py-4 px-10 font-bold">
                           Estimated time required to finish the task
                         </h1>
-                        <p className="py-4 px-10"> {task.estimatedTime}</p>
+                        <p className="py-4 px-10">{task.estimatedTime}</p>
                       </div>
                       <div className="grid bg-zinc-50 grid-cols-2">
                         <h1 className="py-4 px-10 font-bold">
                           Scheduled time slot
                         </h1>
                         <p className="py-4 px-10">
-                          {" "}
                           {task?.startDate
                             ? `${formatDate(task.startDate)}, ${
                                 task.selectedTimeSlots[0]
@@ -84,13 +90,10 @@ const AddedTasks = () => {
                             : "N/A"}
                         </p>
                       </div>
-                      <h1 className="py-4 px-10">
-                        This machine requires faculty permission/availability.
-                      </h1>
-                      {/* <button className="py-4 px-10 underline underline-offset-4">
-                        Tutorial
-                      </button> */}
-                      <button className="block py-4 px-10 underline underline-offset-4">
+                      <button
+                        onClick={() => handleShare(task)}
+                        className="block text-blue-500 py-4 px-10 underline underline-offset-4"
+                      >
                         Share
                       </button>
                     </div>
