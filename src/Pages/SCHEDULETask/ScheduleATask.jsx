@@ -9,11 +9,12 @@ import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
 import { Tooltip } from "@mui/material";
+import MachineManagement from "../../Services/Machine";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
   const createdBy = user?.username;
-
+  const [machineData, setMachineData] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
@@ -69,47 +70,7 @@ const ScheduleATask = () => {
     "18:45",
     "19:00",
   ];
-  const mechines = [
-    "Bosslaser",
-    "Polar78 cutter",
-    "Konica Minolta digital press",
-    "Protopic III-540 Sleeking unit",
-    "Aerocut",
-    "1800S Auto Air Suction Paper Folder",
-    "HP Indigo",
-    "Ryobi 3304HA Offset printer",
-    "Fastbind book binder",
-    "Uperpad padding press",
-    "Pad press",
-    "Casematic XT Paper edge cutter",
-    "Duralam integra",
-    "Rotatrim Professional M42",
-    "Epson SureColor P7570 SpectroProofer",
-    "Mimaki CG-130SR III Cutting Plotter",
-    "Mimaki JV150-160",
-    "Mimaki UJF-6042 MKII Dye Sub",
-    "Nordson UV Curing",
-    "Mimaki CFL-605RT",
-    "Kompac EZ Koat 20",
-    "Comco Captain Flexo Press",
-    "Nilpeter FA LINE Flexo Press",
-    "jmheaford Mounting & Proofing Solutions",
-    "Esko CDI Spark 2530",
-    "DU PONT Cyrel FAST Image processor",
-    "DU PONT Cyrel FAST post processor",
-    "IDEAL 1038 Cutter",
-    "Ricoh Pro C651EX",
-    "Triumph 5260 VRCUT",
-    "Mimaki UJF-6042 UV Printer",
-    "Riso Goccopro QS2536",
-    "DragonAir",
-    "Sohn 4400 Rotary Die Cutting and Label Printing Machine",
-    "Orbital X",
-    "Kodak Flexcel NX Laminator",
-    "Trendsetter NX Mid Squarespot image processor",
-    "Ryobi RP520-220F plate cutter",
-    "Other",
-  ];
+  const [machines, setMachines] = useState([]);
 
   const courses = [
     "GC 1041",
@@ -130,7 +91,13 @@ const ScheduleATask = () => {
     "5 hours": 21,
     "6 hours": 25,
   };
-  const filteredOptions = mechines.filter((o) => !selectedMachine.includes(o));
+  const filteredMachines = machines.filter(
+    (o) => !selectedMachine?.title?.includes(o.title)
+  );
+  const handleMachine = (e) => {
+    const filtered = machines.filter((machine) => e.includes(machine.title));
+    setMachineData(filtered);
+  };
   const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
@@ -146,7 +113,23 @@ const ScheduleATask = () => {
     };
     return durationFormatMapping[duration] || "00:00";
   };
+  useEffect(() => {
+    MachineManagement.getMachines().then((res) => setMachines(res?.data?.data));
+    const fetchScheduledTasks = async () => {
+      try {
+        const response = await fetch(`${baseUrl.scheduledtasks}`);
+        const data = await response.json();
+        const approvedData = data.data.filter(
+          (item) => item.approve === "Approved"
+        );
+        setScheduledTasks(approvedData);
+      } catch (error) {
+        console.error("Error fetching scheduled tasks:", error);
+      }
+    };
 
+    fetchScheduledTasks();
+  }, []);
   const handleTimeSlotClick = (slot) => {
     const selectedIndex = timeSlots.indexOf(slot);
     const durationInSlots = durationMapping[duration] || 0;
@@ -205,7 +188,7 @@ const ScheduleATask = () => {
       !duration ||
       selectedCourse.length === 0 ||
       selectedTimeSlots.length === 0 ||
-      selectedMachine.length === 0
+      machineData.length === 0
     ) {
       toast.error(
         "Please fill in all fields, select time slots, and choose at least one machine."
@@ -219,7 +202,7 @@ const ScheduleATask = () => {
       selectedCourse,
       startDate: startDate.toISOString(),
       selectedTimeSlots: selectedTimeSlots.length > 0 ? selectedTimeSlots : [],
-      selectedMachine,
+      selectedMachine: machineData,
       estimatedTime: duration,
       approve: "Pending",
       createdBy,
@@ -260,22 +243,6 @@ const ScheduleATask = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchScheduledTasks = async () => {
-      try {
-        const response = await fetch(`${baseUrl.scheduledtasks}`);
-        const data = await response.json();
-        const approvedData = data.data.filter(
-          (item) => item.approve === "Approved"
-        );
-        setScheduledTasks(approvedData);
-      } catch (error) {
-        console.error("Error fetching scheduled tasks:", error);
-      }
-    };
-
-    fetchScheduledTasks();
-  }, []);
   const handleEstimate = (e) => {
     if (e.target.checked) {
       setDuration("30 minutes");
@@ -296,6 +263,7 @@ const ScheduleATask = () => {
     const day = date.getDay();
     return day !== 0 && day !== 6;
   };
+  const isAuthor = machineData?.some((machine) => machine.author);
 
   return (
     <>
@@ -366,16 +334,16 @@ const ScheduleATask = () => {
                     <Select
                       mode="multiple"
                       placeholder="Please select machines"
-                      value={selectedMachine}
-                      onChange={setSelectedMachine}
+                      // value={selectedMachine.title}
+                      onChange={(e) => handleMachine(e)}
                       style={{
                         width: "235px",
                         borderColor:
                           selectedMachine.length === 0 ? "red" : undefined,
                       }}
-                      options={filteredOptions.map((item) => ({
-                        value: item,
-                        label: item,
+                      options={filteredMachines.map((item) => ({
+                        value: item.title,
+                        label: item.title,
                       }))}
                     />
                   </div>
@@ -543,9 +511,9 @@ const ScheduleATask = () => {
                 <div className="">
                   <Tooltip
                     title={
-                      !selectedMachine.includes("HP Indigo")
-                        ? "This checkbox is for some specific machine"
-                        : "Please check this box if you want to proceed"
+                      isAuthor
+                        ? "Please check this box if you want to proceed"
+                        : "This checkbox is for some specific machine"
                     }
                   >
                     <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
@@ -555,8 +523,8 @@ const ScheduleATask = () => {
                       </p>
 
                       <input
-                        disabled={!selectedMachine.includes("HP Indigo")}
-                        required={selectedMachine.includes("HP Indigo")}
+                        disabled={!isAuthor}
+                        required={isAuthor}
                         onClick={(e) => handleSendApproval(e)}
                         type="checkbox"
                       />
