@@ -11,7 +11,7 @@ import baseUrl from "../../api/apiConfig";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
-  const taskCratedBy = user?.username;
+  const createdBy = user?.username;
 
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
@@ -221,7 +221,7 @@ const ScheduleATask = () => {
       selectedMachine,
       estimatedTime: duration,
       approve: "Pending",
-      taskCratedBy,
+      createdBy,
       sendApproval,
     };
 
@@ -247,6 +247,7 @@ const ScheduleATask = () => {
       setSelectedCourse([]);
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
+      setIsEstimate(false);
       setSendApproval(false);
       setStartDate(new Date());
       setDuration("30 minutes");

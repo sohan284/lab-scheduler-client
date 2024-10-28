@@ -38,11 +38,36 @@ const removeAccount = async (username) => {
     throw error;
   }
 };
+const sendOtp = async (email) => {
+  try {
+    const response = await axios.post(`${baseUrl.login}/send-otp`, {
+      email,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to send OTP:", error);
+    throw error;
+  }
+};
+const verifyOtp = async (email, otp) => {
+  try {
+    const response = await axios.post(`${baseUrl.login}/verify-otp`, {
+      email,
+      otp,
+    });
+    return response.data; // Assuming the API returns a success flag or similar
+  } catch (error) {
+    console.error("Failed to verify OTP:", error);
+    throw error;
+  }
+};
 
 const UserManagement = {
   upsertUser,
   loginUser,
   removeAccount,
+  sendOtp,
+  verifyOtp,
 };
 
 // Export the object
