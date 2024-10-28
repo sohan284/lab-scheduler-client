@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const VideoList = () => {
-    const [videos, setVideos] = useState([]);
-    const [error, setError] = useState(null);
+const AdvancedVideoPlayer = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [showSettings, setShowSettings] = useState(false);
+  const videoRef = useRef(null);
+  const playerRef = useRef(null);
+  const progressBarRef = useRef(null);
 
     useEffect(() => {
         const fetchVideos = async () => {
@@ -49,4 +59,4 @@ const VideoList = () => {
     );
 };
 
-export default VideoList;
+export default AdvancedVideoPlayer;

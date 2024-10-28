@@ -2,61 +2,73 @@
     {
         "id": 1,
         "name": "How to mount a plate",
+        "video": "../../assets/tutorials/wall_printing.mp4",
         "duration": "10:40"
     },
     {
         "id": 2,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/Bnjv4XrAht8?si=D65Ad46O2GqVInt2",
         "duration": "10:40"
     },
     {
         "id": 3,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/BlLeQ-oWfiA?si=tf0TbjHsp8wikVQX",
         "duration": "10:40"
     },
     {
         "id": 4,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/Bnjv4XrAht8?si=D65Ad46O2GqVInt2",
         "duration": "10:40"
     },
     {
         "id": 5,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/BlLeQ-oWfiA?si=tf0TbjHsp8wikVQX",
         "duration": "10:40"
     },
     {
         "id": 6,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/Bnjv4XrAht8?si=D65Ad46O2GqVInt2",
         "duration": "10:40"
     },
     {
         "id": 7,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/BlLeQ-oWfiA?si=tf0TbjHsp8wikVQX",
         "duration": "10:40"
     },
     {
         "id": 8,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/Bnjv4XrAht8?si=D65Ad46O2GqVInt2",
         "duration": "10:40"
     },
     {
         "id": 9,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/BlLeQ-oWfiA?si=tf0TbjHsp8wikVQX",
         "duration": "10:40"
     },
     {
         "id": 10,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/Bnjv4XrAht8?si=D65Ad46O2GqVInt2",
         "duration": "10:40"
     },
     {
         "id": 11,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/BlLeQ-oWfiA?si=tf0TbjHsp8wikVQX",
         "duration": "10:40"
     },
     {
         "id": 12,
         "name": "How to mount a plate",
+        "video": "https://www.youtube.com/embed/Bnjv4XrAht8?si=D65Ad46O2GqVInt2",
         "duration": "10:40"
     }
 ]
