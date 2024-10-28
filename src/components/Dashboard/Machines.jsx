@@ -140,7 +140,7 @@ const Machines = () => {
                                 type="submit"
                                 className="md:col-span-2 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-md transition duration-300"
                             >
-                                {isEdit ? 'Update' : 'Submit'}
+                                {isEdit ? 'Update' : 'Add Machine'}
                             </button>
                         </form>
                     </div>
@@ -160,11 +160,11 @@ const Machines = () => {
                         {filteredMachines.length > 0 ? (
                             filteredMachines.map(machine => (
                                 <tr key={machine._id}>
-                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine.title}</td>
-                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine.author}</td>
+                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.title}</td>
+                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.author}</td>
                                     <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                                         <button className='flex gap-6'>
-                                            <MdDelete onClick={() => handleClickOpen(machine._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1' />
+                                            <MdDelete onClick={() => handleClickOpen(machine?._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1' />
                                             <FaPen onClick={() => handleEditMachine(machine)} className='text-green-500 border border-green-500 hover:bg-green-200 duration-300 ease-out rounded p-2' />
                                         </button>
                                     </td>
