@@ -19,19 +19,19 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <ProtectedRoute element={<Home />} />,
+        element: <ProtectedRoute element={<Home />} role="student" />,
       },
       {
         path: "/tutorials",
-        element: <ProtectedRoute element={<Tutorials />} />,
+        element: <ProtectedRoute element={<Tutorials />} role="student" />,
       },
       {
         path: "/ScheduleATask",
-        element: <ProtectedRoute element={<ScheduleATask />} />,
+        element: <ProtectedRoute element={<ScheduleATask />} role="student" />,
       },
       {
         path: "/addedTasks",
-        element: <ProtectedRoute element={<AddedTasks />} />,
+        element: <ProtectedRoute element={<AddedTasks />} role="student" />,
       },
       {
         path: "/register",
@@ -45,18 +45,18 @@ export const router = createBrowserRouter([
         path: "/upload",
         element: <VideoUpload />,
       },
-      {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
     ],
   },
   {
+    path: "/dashboard",
+    element: <ProtectedRoute element={<Dashboard />} role="admin" />, // Only admin can access
+  },
+  {
     path: "/tasks/approve/:taskId",
-    element: <ApproveStatusPage />,
+    element: <ApproveStatusPage />, // Accessible to all authenticated users
   },
   {
     path: "/tasks/reject/:taskId",
-    element: <RejectStatusPage />,
+    element: <RejectStatusPage />, // Accessible to all authenticated users
   },
 ]);
