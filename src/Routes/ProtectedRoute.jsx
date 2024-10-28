@@ -4,25 +4,26 @@ import VerifyToken from "../utils/VerifyToken";
 
 const ProtectedRoute = ({ element, role }) => {
   const user = VerifyToken();
+  console.log(user?.role);
 
   if (!user?.username) {
     return <Navigate to="/login" />;
   }
 
-  if (user.role === "admin" && role !== "admin") {
+  if (user.role === role) {
+    return element;
+  }
+
+  if (user.role === "admin") {
     return <Navigate to="/dashboard" />;
   }
 
-  if (role && user.role !== role) {
-    return <Navigate to="/" />;
-  }
-
-  return element;
+  return <Navigate to="/" />;
 };
 
 ProtectedRoute.propTypes = {
   element: PropTypes.node.isRequired,
-  role: PropTypes.string,
+  role: PropTypes.string.isRequired,
 };
 
 export default ProtectedRoute;

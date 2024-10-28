@@ -49,14 +49,14 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <ProtectedRoute element={<Dashboard />} role="admin" />,
+    element: <ProtectedRoute element={<Dashboard />} role="admin" />, // Only admin can access
   },
   {
     path: "/tasks/approve/:taskId",
-    element: <ApproveStatusPage />,
+    element: <ApproveStatusPage />, // Accessible to all authenticated users
   },
   {
     path: "/tasks/reject/:taskId",
-    element: <RejectStatusPage />,
+    element: <RejectStatusPage />, // Accessible to all authenticated users
   },
 ]);
