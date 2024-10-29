@@ -9,7 +9,7 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import VerifyToken from "../../utils/VerifyToken";
 import toast, { Toaster } from "react-hot-toast";
 
-const Students = () => {
+const Users = () => {
   const user = VerifyToken();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -168,4 +168,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default Users;

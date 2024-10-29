@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { FaUsers, FaTools, FaBook, FaTasks } from 'react-icons/fa';
 import { IoClose, IoLogoCss3, IoLogOut, IoMenu, IoSettings } from 'react-icons/io5';
-import Students from '../../components/Dashboard/Students';
 import Machines from '../../components/Dashboard/Machines';
 import Courses from '../../components/Dashboard/Courses';
 import TaskList from '../../components/Dashboard/TaskList';
 import { useNavigate } from 'react-router-dom';
 import { VscSignOut } from 'react-icons/vsc';
+import Users from '../../components/Dashboard/Users';
 
 const Dashboard = () => {
-    const [selectedTab, setSelectedTab] = useState('Students');
+    const [selectedTab, setSelectedTab] = useState('Users');
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     const handleTabChange = (tab) => {
@@ -28,10 +28,10 @@ const Dashboard = () => {
                 <h1 className="text-2xl font-bold mb-5">Admin</h1>
                 <nav className="flex flex-col gap-4 ">
                     <button
-                        onClick={() => handleTabChange('Students')}
-                        className={`flex items-center space-x-2 p-2 rounded ${selectedTab === 'Students' ? 'p-bg  text-white font-bold' : 'hover:bg-zinc-300 p-text'}`}
+                        onClick={() => handleTabChange('Users')}
+                        className={`flex items-center space-x-2 p-2 rounded ${selectedTab === 'Users' ? 'p-bg  text-white font-bold' : 'hover:bg-zinc-300 p-text'}`}
                     >
-                        <FaUsers /><span>Students</span>
+                        <FaUsers /><span>Users</span>
                     </button>
                     <button
                         onClick={() => handleTabChange('Machines')}
@@ -73,7 +73,7 @@ const Dashboard = () => {
                 </header>
 
                 <main className="p-5">
-                    {selectedTab === 'Students' && <Students />}
+                    {selectedTab === 'Users' && <Users />}
                     {selectedTab === 'Machines' && <Machines />}
                     {selectedTab === 'Courses' && <Courses />}
                     {selectedTab === 'Task List' && <TaskList />}
