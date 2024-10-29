@@ -109,7 +109,7 @@ const RegisterPage = () => {
     const data = {
       username: userEmail,
       password: formData.password,
-      role: "admin",
+      role: "student",
     };
 
     try {
