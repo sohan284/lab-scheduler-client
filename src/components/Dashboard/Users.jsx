@@ -9,7 +9,7 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import VerifyToken from "../../utils/VerifyToken";
 import toast, { Toaster } from "react-hot-toast";
 
-const TaskList = () => {
+const Users = () => {
   const user = VerifyToken();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -35,13 +35,13 @@ const TaskList = () => {
   } = useQuery({
     queryKey: ["userOrders"],
     queryFn: async () => {
-      const response = await axios.get(`${baseUrl.scheduledtasks}`);
+      const response = await axios.get(`${baseUrl.users}`);
       return response.data.data;
     },
   });
 
-  const filteredUsers = data?.filter((machine) =>
-    machine.taskName?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = data.filter((machine) =>
+    machine.username?.toLowerCase().includes(searchQuery.toLowerCase())
   );
   const handleRemoveUser = async (username) => {
     if (username !== user.username) {
@@ -57,6 +57,21 @@ const TaskList = () => {
       toast.error("You can delete your own account");
     }
   };
+
+  // const handleMakeAdmin = async (username) => {
+  //   if (username !== user.username) {
+  //     try {
+  //       await axios.put(`${baseUrl.users}/${username}`, { role: "admin" });
+  //       refetch();
+  //       toast.success("Success");
+  //     } catch (error) {
+  //       console.log("Error in deleting machine", error);
+  //     }
+  //   } else {
+  //     toast.error("You can't make any update to your own account");
+  //   }
+  // };
+
   return (
     <div>
       <Toaster position="top-center" reverseOrder={false} />
@@ -78,13 +93,13 @@ const TaskList = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
-                Title
+                User
               </th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
-                Created By
+                Role
               </th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
-                Status
+                Action
               </th>
             </tr>
           </thead>
@@ -93,13 +108,27 @@ const TaskList = () => {
               filteredUsers.map((machine) => (
                 <tr key={machine._id}>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.taskName}
+                    {machine?.username}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.createdBy}
+                    {machine?.role}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.approve}
+                  <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
+                    <div className="flex items-center gap-6 h-8">
+                      <button
+                        onClick={() => handleClickOpen(machine?.username)}
+                        className="flex items-center justify-center h-full text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1"
+                      >
+                        <MdDelete style={{padding:'5px'}} />
+                      </button>
+                     {/* {machine?.role !== "admin" &&  <button
+                        onClick={() => handleMakeAdmin(machine?.username)}
+                        className="flex items-center justify-center h-full text-green-500 border border-green-500 font-semibold hover:bg-green-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
+                      >
+                        Make Admin
+                      </button>} */}
+                    
+                    </div>
                   </td>
                 </tr>
               ))
@@ -139,4 +168,4 @@ const TaskList = () => {
   );
 };
 
-export default TaskList;
+export default Users;

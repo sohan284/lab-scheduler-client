@@ -20,20 +20,17 @@ const RegisterPage = () => {
   const validateForm = () => {
     if (!formData.username) {
       setErrorMsg("Username is required.");
-      setLoading(false);
       return false;
     }
     if (!formData.password) {
       setErrorMsg("Password is required.");
-      setLoading(false);
       return false;
-    } else if (formData.password.length < 6) {
+    }
+    if (formData.password.length < 6) {
       setErrorMsg("Password must be at least 6 characters long.");
-      setLoading(false);
       return false;
     }
     setErrorMsg(null);
-    setLoading(false);
     return true;
   };
 
@@ -41,14 +38,16 @@ const RegisterPage = () => {
     setLoading(true);
     setErrorMsg(null);
     const { username } = formData;
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      setLoading(false);
+      return;
+    }
     try {
       await UserManagement.sendOtp(`${username}@gmail.com`);
-      // await UserManagement.sendOtp(`${username}@g.clemson.edu`);
       toast.success("OTP sent to your email.");
       setIsDialogOpen(true);
     } catch (error) {
-      setErrorMsg(`Error: ${error.response?.data?.message || error.message}`);
+      setErrorMsg(` ${error.response?.data?.message || error.message}`);
     } finally {
       setLoading(false);
     }
@@ -81,10 +80,6 @@ const RegisterPage = () => {
         `${formData.username}@gmail.com`,
         otpString
       );
-      // const isValid = await UserManagement.verifyOtp(
-      //   `${formData.username}@g.clemson.edu`,
-      //   otpString
-      // );
       if (isValid) {
         await handleRegister(); // Proceed to complete sign-up
         setIsDialogOpen(false); // Close the OTP dialog
@@ -92,19 +87,14 @@ const RegisterPage = () => {
         setErrorMsg("Invalid OTP. Please try again.");
       }
     } catch (error) {
-      setErrorMsg(`Error: ${error.response?.data?.message}`);
-      toast.error(`Error: ${error.response?.data?.message}`);
+      setErrorMsg(`${error.response?.data?.message}`);
+      toast.error(` ${error.response?.data?.message}`);
     }
   };
 
   const handleRegister = async () => {
     setLoading(true);
-    // const userEmail = formData.username.includes("@g.clemson.edu")
-    //   ? formData.username
-    //   : `${formData.username}@g.clemson.edu`;
-    const userEmail = formData.username.includes("@gmail.com")
-      ? formData.username
-      : `${formData.username}@gmail.com`;
+    const userEmail = `${formData.username}@gmail.com`;
 
     const data = {
       username: userEmail,
@@ -126,6 +116,16 @@ const RegisterPage = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      if (isDialogOpen) {
+        handleVerifyOtp();
+      } else {
+        handleSendOtp();
+      }
+    }
+  };
+
   return (
     <div className="flex justify-center">
       <div className="pt-20 text-[#515151]">
@@ -133,7 +133,7 @@ const RegisterPage = () => {
           Register
         </p>
         <div className="lg:ml-24 max-w-[300px] lg:max-w-full">
-          <div className="flex items-center mb-[6px]">
+          <div className="flex items-center mb-4">
             <h1 className="uppercase text-nowrap font-medium text-[15px] mr-[20px]">
               User Name
             </h1>
@@ -156,7 +156,7 @@ const RegisterPage = () => {
               className="text-sm"
             />
             <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
-              @g.clemson.edu
+              @gmail.com
             </h1>
           </div>
           <div className="flex items-center mb-4">
@@ -213,6 +213,7 @@ const RegisterPage = () => {
                 color: "white",
               }}
               onClick={handleSendOtp}
+              onKeyPress={handleKeyPress}
             >
               {loading ? "Loading..." : "Register"}
             </Button>
@@ -228,7 +229,7 @@ const RegisterPage = () => {
         {/* OTP Dialog */}
         <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
           <div className="p-4">
-            <label className="block mt-5  text-gray-500 text-sm">
+            <label className="block mt-5 text-gray-500 text-sm">
               Enter OTP<span className="text-red-500 text-xs">*</span>
             </label>
             <div className="flex justify-between mt-2">
@@ -239,6 +240,7 @@ const RegisterPage = () => {
                   size="small"
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
+                  onKeyPress={handleKeyPress}
                   className="w-[15%] text-sm"
                 />
               ))}
@@ -251,6 +253,8 @@ const RegisterPage = () => {
             <div
               className="w-full text-center p-3 hover:opacity-85 cursor-pointer bg-[#522C80] text-white mt-5 rounded"
               onClick={handleVerifyOtp}
+              onKeyPress={handleKeyPress}
+              tabIndex={0} // Make the div focusable
             >
               Verify OTP
             </div>
