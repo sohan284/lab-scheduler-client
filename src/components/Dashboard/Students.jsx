@@ -58,19 +58,19 @@ const Students = () => {
     }
   };
 
-  const handleMakeAdmin = async (username) => {
-    if (username !== user.username) {
-      try {
-        await axios.put(`${baseUrl.users}/${username}`, { role: "admin" });
-        refetch();
-        toast.success("Success");
-      } catch (error) {
-        console.log("Error in deleting machine", error);
-      }
-    } else {
-      toast.error("You can't make any update to your own account");
-    }
-  };
+  // const handleMakeAdmin = async (username) => {
+  //   if (username !== user.username) {
+  //     try {
+  //       await axios.put(`${baseUrl.users}/${username}`, { role: "admin" });
+  //       refetch();
+  //       toast.success("Success");
+  //     } catch (error) {
+  //       console.log("Error in deleting machine", error);
+  //     }
+  //   } else {
+  //     toast.error("You can't make any update to your own account");
+  //   }
+  // };
 
   return (
     <div>
