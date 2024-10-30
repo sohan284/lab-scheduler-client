@@ -94,10 +94,17 @@ const ScheduleATask = () => {
   const filteredMachines = machines.filter(
     (o) => !selectedMachine?.title?.includes(o.title)
   );
-  const handleMachine = (e) => {
-    const filtered = machines.filter((machine) => e.includes(machine.title));
-    setMachineData(filtered);
+
+  const [selectedMachines, setSelectedMachines] = useState([]);
+
+  const handleMachine = (selectedValues) => {
+    const filtered = machines.filter((machine) => selectedValues.includes(machine.title));
+    setSelectedMachines(filtered); // Store the selected machines
+    setMachineData(filtered); // Update machine data if needed
   };
+
+
+
   const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
@@ -150,35 +157,39 @@ const ScheduleATask = () => {
     setSelectedTimeSlots(newSelectedSlots);
   };
 
+
+
   const isSlotBooked = (startSlot, durationInSlots) => {
     const startIndex = timeSlots.indexOf(startSlot);
     const endIndex = startIndex + durationInSlots - 1;
 
     return scheduledTasks.some((task) => {
-      if (
-        task.selectedMachine.some((machine) =>
-          selectedMachine.includes(machine)
-        )
-      ) {
-        const bookedStartTime = new Date(task.startDate);
-        const bookedTimeSlots = task.selectedTimeSlots;
+      const bookedStartTime = new Date(task.startDate);
+      const bookedTimeSlots = task.selectedTimeSlots;
 
-        if (bookedStartTime.toDateString() === startDate.toDateString()) {
-          const taskStartIndex = timeSlots.indexOf(bookedTimeSlots[0]);
-          const taskEndIndex = taskStartIndex + bookedTimeSlots.length - 1;
+      // Check if any of the selected machines match the task's machine
+      const isMachineMatched = task.selectedMachine.some(machine =>
+        selectedMachines.some(selected => selected.title === machine.title) // Ensure you're matching correctly
+      );
 
-          if (
-            (startIndex >= taskStartIndex && startIndex <= taskEndIndex) ||
-            (endIndex >= taskStartIndex && endIndex <= taskEndIndex) ||
-            (startIndex <= taskStartIndex && endIndex >= taskEndIndex)
-          ) {
-            return true;
-          }
-        }
+      // Only check booked slots if the date matches and there's a machine match
+      if (bookedStartTime.toDateString() === startDate.toDateString() && isMachineMatched) {
+        const taskStartIndex = timeSlots.indexOf(bookedTimeSlots[0]);
+        const taskEndIndex = taskStartIndex + bookedTimeSlots.length - 1;
+
+        return (
+          (startIndex >= taskStartIndex && startIndex <= taskEndIndex) ||
+          (endIndex >= taskStartIndex && endIndex <= taskEndIndex) ||
+          (startIndex <= taskStartIndex && endIndex >= taskEndIndex)
+        );
       }
       return false;
     });
   };
+
+
+
+
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -395,11 +406,10 @@ const ScheduleATask = () => {
                       />
                     </label>
                     <span
-                      className={`ml-2 text-[15px] ${
-                        selectedTimeSlots.length > 0
-                          ? "text-blue-600"
-                          : "text-gray-500"
-                      }`}
+                      className={`ml-2 text-[15px] ${selectedTimeSlots.length > 0
+                        ? "text-blue-600"
+                        : "text-gray-500"
+                        }`}
                     >
                       {duration ? formatDuration(duration) : "00:00"}
                     </span>
@@ -429,10 +439,10 @@ const ScheduleATask = () => {
                       <p className="text-[25px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
                           : "Date not available"}
                       </p>
                       <div className="grid grid-cols-3 mt-5 w-[300px] mx-auto">
@@ -457,41 +467,42 @@ const ScheduleATask = () => {
                           <p className="text-[15px]"> Available</p>
                         </div>
                       </div>
+
+
                       <div className="grid grid-cols-4 gap-3 place-items-center mt-5">
-                        {timeSlots.map((slot, index) => {
-                          const isDisabled = isSlotBooked(slot);
-                          return (
-                            <div
-                              key={index}
-                              className={`px-2 py-1 text-[14px] cursor-pointer rounded transition-all duration-200 
-                                                        ${
-                                                          selectedTimeSlots.includes(
-                                                            slot
-                                                          )
-                                                            ? "bg-blue-200 text-black"
-                                                            : isDisabled
-                                                            ? "bg-gray-300 cursor-not-allowed"
-                                                            : "hover:bg-blue-300"
-                                                        }`}
-                              onClick={() =>
-                                !isDisabled && handleTimeSlotClick(slot)
-                              }
-                            >
-                              {slot}
-                            </div>
-                          );
-                        })}
-                      </div>
+    {timeSlots.map((slot, index) => {
+        const durationInSlots = durationMapping[duration] || 0;
+        const isDisabled = isSlotBooked(slot, durationInSlots); // Check if the slot is booked for the selected machines
+        return (
+            <div
+                key={index}
+                className={`px-2 py-1 text-[14px] cursor-pointer rounded transition-all duration-200 
+                    ${selectedTimeSlots.includes(slot) 
+                        ? "bg-blue-200 text-black" 
+                        : isDisabled 
+                        ? "bg-gray-300 cursor-not-allowed" 
+                        : "hover:bg-blue-300"
+                    }`}
+                onClick={() => !isDisabled && handleTimeSlotClick(slot)}
+            >
+                {slot}
+            </div>
+        );
+    })}
+</div>
+
+
+
                     </div>
                     <div className="flex-1 hidden lg:flex text-center lg:text-start mt-5 lg:mt-0 font-semibold">
                       <div>
                         <p className="text-[25px]">
                           {startDate
                             ? startDate.toLocaleDateString(undefined, {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
                             : "Date not available"}
                         </p>
                         <div className="grid text-center mt-5 grid-cols-3 w-[300px] mx-auto">
@@ -544,18 +555,7 @@ const ScheduleATask = () => {
                   </button>
                 </div>
               </form>
-              {/* <div className="mt-4 flex flex-col w-fit gap-5 px-10">
-                                <p className="border-b w-fit">Share</p>
-                                <div className="flex gap-5">
-                                    <p className="ml-10">Type email:</p> <input className="border text-[15px] w-[235px] h-6 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" />
-                                </div>
-                                <button
-                                    type="submit"
-                                    className="bg-[#522C80] text-white px-4 py-2 w-fit rounded shadow text-[15px] hover:bg-[#754da7] transition"
-                                >
-                                    SHARE
-                                </button>
-                            </div> */}
+
             </div>
           </div>
         )}
