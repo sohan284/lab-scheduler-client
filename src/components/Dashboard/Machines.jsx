@@ -120,8 +120,8 @@ const Machines = () => {
                             <div>
                                 <label className="block mb-2 text-gray-700">Tutorial URL</label>
                                 <input
-                                    type="url"
-                                    {...register("tutorial", { required: "Tutorial URL is required" })}
+                                    type="text"
+                                    {...register("tutorial")}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                                 />
                                 {errors.tutorial && <p className="text-red-500 text-sm">{errors.tutorial.message}</p>}
@@ -131,7 +131,7 @@ const Machines = () => {
                                 <label className="block mb-2 text-gray-700">Author Email</label>
                                 <input
                                     type="email"
-                                    {...register("author", { required: "Author email is required" })}
+                                    {...register("author")}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                                 />
                                 {errors.author && <p className="text-red-500 text-sm">{errors.author.message}</p>}

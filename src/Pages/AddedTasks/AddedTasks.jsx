@@ -32,7 +32,7 @@ const AddedTasks = () => {
     const subject = encodeURIComponent(`Task: ${task.taskName}`);
     const body = encodeURIComponent(`
       Task Name: ${task.taskName}
-      Machine: ${task.selectedMachine.join(", ")}
+      Machine: ${task.selectedMachine.map(machine => machine.title).join(", ")}
       Estimated Time: ${task.estimatedTime}
       Scheduled Time Slot: ${
         task?.startDate
@@ -69,7 +69,7 @@ const AddedTasks = () => {
                       <div className="grid bg-zinc-50 grid-cols-2">
                         <h1 className="py-4 px-10 font-bold">Machine</h1>
                         <p className="py-4 px-10">
-                          {task.selectedMachine.join(", ")}
+                          {task.selectedMachine.map(machine => machine.title).join(", ")}
                         </p>
                       </div>
                       <div className="grid grid-cols-2">

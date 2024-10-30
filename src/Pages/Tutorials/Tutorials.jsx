@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 // import tutorialsJson from "./tutorials.json";
 import TabNav from "../../Shared/TabNav";
@@ -8,6 +8,9 @@ import "react-responsive-modal/styles.css";
 import VideoLink from "../../assets/tutorials/wall_printing.mp4";
 import './tutorial.css'
 import { duration } from "@mui/material";
+import baseUrl from "../../api/apiConfig";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const Tutorials = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +23,7 @@ const Tutorials = () => {
     {
         "id": 1,
         "name": "How to mount a plate",
-        "video": VideoLink,
+        "video": "https://www.youtube.com/watch?v=h0On8w8x_Yo",
         
     },
     {
@@ -90,6 +93,21 @@ const Tutorials = () => {
         
     }
 ];
+const {
+  isLoading,
+  isError,
+  data = [],
+  error,
+  refetch,
+} = useQuery({
+  queryKey: ["userOrders"],
+  queryFn: async () => {
+    const response = await axios.get(`${baseUrl.machines}`);
+    return response.data.data;
+  },
+});
+console.log(data);
+
 
   const handleOpenModal = (videoUrl) => {
     // console.log('videoUrl', videoUrl)
@@ -118,8 +136,8 @@ const Tutorials = () => {
     setFilterSearch(search);
   }
 
-  const filterTutorialsBySearch = tutorialsJson.filter((tutorial) => 
-    tutorial.name.toLowerCase().includes(filterSearch.toLowerCase())
+  const filterTutorialsBySearch = data.filter((tutorial) => 
+    tutorial.title.toLowerCase().includes(filterSearch.toLowerCase())
   );
 
   return (
@@ -148,37 +166,40 @@ const Tutorials = () => {
           </div>
         </div>
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 my-12 px-4">
-          {filterTutorialsBySearch.map((tutorial) => (
-            <div key={tutorial.id} className="mt-12 md:mt-20">
-              <div className="grid justify-center">
-                <div className="flex justify-between">
-                  <div className="text-[15px] font-bold text-gray-600">
-                    {tutorial.name}
-                  </div>
-                  <div className="text-[15px] font-bold text-gray-600">
-                    {durations[tutorial.video] || 'Loading...'}
-                  </div>
-                </div>
-                <div className="mt-4 flex justify-center">
-                  <button
-                    onClick={() => handleOpenModal(tutorial.video)}
-                    className="relative"
-                    style={{ width: "100%", maxWidth: "300px" }}
-                  >
-                    <ReactPlayer
-                      url={tutorial.video}
-                      width="100%"
-                      height="auto"
-                      controls={false}
-                      onDuration={(duration) => handleDuration(duration, tutorial.video)}
-                      className="rounded-lg shadow-md cursor-pointer"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+  {filterTutorialsBySearch.filter(tutorial => tutorial.tutorial).map((tutorial) => (
+    <div key={tutorial?.id} className="mt-12 md:mt-20 flex flex-col items-center">
+      {tutorial.tutorial && (
+        <div className="flex flex-col items-center">
+          <div className="text-[15px] font-bold text-gray-600 text-center overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-[300px]">
+            {tutorial?.title}
+          </div>
+          
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={() => handleOpenModal(tutorial?.tutorial)}
+              className="relative"
+              style={{ width: "100%", maxWidth: "300px" }}
+            >
+              <ReactPlayer
+                url={tutorial?.tutorial}
+                width="100%"
+                height="auto"
+                controls={false}
+                onDuration={(duration) => handleDuration(duration, tutorial?.tutorial)}
+                className="rounded-lg shadow-md cursor-pointer"
+              />
+            </button>
+          </div>
+          
+          <div className="text-[15px] mt-3 text-orange-500 font-semibold">
+            {durations[tutorial?.tutorial] || 'Loading...'}
+          </div>
         </div>
+      )}
+    </div>
+  ))}
+</div>
+
       </div>
 
       {/* Modal Video */}
