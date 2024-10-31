@@ -8,11 +8,11 @@ import { Toaster, toast } from "react-hot-toast";
 import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
+import { Tooltip } from "@mui/material";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
-  const taskCratedBy = user?.username;
-
+  const createdBy = user?.username;
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
@@ -24,6 +24,9 @@ const ScheduleATask = () => {
   const [duration, setDuration] = useState("30 minutes");
   const [Loading, setLoading] = useState(false);
   const [isEstimate, setIsEstimate] = useState(false);
+  const [isAuthor,setIsAuthor]= useState(false)
+  const [sendApproval,setSendApproval]=useState(false)
+  const [machineForApproval,setMachineForApproval]=useState([])
   const timeSlots = [
     "08:30",
     "08:45",
@@ -73,17 +76,14 @@ const ScheduleATask = () => {
   const [machines, setMachines] = useState([]);
 
   useEffect(() => {
-    fetch("https://lab-scheduler-server.vercel.app/machines")
+    fetch(`${baseUrl.machines}`)
       .then(res => res.json())
       .then(data => {
+        setMachineForApproval(data.data);
         const titles = data.data.map(machine => machine.title);
         setMachines(titles);
       });
   }, []);
-
-  console.log(machines);
-
-
   const courses = [
     "GC 1041",
     "GC 2071",
@@ -93,15 +93,15 @@ const ScheduleATask = () => {
     "GC 4401",
   ];
   const durationMapping = {
-    "15 minutes": 1,
-    "30 minutes": 2,
-    "45 minutes": 3,
-    "1 hour": 4,
-    "2 hours": 8,
-    "3 hours": 12,
-    "4 hours": 16,
-    "5 hours": 20,
-    "6 hours": 24,
+    "15 minutes": 2,
+    "30 minutes": 3,
+    "45 minutes": 4,
+    "1 hour": 5,
+    "2 hours": 9,
+    "3 hours": 13,
+    "4 hours": 17,
+    "5 hours": 21,
+    "6 hours": 25,
   };
   const filteredOptions = machines.filter((o) => !selectedMachine.includes(o));
   const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
@@ -119,6 +119,7 @@ const ScheduleATask = () => {
     };
     return durationFormatMapping[duration] || "00:00";
   };
+
 
   const handleTimeSlotClick = (slot) => {
     const selectedIndex = timeSlots.indexOf(slot);
@@ -188,6 +189,7 @@ const ScheduleATask = () => {
     }
 
     const formData = {
+      sendApproval,
       taskName,
       selectedCourse,
       startDate: startDate.toISOString(),
@@ -196,7 +198,7 @@ const ScheduleATask = () => {
       email,
       estimatedTime: duration,
       approve: "Pending",
-      taskCratedBy: taskCratedBy,
+      createdBy: createdBy,
     };
 
     try {
@@ -213,11 +215,9 @@ const ScheduleATask = () => {
       }
 
       const result = await response.json();
-      console.log("Success:", result);
       toast.success(
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
-
       setTaskName("");
       setSelectedCourse("");
       setEmail("");
@@ -263,6 +263,29 @@ const ScheduleATask = () => {
     const day = date.getDay();
     return day !== 0 && day !== 6;
   };
+  const handleSendApproval = (e) => {
+    if (e.target.checked) {
+      setSendApproval(true);
+    } else {
+      setSendApproval(false);
+    }
+  };
+  const handleSelectMachine = (event) =>{
+    setSelectedMachine(event)
+    
+    machineForApproval.map(machine => {
+      if((event.includes(machine.title))){
+        if(machine.author){
+          setIsAuthor(true)
+        }else{
+          setIsAuthor(false)
+        }
+      }
+    })
+    
+  }
+  
+
   return (
     <>
       <TabNav />
@@ -333,7 +356,7 @@ const ScheduleATask = () => {
                       mode="multiple"
                       placeholder="Please select machines"
                       value={selectedMachine}
-                      onChange={setSelectedMachine}
+                      onChange={handleSelectMachine}
                       style={{
                         width: "235px",
                         borderColor:
@@ -481,13 +504,28 @@ const ScheduleATask = () => {
                   </div>
                 </div>
                 <div className="">
-                  <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
-                    <p>
-                      This machine requires faculty permission/availability.{" "}
-                      <br /> Send for approval?
-                    </p>
-                    <input required type="checkbox" />
-                  </div>
+                <Tooltip
+                    title={
+                      isAuthor
+                        ? "Please check this box if you want to proceed"
+                        : "This checkbox is for some specific machine"
+                    }
+                  >
+                    <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
+                      <p>
+                        This machine requires faculty permission/availability.{" "}
+                        <br /> Send for approval?
+                      </p>
+
+                      <input
+                        disabled={!isAuthor}
+                        required={isAuthor}
+                        onClick={(e) => handleSendApproval(e)}
+                        type="checkbox"
+                      />
+                    </div>
+                  </Tooltip>
+
                   <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
                     <input type="checkbox" />
