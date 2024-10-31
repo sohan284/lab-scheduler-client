@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
 import TaskManagement from "../Services/Task";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { CircularProgress } from "@mui/material";
 
 const ApproveStatusPage = () => {
   const { taskId } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const author = queryParams.get('author');
+  
   const [isSuccess, setIsSuccess] = useState("Pending");
 
   useEffect(() => {
     const approveTask = async () => {
       try {
-        const res = await TaskManagement.approveStatus(taskId);
+        const res = await TaskManagement.approveStatus(taskId,{author:author});
 
         if (res.status === 200 || res.status === 201 || res.data.success) {
           setIsSuccess("Success");
@@ -23,6 +27,7 @@ const ApproveStatusPage = () => {
         setIsSuccess("Failed");
       }
     };
+    
 
     approveTask();
   }, [taskId]);
