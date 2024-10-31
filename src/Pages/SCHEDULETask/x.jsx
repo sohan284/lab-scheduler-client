@@ -8,11 +8,11 @@ import { Toaster, toast } from "react-hot-toast";
 import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
-import { Tooltip } from "@mui/material";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
-  const createdBy = user?.username;
+  const taskCratedBy = user?.username;
+
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
@@ -24,9 +24,6 @@ const ScheduleATask = () => {
   const [duration, setDuration] = useState("30 minutes");
   const [Loading, setLoading] = useState(false);
   const [isEstimate, setIsEstimate] = useState(false);
-  const [isAuthor,setIsAuthor]= useState(false)
-  const [sendApproval,setSendApproval]=useState(false)
-  const [machineForApproval,setMachineForApproval]=useState([])
   const timeSlots = [
     "08:30",
     "08:45",
@@ -72,18 +69,48 @@ const ScheduleATask = () => {
     "18:45",
     "19:00",
   ];
-   
-  const [machines, setMachines] = useState([]);
+  const mechines = [
+    "Bosslaser",
+    "Polar78 cutter",
+    "Konica Minolta digital press",
+    "Protopic III-540 Sleeking unit",
+    "Aerocut",
+    "1800S Auto Air Suction Paper Folder",
+    "HP Indigo",
+    "Ryobi 3304HA Offset printer",
+    "Fastbind book binder",
+    "Uperpad padding press",
+    "Pad press",
+    "Casematic XT Paper edge cutter",
+    "Duralam integra",
+    "Rotatrim Professional M42",
+    "Epson SureColor P7570 SpectroProofer",
+    "Mimaki CG-130SR III Cutting Plotter",
+    "Mimaki JV150-160",
+    "Mimaki UJF-6042 MKII Dye Sub",
+    "Nordson UV Curing",
+    "Mimaki CFL-605RT",
+    "Kompac EZ Koat 20",
+    "Comco Captain Flexo Press",
+    "Nilpeter FA LINE Flexo Press",
+    "jmheaford Mounting & Proofing Solutions",
+    "Esko CDI Spark 2530",
+    "DU PONT Cyrel FAST Image processor",
+    "DU PONT Cyrel FAST post processor",
+    "IDEAL 1038 Cutter",
+    "Ricoh Pro C651EX",
+    "Triumph 5260 VRCUT",
+    "Mimaki UJF-6042 UV Printer",
+    "Riso Goccopro QS2536",
+    "DragonAir",
+    "Sohn 4400 Rotary Die Cutting and Label Printing Machine",
+    "Orbital X",
+    "Kodak Flexcel NX Laminator",
+    "Trendsetter NX Mid Squarespot image processor",
+    "Ryobi RP520-220F plate cutter",
+    "Other",
+  ];
 
-  useEffect(() => {
-    fetch(`${baseUrl.machines}`)
-      .then(res => res.json())
-      .then(data => {
-        setMachineForApproval(data.data);
-        const titles = data.data.map(machine => machine.title);
-        setMachines(titles);
-      });
-  }, []);
   const courses = [
     "GC 1041",
     "GC 2071",
@@ -93,17 +120,17 @@ const ScheduleATask = () => {
     "GC 4401",
   ];
   const durationMapping = {
-    "15 minutes": 2,
-    "30 minutes": 3,
-    "45 minutes": 4,
-    "1 hour": 5,
-    "2 hours": 9,
-    "3 hours": 13,
-    "4 hours": 17,
-    "5 hours": 21,
-    "6 hours": 25,
+    "15 minutes": 1,
+    "30 minutes": 2,
+    "45 minutes": 3,
+    "1 hour": 4,
+    "2 hours": 8,
+    "3 hours": 12,
+    "4 hours": 16,
+    "5 hours": 20,
+    "6 hours": 24,
   };
-  const filteredOptions = machines.filter((o) => !selectedMachine.includes(o));
+  const filteredOptions = mechines.filter((o) => !selectedMachine.includes(o));
   const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
@@ -119,7 +146,6 @@ const ScheduleATask = () => {
     };
     return durationFormatMapping[duration] || "00:00";
   };
-
 
   const handleTimeSlotClick = (slot) => {
     const selectedIndex = timeSlots.indexOf(slot);
@@ -189,7 +215,6 @@ const ScheduleATask = () => {
     }
 
     const formData = {
-      sendApproval,
       taskName,
       selectedCourse,
       startDate: startDate.toISOString(),
@@ -198,7 +223,7 @@ const ScheduleATask = () => {
       email,
       estimatedTime: duration,
       approve: "Pending",
-      createdBy: createdBy,
+      taskCratedBy: taskCratedBy,
     };
 
     try {
@@ -215,9 +240,11 @@ const ScheduleATask = () => {
       }
 
       const result = await response.json();
+      console.log("Success:", result);
       toast.success(
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
+
       setTaskName("");
       setSelectedCourse("");
       setEmail("");
@@ -226,8 +253,6 @@ const ScheduleATask = () => {
       setStartDate(new Date());
       setDuration("30 minutes");
     } catch (error) {
-      console.log(error);
-      
       console.error("Error:", error);
       toast.error("There was a problem scheduling the task.");
     } finally {
@@ -263,29 +288,6 @@ const ScheduleATask = () => {
     const day = date.getDay();
     return day !== 0 && day !== 6;
   };
-  const handleSendApproval = (e) => {
-    if (e.target.checked) {
-      setSendApproval(true);
-    } else {
-      setSendApproval(false);
-    }
-  };
-  const handleSelectMachine = (event) =>{
-    setSelectedMachine(event)
-    
-    machineForApproval.map(machine => {
-      if((event.includes(machine.title))){
-        if(machine.author){
-          setIsAuthor(true)
-        }else{
-          setIsAuthor(false)
-        }
-      }
-    })
-    
-  }
-  
-
   return (
     <>
       <TabNav />
@@ -356,7 +358,7 @@ const ScheduleATask = () => {
                       mode="multiple"
                       placeholder="Please select machines"
                       value={selectedMachine}
-                      onChange={handleSelectMachine}
+                      onChange={setSelectedMachine}
                       style={{
                         width: "235px",
                         borderColor:
@@ -414,10 +416,11 @@ const ScheduleATask = () => {
                       />
                     </label>
                     <span
-                      className={`ml-2 text-[15px] ${selectedTimeSlots.length > 0
-                        ? "text-blue-600"
-                        : "text-gray-500"
-                        }`}
+                      className={`ml-2 text-[15px] ${
+                        selectedTimeSlots.length > 0
+                          ? "text-blue-600"
+                          : "text-gray-500"
+                      }`}
                     >
                       {duration ? formatDuration(duration) : "00:00"}
                     </span>
@@ -447,10 +450,10 @@ const ScheduleATask = () => {
                       <p className="text-[15px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
                           : "Date not available"}
                       </p>
                     </div>
@@ -472,14 +475,15 @@ const ScheduleATask = () => {
                             <div
                               key={index}
                               className={`px-2 py-1 text-[14px] cursor-pointer rounded transition-all duration-200 
-                                                        ${selectedTimeSlots.includes(
-                                slot
-                              )
-                                  ? "bg-blue-200 text-black"
-                                  : isDisabled
-                                    ? "bg-gray-300 cursor-not-allowed"
-                                    : "hover:bg-blue-300"
-                                }`}
+                                                        ${
+                                                          selectedTimeSlots.includes(
+                                                            slot
+                                                          )
+                                                            ? "bg-blue-200 text-black"
+                                                            : isDisabled
+                                                            ? "bg-gray-300 cursor-not-allowed"
+                                                            : "hover:bg-blue-300"
+                                                        }`}
                               onClick={() =>
                                 !isDisabled && handleTimeSlotClick(slot)
                               }
@@ -494,38 +498,23 @@ const ScheduleATask = () => {
                       <p className="text-[15px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
                           : "Date not available"}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className="">
-                <Tooltip
-                    title={
-                      isAuthor
-                        ? "Please check this box if you want to proceed"
-                        : "This checkbox is for some specific machine"
-                    }
-                  >
-                    <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
-                      <p>
-                        This machine requires faculty permission/availability.{" "}
-                        <br /> Send for approval?
-                      </p>
-
-                      <input
-                        disabled={!isAuthor}
-                        required={isAuthor}
-                        onClick={(e) => handleSendApproval(e)}
-                        type="checkbox"
-                      />
-                    </div>
-                  </Tooltip>
-
+                  <div className="flex items-center gap-4 bg-[#F2F4F6] text-[15px] px-10 py-5">
+                    <p>
+                      This machine requires faculty permission/availability.{" "}
+                      <br /> Send for approval?
+                    </p>
+                    <input required type="checkbox" />
+                  </div>
                   <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
                     <input type="checkbox" />

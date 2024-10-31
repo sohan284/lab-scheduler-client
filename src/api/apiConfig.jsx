@@ -7,6 +7,7 @@ const baseUrl = {
   Upload: `${domain}/videos`,
   scheduledtasks: `${domain}/scheduledtasks`,
   machines: `${domain}/machines`,
+  courses: `${domain}/courses`,
 };
 
 export default baseUrl;

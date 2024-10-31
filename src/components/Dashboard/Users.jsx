@@ -5,7 +5,7 @@ import {  FaSearch } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import baseUrl from "../../api/apiConfig";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import VerifyToken from "../../utils/VerifyToken";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -134,8 +134,8 @@ const Users = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="py-2 px-4 text-center text-gray-700">
-                  No machines found
+                <td colSpan="3" className="py-2 px-4 h-[600px] text-center text-gray-700">
+                  {isLoading ? <CircularProgress/> : "No users found"}
                 </td>
               </tr>
             )}

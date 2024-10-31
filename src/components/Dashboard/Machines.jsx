@@ -6,7 +6,7 @@ import { IoClose } from 'react-icons/io5';
 import { MdDelete } from 'react-icons/md';
 import baseUrl from '../../api/apiConfig';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 const Machines = () => {
     const [showForm, setShowForm] = useState(false);
@@ -70,6 +70,7 @@ const Machines = () => {
         setValue('title', machine.title); 
         setValue('tutorial', machine.tutorial);
         setValue('author', machine.author);
+        setValue('duration', machine.duration); // Set duration for editing
     };
 
     return (
@@ -117,11 +118,12 @@ const Machines = () => {
                                 />
                                 {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
                             </div>
+
                             <div>
                                 <label className="block mb-2 text-gray-700">Tutorial URL</label>
                                 <input
-                                    type="url"
-                                    {...register("tutorial", { required: "Tutorial URL is required" })}
+                                    type="text"
+                                    {...register("tutorial")}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                                 />
                                 {errors.tutorial && <p className="text-red-500 text-sm">{errors.tutorial.message}</p>}
@@ -131,11 +133,34 @@ const Machines = () => {
                                 <label className="block mb-2 text-gray-700">Author Email</label>
                                 <input
                                     type="email"
-                                    {...register("author", { required: "Author email is required" })}
+                                    {...register("author")}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                                 />
                                 {errors.author && <p className="text-red-500 text-sm">{errors.author.message}</p>}
                             </div>
+
+                            <div className="flex items-center gap-5">
+                                <label htmlFor="duration" className="block font-medium text-[15px] px-10">
+                                    Duration:
+                                </label>
+                                <select
+                                    {...register("duration")}
+                                    className="border text-[15px] border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Select Duration</option>
+                                    <option value="15 minutes">15 minutes</option>
+                                    <option value="30 minutes">30 minutes</option>
+                                    <option value="45 minutes">45 minutes</option>
+                                    <option value="1 hour">1 hour</option>
+                                    <option value="2 hours">2 hours</option>
+                                    <option value="3 hours">3 hours</option>
+                                    <option value="4 hours">4 hours</option>
+                                    <option value="5 hours">5 hours</option>
+                                    <option value="6 hours">6 hours</option>
+                                </select>
+                                {errors.duration && <p className="text-red-500 text-sm">{errors.duration.message}</p>}
+                            </div>
+
                             <button
                                 type="submit"
                                 className="md:col-span-2 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-md transition duration-300"
@@ -153,6 +178,7 @@ const Machines = () => {
                         <tr className="bg-gray-100">
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Machine</th>
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Author Email</th>
+                            <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Duration</th>
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Action</th>
                         </tr>
                     </thead>
@@ -162,6 +188,7 @@ const Machines = () => {
                                 <tr key={machine._id}>
                                     <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.title}</td>
                                     <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.author}</td>
+                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.duration}</td>
                                     <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                                         <button className='flex gap-6'>
                                             <MdDelete onClick={() => handleClickOpen(machine?._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1' />
@@ -172,7 +199,9 @@ const Machines = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="3" className="py-2 px-4 text-center text-gray-700">No machines found</td>
+                                <td colSpan="4" className="py-2 px-4 h-[600px] text-center text-gray-700">
+                                    {isLoading ? <CircularProgress /> : "No machines found"}
+                                </td>
                             </tr>
                         )}
                     </tbody>
