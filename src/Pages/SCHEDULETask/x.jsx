@@ -69,20 +69,47 @@ const ScheduleATask = () => {
     "18:45",
     "19:00",
   ];
-   
-  const [machines, setMachines] = useState([]);
-
-  useEffect(() => {
-    fetch("https://lab-scheduler-server.vercel.app/machines")
-      .then(res => res.json())
-      .then(data => {
-        const titles = data.data.map(machine => machine.title);
-        setMachines(titles);
-      });
-  }, []);
-
-  console.log(machines);
-
+  const mechines = [
+    "Bosslaser",
+    "Polar78 cutter",
+    "Konica Minolta digital press",
+    "Protopic III-540 Sleeking unit",
+    "Aerocut",
+    "1800S Auto Air Suction Paper Folder",
+    "HP Indigo",
+    "Ryobi 3304HA Offset printer",
+    "Fastbind book binder",
+    "Uperpad padding press",
+    "Pad press",
+    "Casematic XT Paper edge cutter",
+    "Duralam integra",
+    "Rotatrim Professional M42",
+    "Epson SureColor P7570 SpectroProofer",
+    "Mimaki CG-130SR III Cutting Plotter",
+    "Mimaki JV150-160",
+    "Mimaki UJF-6042 MKII Dye Sub",
+    "Nordson UV Curing",
+    "Mimaki CFL-605RT",
+    "Kompac EZ Koat 20",
+    "Comco Captain Flexo Press",
+    "Nilpeter FA LINE Flexo Press",
+    "jmheaford Mounting & Proofing Solutions",
+    "Esko CDI Spark 2530",
+    "DU PONT Cyrel FAST Image processor",
+    "DU PONT Cyrel FAST post processor",
+    "IDEAL 1038 Cutter",
+    "Ricoh Pro C651EX",
+    "Triumph 5260 VRCUT",
+    "Mimaki UJF-6042 UV Printer",
+    "Riso Goccopro QS2536",
+    "DragonAir",
+    "Sohn 4400 Rotary Die Cutting and Label Printing Machine",
+    "Orbital X",
+    "Kodak Flexcel NX Laminator",
+    "Trendsetter NX Mid Squarespot image processor",
+    "Ryobi RP520-220F plate cutter",
+    "Other",
+  ];
 
   const courses = [
     "GC 1041",
@@ -103,7 +130,7 @@ const ScheduleATask = () => {
     "5 hours": 20,
     "6 hours": 24,
   };
-  const filteredOptions = machines.filter((o) => !selectedMachine.includes(o));
+  const filteredOptions = mechines.filter((o) => !selectedMachine.includes(o));
   const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
@@ -226,8 +253,6 @@ const ScheduleATask = () => {
       setStartDate(new Date());
       setDuration("30 minutes");
     } catch (error) {
-      console.log(error);
-      
       console.error("Error:", error);
       toast.error("There was a problem scheduling the task.");
     } finally {
@@ -391,10 +416,11 @@ const ScheduleATask = () => {
                       />
                     </label>
                     <span
-                      className={`ml-2 text-[15px] ${selectedTimeSlots.length > 0
-                        ? "text-blue-600"
-                        : "text-gray-500"
-                        }`}
+                      className={`ml-2 text-[15px] ${
+                        selectedTimeSlots.length > 0
+                          ? "text-blue-600"
+                          : "text-gray-500"
+                      }`}
                     >
                       {duration ? formatDuration(duration) : "00:00"}
                     </span>
@@ -424,10 +450,10 @@ const ScheduleATask = () => {
                       <p className="text-[15px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
                           : "Date not available"}
                       </p>
                     </div>
@@ -449,14 +475,15 @@ const ScheduleATask = () => {
                             <div
                               key={index}
                               className={`px-2 py-1 text-[14px] cursor-pointer rounded transition-all duration-200 
-                                                        ${selectedTimeSlots.includes(
-                                slot
-                              )
-                                  ? "bg-blue-200 text-black"
-                                  : isDisabled
-                                    ? "bg-gray-300 cursor-not-allowed"
-                                    : "hover:bg-blue-300"
-                                }`}
+                                                        ${
+                                                          selectedTimeSlots.includes(
+                                                            slot
+                                                          )
+                                                            ? "bg-blue-200 text-black"
+                                                            : isDisabled
+                                                            ? "bg-gray-300 cursor-not-allowed"
+                                                            : "hover:bg-blue-300"
+                                                        }`}
                               onClick={() =>
                                 !isDisabled && handleTimeSlotClick(slot)
                               }
@@ -471,10 +498,10 @@ const ScheduleATask = () => {
                       <p className="text-[15px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
                           : "Date not available"}
                       </p>
                     </div>
