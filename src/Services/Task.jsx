@@ -1,9 +1,9 @@
 import axios from "axios";
 import baseUrl from "../api/apiConfig";
 
-const approveStatus = async (id) => {
+const approveStatus = async (id,data) => {
   try {
-    const response = await axios.put(`${baseUrl.task}/approve/${id}`);
+    const response = await axios.put(`${baseUrl.task}/approve/${id}`,data);
     return response; // Return the entire response object
   } catch (error) {
     // Handle errors
@@ -11,9 +11,9 @@ const approveStatus = async (id) => {
     throw error;
   }
 };
-const rejectStatus = async (id) => {
+const rejectStatus = async (id,data) => {
   try {
-    const response = await axios.put(`${baseUrl.task}/reject/${id}`);
+    const response = await axios.put(`${baseUrl.task}/reject/${id}`,data);
     return response; // Return the entire response object
   } catch (error) {
     // Handle errors
