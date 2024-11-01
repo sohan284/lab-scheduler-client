@@ -8,6 +8,7 @@ const baseUrl = {
   scheduledtasks: `${domain}/scheduledtasks`,
   machines: `${domain}/machines`,
   courses: `${domain}/courses`,
+  tutorials: `${domain}/tutorials`,
 };
 
 export default baseUrl;

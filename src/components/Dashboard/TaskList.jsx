@@ -64,7 +64,7 @@ const TaskList = () => {
         <div className="relative">
           <input
             type="text"
-            placeholder="Search Users..."
+            placeholder="Search tasks..."
             className="md:w-96 py-1.5 pl-10 border border-zinc-300 rounded-md focus:outline-none focus:border-orange-400"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -73,7 +73,7 @@ const TaskList = () => {
         </div>
       </div>
 
-      <div className="mt-10 overflow-auto max-w-sm md:max-w-full max-h-[80vh]">
+      <div className="mt-10 overflow-auto max-w-sm md:max-w-full max-h-[80vh] custom-scroll">
         <table className="min-w-full bg-white border border-gray-300 rounded-md">
           <thead>
             <tr className="bg-gray-100">

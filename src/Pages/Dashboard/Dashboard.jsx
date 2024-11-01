@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaUsers, FaTools, FaBook, FaTasks } from 'react-icons/fa';
 import { IoClose, IoMenu, IoSettings } from 'react-icons/io5';
 import Machines from '../../components/Dashboard/Machines';
@@ -7,10 +7,12 @@ import TaskList from '../../components/Dashboard/TaskList';
 import { useNavigate } from 'react-router-dom';
 import { VscSignOut } from 'react-icons/vsc';
 import Users from '../../components/Dashboard/Users';
+import { RiVideoFill } from "react-icons/ri";
+import AddTutorial from '../../components/Dashboard/AddTutorial';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    
+
     // State for selected tab
     const [selectedTab, setSelectedTab] = useState(localStorage.getItem('tab') || 'Users');
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -59,12 +61,12 @@ const Dashboard = () => {
                     >
                         <FaTasks /><span>Task List</span>
                     </button>
-                    {/* <button
-                        onClick={() => handleTabChange('Settings')}
-                        className={`flex items-center space-x-2 p-2 rounded ${selectedTab === 'Settings' ? 'bg-orange-500 text-white font-bold' : 'hover:bg-zinc-300'}`}
+                    <button
+                        onClick={() => handleTabChange('Tutorials')}
+                        className={`flex items-center space-x-2 p-2 rounded ${selectedTab === 'Tutorials' ? 'bg-orange-500 text-white font-bold' : 'hover:bg-zinc-300'}`}
                     >
-                        <IoSettings /><span>Settings</span>
-                    </button> */}
+                        <RiVideoFill /><span>Tutorials</span>
+                    </button>
                 </nav>
             </aside>
 
@@ -85,7 +87,7 @@ const Dashboard = () => {
                     {selectedTab === 'Machines' && <Machines />}
                     {selectedTab === 'Courses' && <Courses />}
                     {selectedTab === 'Task List' && <TaskList />}
-                    {/* {selectedTab === 'Settings' && <div>Settings Content</div>}  */}
+                    {selectedTab === 'Tutorials' && <AddTutorial />}
                 </main>
             </div>
         </div>
