@@ -137,12 +137,12 @@ const ScheduleATask = () => {
   const durationInSlots = durationMapping[duration] || 0;
   
   const endIndex = selectedIndex + durationInSlots - 2;
-  
+
   if (endIndex >= timeSlots.indexOf("19:00")) {
-    toast.error("For the selected duration, the latest start time is " + 
-                timeSlots[endIndex - durationInSlots + 1] + ".");
+    toast.error(`For a duration of ${duration}, please select a start time no later than 19:00.`);
     return;
   }
+  
 
   const isConflict = isSlotBooked(slot, durationInSlots);
   if (isConflict) {
