@@ -132,7 +132,7 @@ const RegisterPage = () => {
         <p className="uppercase text-center lg:text-start font-bold text-[20px] mb-12">
           Register
         </p>
-        <div className="lg:ml-24 max-w-[300px] lg:max-w-full">
+        <div className="lg:ml-24 max-w-[350px] lg:max-w-full">
           <div className="flex items-center mb-4">
             <h1 className="uppercase text-nowrap font-medium text-[15px] mr-[20px]">
               User Name
