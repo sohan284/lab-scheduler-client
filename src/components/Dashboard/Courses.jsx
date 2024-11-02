@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPen, FaPlus, FaSearch } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
@@ -25,7 +25,7 @@ const Courses = () => {
         setOpen(false);
     };
 
-    const { isLoading, isError, data = [], error, refetch } = useQuery({
+    const { isLoading, data = [], refetch } = useQuery({
         queryKey: ['userOrders'],
         queryFn: async () => {
             const response = await axios.get(`${baseUrl.courses}`);

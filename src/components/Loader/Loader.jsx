@@ -5,7 +5,7 @@ const Loader = ({ text }) => {
   return (
     <div className="min-h-screen overflow-hidden ">
       <p className=" text-center">{text ? text : ""}</p>
-      <img src={tiger} alt="" className="w-fit mx-auto" />
+      <img src={tiger} alt="" className="w-[200px] mx-auto" />
     </div>
   );
 };

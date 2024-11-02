@@ -252,7 +252,7 @@ const ScheduleATask = () => {
         const response = await fetch(`${baseUrl.scheduledtasks}`);
         const data = await response.json();
         const approvedData = data.data.filter(
-          (item) => item.approve === "Approved"
+          (item) => item.approve === "Approved" || item.approve === "Pending"
         );
         setScheduledTasks(approvedData);
       } catch (error) {

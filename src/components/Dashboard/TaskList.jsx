@@ -1,25 +1,22 @@
 import axios from "axios";
-import React, { useState } from "react";
+import  { useState } from "react";
 import {  FaSearch } from "react-icons/fa";
 
 import { MdDelete } from "react-icons/md";
 import baseUrl from "../../api/apiConfig";
 import { useQuery } from "@tanstack/react-query";
 import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from "@mui/material";
-import VerifyToken from "../../utils/VerifyToken";
 import toast, { Toaster } from "react-hot-toast";
 
 const TaskList = () => {
-  const user = VerifyToken();
   const [searchQuery, setSearchQuery] = useState("");
 
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
-  const [username, setUsername] = useState(null);
 
-  const handleClickOpen = (username) => {
+  const handleClickOpen = (id) => {
     setOpen(true);
-    setUsername(username);
+    setId(id);
   };
 
   const handleClose = () => {
@@ -28,9 +25,7 @@ const TaskList = () => {
 
   const {
     isLoading,
-    isError,
     data = [],
-    error,
     refetch,
   } = useQuery({
     queryKey: ["userOrders"],
@@ -40,22 +35,19 @@ const TaskList = () => {
     },
   });
 
-  const filteredUsers = data?.filter((machine) =>
-    machine.taskName?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = data?.filter((task) =>
+    task.taskName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const handleRemoveUser = async (username) => {
-    if (username !== user.username) {
+  const handleRemoveUser = async (id) => {
       try {
-        await axios.delete(`${baseUrl.users}/${username}`);
+        await axios.delete(`${baseUrl.task}/${id}`);
         handleClose();
         refetch();
-        toast.success("User deleted successfully");
+        toast.success("task deleted successfully");
       } catch (error) {
-        console.log("Error in deleting machine", error);
+        console.log("Error in deleting task", error);
       }
-    } else {
-      toast.error("You can't delete your own account");
-    }
+    
   };
   return (
     <div>
@@ -86,21 +78,39 @@ const TaskList = () => {
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
                 Status
               </th>
+              <th className="py-2 px-4 border-b border-gray-300 text-center text-sm font-semibold text-gray-700">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.length > 0 ? (
-              filteredUsers.map((machine) => (
-                <tr key={machine._id}>
+              filteredUsers.map((task) => (
+                <tr key={task._id} className="">
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.taskName}
+                    {task?.taskName}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.createdBy}
+                    {task?.createdBy}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.approve}
+                  <td className=" border-b border-gray-300 text-center text-sm text-gray-800">
+                    <p
+                        className={`text-nowrap w-[100px] px-2 p-0.5 ${
+                          task?.approve === "Pending" &&
+                          "bg-orange-500 text-white rounded-xl"
+                        } ${
+                          task?.approve === "Approved" &&
+                          "bg-green-600 text-white rounded-xl"
+                        } ${
+                          task?.approve === "Rejected" &&
+                          "bg-red-700 text-white rounded-xl"
+                        }`}
+                      >{task?.approve}</p>
                   </td>
+                  <td className=" border-b border-gray-300  text-3xl text-gray-800">
+                  <div className="flex justify-center"><MdDelete onClick={() => handleClickOpen(task?._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 m-2 p-1 ease-out rounded' /></div>
+                  </td>
+               
                 </tr>
               ))
             ) : (
@@ -120,14 +130,14 @@ const TaskList = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Confirm Machine Deletion"}
+          {"Confirm Task Deletion"}
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button
-            onClick={() => handleRemoveUser(username)}
+            onClick={() => handleRemoveUser(id)}
             color="error"
             autoFocus
           >

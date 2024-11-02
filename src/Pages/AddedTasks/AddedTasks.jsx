@@ -11,13 +11,25 @@ const AddedTasks = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTasks(data.data);
+    const fetchScheduledTasks = async () => {
+      try {
+        const response = await fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`);
+        const data = await response.json();
+        
+        // Filter tasks to only include those with status "approve"
+        const approvedTasks = data.data.filter(task => task.approve === 'Approved');
+        
+        setTasks(approvedTasks);
+      } catch (error) {
+        console.error("Error fetching scheduled tasks:", error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+  
+    fetchScheduledTasks();
   }, [createdBy]);
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -69,7 +81,7 @@ const AddedTasks = () => {
                       <div className="grid bg-zinc-50 grid-cols-2">
                         <h1 className="py-4 px-10 font-bold">Machine</h1>
                         <p className="py-4 px-10">
-                          {task.selectedMachine.map(machine => machine.title).join(", ")}
+                          {task.selectedMachine.map(machine => machine).join(", ")}
                         </p>
                       </div>
                       <div className="grid grid-cols-2">

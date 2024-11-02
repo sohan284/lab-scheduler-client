@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { FaMinus, FaPen, FaPlus, FaSearch } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
@@ -22,7 +22,7 @@ const Machines = () => {
         name: "tutorials"  // Array to store multiple tutorial URLs
     });
 
-    const { isLoading, isError, data = [], error, refetch } = useQuery({
+    const { isLoading,  data = [],  refetch } = useQuery({
         queryKey: ['userOrders'],
         queryFn: async () => {
             const response = await axios.get(`${baseUrl.machines}`);
@@ -75,7 +75,6 @@ const Machines = () => {
         setShowForm(true);
         setValue('title', machine.title);
         setValue('author', machine.author);
-        setValue('duration', machine.duration);
         setValue('tutorials', machine.tutorials || []);
     };
 
@@ -105,7 +104,6 @@ const Machines = () => {
                     <FaPlus />
                 </button>
             </div>
-
             {showForm && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/10 z-50">
                     <div className="max-w-lg w-full bg-white shadow-md rounded-lg p-6 animation relative">
@@ -158,7 +156,7 @@ const Machines = () => {
                                 {errors.author && <p className="text-red-500 text-sm">{errors.author.message}</p>}
                             </div>
 
-                            <div className="flex items-center gap-5">
+                            {/* <div className="flex items-center gap-5">
                                 <label htmlFor="duration" className="block font-medium text-[15px] px-10">
                                     Duration:
                                 </label>
@@ -178,7 +176,7 @@ const Machines = () => {
                                     <option value="6 hours">6 hours</option>
                                 </select>
                                 {errors.duration && <p className="text-red-500 text-sm">{errors.duration.message}</p>}
-                            </div>
+                            </div> */}
 
                             <button
                                 type="submit"
@@ -197,7 +195,7 @@ const Machines = () => {
                         <tr className="bg-gray-100">
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Machine</th>
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Author Email</th>
-                            <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Duration</th>
+                            {/* <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Duration</th> */}
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Action</th>
                         </tr>
                     </thead>
@@ -207,7 +205,7 @@ const Machines = () => {
                                 <tr key={machine._id}>
                                     <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.title}</td>
                                     <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.author}</td>
-                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.duration}</td>
+                                    {/* <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.duration}</td> */}
                                     <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                                         <button className='flex gap-6'>
                                             <MdDelete onClick={() => handleClickOpen(machine?._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1' />

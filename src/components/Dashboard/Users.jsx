@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import  { useState } from "react";
 import {  FaSearch } from "react-icons/fa";
 
 import { MdDelete } from "react-icons/md";
@@ -27,9 +27,7 @@ console.log(user.role);
 
   const {
     isLoading,
-    isError,
     data = [],
-    error,
     refetch,
   } = useQuery({
     queryKey: ["userOrders"],
@@ -39,8 +37,8 @@ console.log(user.role);
     },
   });
 
-  const filteredUsers = data.filter((machine) =>
-    machine.username?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = data.filter((user) =>
+    user.username?.toLowerCase().includes(searchQuery.toLowerCase())
   );
   const handleRemoveUser = async (username) => {
     if (username !== user.username) {
@@ -50,7 +48,7 @@ console.log(user.role);
         refetch();
         toast.success("User deleted successfully");
       } catch (error) {
-        console.log("Error in deleting machine", error);
+        console.log("Error in deleting user", error);
       }
     } else {
       try {
@@ -61,7 +59,7 @@ console.log(user.role);
         window.location.reload()
         toast.success("User deleted successfully");
       } catch (error) {
-        console.log("Error in deleting machine", error);
+        console.log("Error in deleting user", error);
       }
     }
   };
@@ -73,7 +71,7 @@ console.log(user.role);
         refetch();
         toast.success("Success");
       } catch (error) {
-        console.log("Error in deleting machine", error);
+        console.log("Error in deleting user", error);
       }
     } else {
       toast.error("You can't make any update to your own account");
@@ -113,25 +111,25 @@ console.log(user.role);
           </thead>
           <tbody>
             {filteredUsers.length > 0 ? (
-              filteredUsers.map((machine) => (
-                <tr key={machine._id}>
+              filteredUsers.map((user) => (
+                <tr key={user._id}>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.username}
+                    {user?.username}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {machine?.role}
+                    {user?.role}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                     <div className="flex items-center gap-6 h-8">
-                     {(machine?.role === "student" || user?.username == machine?.username)&&  <button
-                        onClick={() => handleClickOpen(machine?.username)}
+                     {(user?.role === "student" || user?.username == user?.username)&&  <button
+                        onClick={() => handleClickOpen(user?.username)}
                         className="flex items-center justify-center h-full text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1"
                       >
                         <MdDelete style={{padding:'5px'}} />
                       </button>
                      }
-                     {(machine?.role === "student") &&  <button
-                        onClick={() => handleMakeAdmin(machine?.username)}
+                     {(user?.role === "student") &&  <button
+                        onClick={() => handleMakeAdmin(user?.username)}
                         className="flex items-center justify-center h-full text-green-500 border border-green-500 font-semibold hover:bg-green-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
                       >
                         Make Admin
