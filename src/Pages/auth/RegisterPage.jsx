@@ -156,7 +156,7 @@ const RegisterPage = () => {
               className="text-sm"
             />
             <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
-              @gmail.com
+            @g.clemson.edu
             </h1>
           </div>
           <div className="flex items-center mb-4">
