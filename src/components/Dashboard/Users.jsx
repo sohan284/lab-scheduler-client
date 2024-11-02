@@ -114,7 +114,7 @@ console.log(user.role);
               filteredUsers.map((u) => (
                 <tr key={u._id}>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {u?.username}
+                    {u?.username} <p className="inline text-orange-500 ml-3 font-bold">{u?.username === user.username && "(you)"}</p>
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
                     {u?.role}
