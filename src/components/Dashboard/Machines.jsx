@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FaPen, FaPlus, FaSearch } from 'react-icons/fa';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { FaMinus, FaPen, FaPlus, FaSearch } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { MdDelete } from 'react-icons/md';
 import baseUrl from '../../api/apiConfig';
@@ -11,19 +11,16 @@ import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from '@m
 const Machines = () => {
     const [showForm, setShowForm] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [isEdit, setIsEdit] = useState(false); 
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
-    const [open, setOpen] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
     const [id, setId] = useState(null);
+    const [open, setOpen] = useState(false);
 
-    const handleClickOpen = (id) => {
-        setOpen(true);
-        setId(id);
-    };
+    const { register, handleSubmit, reset, control, setValue, formState: { errors } } = useForm();
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "tutorials"  // Array to store multiple tutorial URLs
+    });
 
     const { isLoading, isError, data = [], error, refetch } = useQuery({
         queryKey: ['userOrders'],
@@ -37,29 +34,38 @@ const Machines = () => {
         machine.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const onSubmit = async (data) => {
+    const handleClickOpen = (machineId) => {
+        setOpen(true);
+        setId(machineId);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const onSubmit = async (formData) => {
         try {
             if (isEdit) {
-                await axios.put(`${baseUrl.machines}/${id}`, data);
+                await axios.put(`${baseUrl.machines}/${id}`, formData);
                 setIsEdit(false);
             } else {
-                await axios.post(`${baseUrl.machines}`, data);
+                await axios.post(`${baseUrl.machines}`, formData);
             }
             refetch();
             setShowForm(false);
             reset();
         } catch (error) {
-            console.log('Error in submitting machine data', error);
+            console.error('Error in submitting machine data:', error);
         }
     };
 
-    const handleRemoveMachine = async (id) => {
+    const handleRemoveMachine = async (machineId) => {
         try {
-            await axios.delete(`${baseUrl.machines}/${id}`);
+            await axios.delete(`${baseUrl.machines}/${machineId}`);
             handleClose();
             refetch();
         } catch (error) {
-            console.log('Error in deleting machine', error);
+            console.error('Error in deleting machine:', error);
         }
     };
 
@@ -67,11 +73,12 @@ const Machines = () => {
         setId(machine._id);
         setIsEdit(true);
         setShowForm(true);
-        setValue('title', machine.title); 
-        setValue('tutorial', machine.tutorial);
+        setValue('title', machine.title);
         setValue('author', machine.author);
-        setValue('duration', machine.duration); // Set duration for editing
+        setValue('duration', machine.duration);
+        setValue('tutorials', machine.tutorials || []);
     };
+
 
     return (
         <div>
@@ -108,8 +115,8 @@ const Machines = () => {
                         <button onClick={() => setShowForm(false)} className='absolute top-5 right-5 text-xl p-bg p-1 rounded-full text-white'>
                             <IoClose />
                         </button>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-0 grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div className='col-span-2'>
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-0 grid grid-cols-1 gap-5">
+                            <div className=''>
                                 <label className="block mb-2 text-gray-700 ">Machine Name</label>
                                 <input
                                     type="text"
@@ -120,13 +127,25 @@ const Machines = () => {
                             </div>
 
                             <div>
-                                <label className="block mb-2 text-gray-700">Tutorial URL</label>
-                                <input
-                                    type="text"
-                                    {...register("tutorial")}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
-                                />
-                                {errors.tutorial && <p className="text-red-500 text-sm">{errors.tutorial.message}</p>}
+                                <label className="block text-gray-700">Tutorial URLs</label>
+                                {fields.map((item, index) => (
+                                    <div key={item.id} className="flex items-center gap-2 sp">
+                                        <input
+                                            type="url"
+                                            {...register(`tutorials.${index}.url`, { required: "URL is required" })}
+                                            placeholder="Enter tutorial URL"
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500 mb-2"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => remove(index)}
+                                            className="text-red-500 p-2 hover:bg-red-100 rounded"
+                                        >
+                                            <FaMinus />
+                                        </button>
+                                    </div>
+                                ))}
+                                <button type="button" onClick={() => append({})} className="text-blue-500 mt-2">Add URL</button>
                             </div>
 
                             <div>
@@ -163,7 +182,7 @@ const Machines = () => {
 
                             <button
                                 type="submit"
-                                className="md:col-span-2 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-md transition duration-300"
+                                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-md transition duration-300"
                             >
                                 {isEdit ? 'Update' : 'Add Machine'}
                             </button>
@@ -172,7 +191,7 @@ const Machines = () => {
                 </div>
             )}
 
-            <div className="mt-10 overflow-auto max-w-sm md:max-w-full max-h-[80vh]">
+            <div className="mt-10 overflow-auto max-w-sm md:max-w-full max-h-[80vh] custom-scroll">
                 <table className="min-w-full bg-white border border-gray-300 rounded-md">
                     <thead>
                         <tr className="bg-gray-100">

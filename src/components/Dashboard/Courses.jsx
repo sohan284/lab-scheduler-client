@@ -126,7 +126,7 @@ const Courses = () => {
                 </div>
             )}
 
-            <div className="mt-10 overflow-auto max-w-sm md:max-w-full max-h-[80vh]">
+            <div className="mt-10 overflow-auto max-w-sm md:max-w-full max-h-[80vh] custom-scroll">
             <table className="min-w-full bg-white border border-gray-300 rounded-md">
           <thead>
             <tr className="bg-gray-100">
