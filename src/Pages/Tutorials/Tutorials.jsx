@@ -18,81 +18,7 @@ const Tutorials = () => {
   const [durations, setDurations] = useState({});
   const [search, setSearch] = useState('');
   const [filterSearch, setFilterSearch] = useState('');
-
-  const tutorialsJson = [
-    {
-        "id": 1,
-        "name": "How to mount a plate",
-        "video": "https://www.youtube.com/watch?v=h0On8w8x_Yo",
-        
-    },
-    {
-        "id": 2,
-        "name": "How to mount a plate",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 3,
-        "name": "Printing Press Machine",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 4,
-        "name": "How to mount a plate",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 5,
-        "name": "Printing Press Machine",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 6,
-        "name": "How to mount a plate",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 7,
-        "name": "Printing Press Machine",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 8,
-        "name": "How to mount a plate",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 9,
-        "name": "How to mount a plate",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 10,
-        "name": "Cutter Machine",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 11,
-        "name": "How to mount a plate",
-        "video": VideoLink,
-        
-    },
-    {
-        "id": 12,
-        "name": "Cutter Machine",
-        "video": VideoLink,
-        
-    }
-];
+ 
 const {
   isLoading,
   isError,
@@ -108,12 +34,6 @@ const {
 });
 console.log(data);
 
-
-  const handleOpenModal = (videoUrl) => {
-    // console.log('videoUrl', videoUrl)
-    setCurrentVideoUrl(videoUrl);
-    setIsOpen(true);
-  };
 
   const formatDuration = (duration) => {
     const minutes = Math.floor(duration / 60);
@@ -139,7 +59,6 @@ console.log(data);
   const filterTutorialsBySearch = data.filter((tutorial) => 
     tutorial.title.toLowerCase().includes(filterSearch.toLowerCase())
   );
-
   return (
     <>
       <TabNav /> 
@@ -165,35 +84,36 @@ console.log(data);
             </button>
           </div>
         </div>
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 my-12 px-4">
-  {filterTutorialsBySearch.filter(tutorial => tutorial.tutorial).map((tutorial) => (
+        <div className="grid my-12 px-4">
+  {filterTutorialsBySearch.filter(tutorial => tutorial.tutorials).map((tutorial) => (
     <div key={tutorial?.id} className="mt-12 md:mt-20 flex flex-col items-center">
-      {tutorial.tutorial && (
+    
+      {tutorial.tutorials && (
         <div className="flex flex-col items-center">
-          <div className="text-[15px] font-bold text-gray-600 text-center overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-[300px]">
+          <div className="text-[15px] font-bold text-center overflow-hidden text-ellipsis text-blue-500 whitespace-nowrap w-full max-w-[300px]">
             {tutorial?.title}
           </div>
+    <div className="grid lg:grid-cols-3 grid-cols-1 gap-5">
+    {tutorial?.tutorials?.map((url)=> {
+  return (
+    <div className="mt-4 flex justify-center" key={url}>
+      <div>
+      <ReactPlayer
+        url={url.url}
+        width="100%"
+        height="auto"
+        controls={false}
+        onDuration={(duration) => handleDuration(duration, url)}
+        className="rounded-lg shadow-md cursor-pointer"
+      /> 
+      </div>
+    </div>
+  );
+})}
+      </div>
+
           
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={() => handleOpenModal(tutorial?.tutorial)}
-              className="relative"
-              style={{ width: "100%", maxWidth: "300px" }}
-            >
-              <ReactPlayer
-                url={tutorial?.tutorial}
-                width="100%"
-                height="auto"
-                controls={false}
-                onDuration={(duration) => handleDuration(duration, tutorial?.tutorial)}
-                className="rounded-lg shadow-md cursor-pointer"
-              />
-            </button>
-          </div>
           
-          <div className="text-[15px] mt-3 text-orange-500 font-semibold">
-            {durations[tutorial?.tutorial] || 'Loading...'}
-          </div>
         </div>
       )}
     </div>
