@@ -4,7 +4,6 @@ import VerifyToken from "../utils/VerifyToken";
 
 const ProtectedRoute = ({ element, role }) => {
   const user = VerifyToken();
-  console.log(user?.role);
 
   if (!user?.username) {
     return <Navigate to="/login" />;

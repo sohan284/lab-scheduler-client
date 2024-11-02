@@ -6,7 +6,7 @@ import ReactPlayer from "react-player";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import VideoLink from "../../assets/tutorials/wall_printing.mp4";
-import './tutorial.css'
+import "./tutorial.css";
 import { duration } from "@mui/material";
 import baseUrl from "../../api/apiConfig";
 import axios from "axios";
@@ -16,54 +16,53 @@ const Tutorials = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentVideoUrl, setCurrentVideoUrl] = useState("");
   const [durations, setDurations] = useState({});
-  const [search, setSearch] = useState('');
-  const [filterSearch, setFilterSearch] = useState('');
- 
-const {
-  isLoading,
-  isError,
-  data = [],
-  error,
-  refetch,
-} = useQuery({
-  queryKey: ["userOrders"],
-  queryFn: async () => {
-    const response = await axios.get(`${baseUrl.machines}`);
-    return response.data.data;
-  },
-});
-console.log(data);
+  const [search, setSearch] = useState("");
+  const [filterSearch, setFilterSearch] = useState("");
 
+  const {
+    isLoading,
+    isError,
+    data = [],
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["userOrders"],
+    queryFn: async () => {
+      const response = await axios.get(`${baseUrl.machines}`);
+      return response.data.data;
+    },
+  });
+  console.log(data);
 
   const formatDuration = (duration) => {
     const minutes = Math.floor(duration / 60);
     const seconds = Math.floor(duration % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   const handleDuration = (duration, videoUrl) => {
     setDurations((prevDurations) => ({
-        ...prevDurations,
-        [videoUrl] : formatDuration(duration),
+      ...prevDurations,
+      [videoUrl]: formatDuration(duration),
     }));
   };
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-  }
+  };
 
   const handleSearchButton = () => {
     setFilterSearch(search);
-  }
+  };
 
-  const filterTutorialsBySearch = data.filter((tutorial) => 
+  const filterTutorialsBySearch = data.filter((tutorial) =>
     tutorial.title.toLowerCase().includes(filterSearch.toLowerCase())
   );
   return (
     <>
-      <TabNav /> 
+      <TabNav />
       <div className="max-w-[1200px] mx-auto">
-        <div className="text-xl font-bold text-[#515151] uppercase my-10 mx-4 xl:mx-0">
+        <div className="text-xl font-bold text-[#515151] uppercase my-10 mx-4 :mx-0">
           Tutorials
         </div>
         <div className="flex gap-3 items-center justify-center mx-4 md:mx-0">
@@ -79,47 +78,54 @@ console.log(data);
             </div>
           </div>
           <div>
-            <button className="px-5 py-[6px] bg-[#522c80] text-white rounded-lg" onClick={handleSearchButton}>
+            <button
+              className="px-5 py-[6px] bg-[#522c80] text-white rounded-lg"
+              onClick={handleSearchButton}
+            >
               Search
             </button>
           </div>
         </div>
         <div className="grid my-12 px-4">
-  {filterTutorialsBySearch.filter(tutorial => tutorial.tutorials).map((tutorial) => (
-    <div key={tutorial?.id} className="mt-12 md:mt-20 flex flex-col items-center">
-    
-      {tutorial.tutorials && (
-        <div className="flex flex-col items-center">
-          <div className="text-[15px] font-bold text-center overflow-hidden text-ellipsis text-blue-500 whitespace-nowrap w-full max-w-[300px]">
-            {tutorial?.title}
-          </div>
-    <div className="grid md:grid-cols-3 grid-cols-1 gap-5">
-    {tutorial?.tutorials?.map((url)=> {
-  return (
-    <div className="mt-4 flex justify-center" key={url}>
-      <div>
-      <ReactPlayer
-        url={url.url}
-        width="100%"
-        height="auto"
-        controls={false}
-        onDuration={(duration) => handleDuration(duration, url)}
-        className="rounded-lg shadow-md cursor-pointer"
-      /> 
-      </div>
-    </div>
-  );
-})}
-      </div>
-
-          
-          
+          {filterTutorialsBySearch
+            .filter((tutorial) => tutorial.tutorials)
+            .map((tutorial) => (
+              <>
+                {tutorial.tutorials.length > 0 && (
+                  <div
+                    key={tutorial?.id}
+                    className="mt-12 md:mt-20 flex flex-col items-center"
+                  >
+                    <div className="flex flex-col items-center">
+                      <div className="text-[20px] font-bold text-center overflow-hidden text-ellipsis text-blue-500 whitespace-nowrap w-full max-w-[300px]">
+                        {tutorial?.title}
+                      </div>
+                      <div className="grid md:grid-cols-3 grid-cols-1 gap-5">
+                        {tutorial?.tutorials?.map((url) => {
+                          return (
+                            <div className="mt-4 flex justify-center" key={url}>
+                              <div>
+                                <ReactPlayer
+                                  url={url.url}
+                                  width="100%"
+                                  height="auto"
+                                  controls={false}
+                                  onDuration={(duration) =>
+                                    handleDuration(duration, url)
+                                  }
+                                  className="rounded-lg shadow-md cursor-pointer"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            ))}
         </div>
-      )}
-    </div>
-  ))}
-</div>
-
       </div>
 
       {/* Modal Video */}
