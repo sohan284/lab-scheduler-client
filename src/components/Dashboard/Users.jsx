@@ -111,29 +111,36 @@ console.log(user.role);
           </thead>
           <tbody>
             {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <tr key={user._id}>
+              filteredUsers.map((u) => (
+                <tr key={u._id}>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {user?.username}
+                    {u?.username}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {user?.role}
+                    {u?.role}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                     <div className="flex items-center gap-6 h-8">
-                     {(user?.role === "student" || user?.username == user?.username)&&  <button
+                    {(u?.username === user.username) &&  <button
+                        onClick={() => handleClickOpen(user?.username)}
+                        className="flex items-center justify-center h-full text-red-400 border border-red-400 font-semibold hover:bg-red-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
+                      >
+                       Remove Your Account
+                      </button>}
+                     {(u?.role === "student")&&  <button
                         onClick={() => handleClickOpen(user?.username)}
                         className="flex items-center justify-center h-full text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1"
                       >
                         <MdDelete style={{padding:'5px'}} />
                       </button>
                      }
-                     {(user?.role === "student") &&  <button
-                        onClick={() => handleMakeAdmin(user?.username)}
+                     {(u?.role === "student") &&  <button
+                        onClick={() => handleMakeAdmin(u?.username)}
                         className="flex items-center justify-center h-full text-green-500 border border-green-500 font-semibold hover:bg-green-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
                       >
                         Make Admin
                       </button>}
+                    
                     
                     </div>
                   </td>

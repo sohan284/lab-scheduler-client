@@ -104,6 +104,9 @@ const TaskList = () => {
                         } ${
                           task?.approve === "Rejected" &&
                           "bg-red-700 text-white rounded-xl"
+                        } ${
+                          task?.approve === "Completed" &&
+                          "bg-blue-500 text-white rounded-xl"
                         }`}
                       >{task?.approve}</p>
                   </td>
