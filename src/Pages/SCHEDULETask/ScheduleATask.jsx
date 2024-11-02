@@ -9,6 +9,7 @@ import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
 import { Tooltip } from "@mui/material";
+import axios from "axios";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
@@ -27,6 +28,7 @@ const ScheduleATask = () => {
   const [isAuthor,setIsAuthor]= useState(false)
   const [sendApproval,setSendApproval]=useState(false)
   const [machineForApproval,setMachineForApproval]=useState([])
+  const [courses,setCourses]= useState([])
   const timeSlots = [
     "08:30",
     "08:45",
@@ -76,22 +78,31 @@ const ScheduleATask = () => {
   const [machines, setMachines] = useState([]);
 
   useEffect(() => {
-    fetch(`${baseUrl.machines}`)
-      .then(res => res.json())
-      .then(data => {
-        setMachineForApproval(data.data);
-        const titles = data.data.map(machine => machine.title);
+    const fetchData = async () => {
+      try {
+        const machineResponse = await axios.get(`${baseUrl.machines}`);
+        setMachineForApproval(machineResponse.data.data);
+        
+        const titles = machineResponse.data.data.map(machine => machine.title);
         setMachines(titles);
-      });
+
+        const coursesResponse = await axios.get(`${baseUrl.courses}`);
+        setCourses(coursesResponse.data.data); // Process this data as needed
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchData();
   }, []);
-  const courses = [
-    "GC 1041",
-    "GC 2071",
-    "GC 3401",
-    "GC 3461",
-    "GC 4061",
-    "GC 4401",
-  ];
+  // const courses = [
+  //   "GC 1041",
+  //   "GC 2071",
+  //   "GC 3401",
+  //   "GC 3461",
+  //   "GC 4061",
+  //   "GC 4401",
+  // ];
   const durationMapping = {
     "15 minutes": 2,
     "30 minutes": 3,
@@ -104,7 +115,7 @@ const ScheduleATask = () => {
     "6 hours": 25,
   };
   const filteredOptions = machines.filter((o) => !selectedMachine.includes(o));
-  const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
+  const filteredCourse = courses.filter((o) => !selectedCourse.includes(o.course));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
       "15 minutes": "00:15",
@@ -219,7 +230,7 @@ const ScheduleATask = () => {
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
       setTaskName("");
-      setSelectedCourse("");
+      setSelectedCourse([]);
       setEmail("");
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
@@ -270,20 +281,16 @@ const ScheduleATask = () => {
       setSendApproval(false);
     }
   };
-  const handleSelectMachine = (event) =>{
-    setSelectedMachine(event)
-    
-    machineForApproval.map(machine => {
-      if((event.includes(machine.title))){
-        if(machine.author){
-          setIsAuthor(true)
-        }else{
-          setIsAuthor(false)
-        }
-      }
-    })
-    
-  }
+  const handleSelectMachine = (event) => {
+    setSelectedMachine(event);
+  
+    const authorExists = machineForApproval.some(machine => 
+      event.includes(machine.title) && machine.author
+    );
+  
+    setIsAuthor(authorExists);
+  };
+  
   
 
   return (
@@ -338,8 +345,8 @@ const ScheduleATask = () => {
                           selectedCourse.length === 0 ? "red" : undefined,
                       }}
                       options={filteredCourse.map((item) => ({
-                        value: item,
-                        label: item,
+                        value: item.course,
+                        label: item.course,
                       }))}
                     />
                   </div>
@@ -419,7 +426,7 @@ const ScheduleATask = () => {
                         : "text-gray-500"
                         }`}
                     >
-                      {duration ? formatDuration(duration) : "00:00"}
+                      {duration ? formatDuration(duration) : "30:00"}
                     </span>
                   </div>
                 </div>
@@ -526,10 +533,10 @@ const ScheduleATask = () => {
                     </div>
                   </Tooltip>
 
-                  <div className="flex items-center gap-4 px-10 text-[15px] py-5">
+                  {/* <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
                     <input type="checkbox" />
-                  </div>
+                  </div> */}
                 </div>
                 <div className="mt-4 px-10">
                   <button

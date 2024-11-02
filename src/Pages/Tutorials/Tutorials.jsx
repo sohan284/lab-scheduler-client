@@ -63,7 +63,7 @@ console.log(data);
     <>
       <TabNav /> 
       <div className="max-w-[1200px] mx-auto">
-        <div className="text-xl font-bold text-[#515151] uppercase my-10 mx-4 md:mx-0">
+        <div className="text-xl font-bold text-[#515151] uppercase my-10 mx-4 xl:mx-0">
           Tutorials
         </div>
         <div className="flex gap-3 items-center justify-center mx-4 md:mx-0">
@@ -93,7 +93,7 @@ console.log(data);
           <div className="text-[15px] font-bold text-center overflow-hidden text-ellipsis text-blue-500 whitespace-nowrap w-full max-w-[300px]">
             {tutorial?.title}
           </div>
-    <div className="grid lg:grid-cols-3 grid-cols-1 gap-5">
+    <div className="grid md:grid-cols-3 grid-cols-1 gap-5">
     {tutorial?.tutorials?.map((url)=> {
   return (
     <div className="mt-4 flex justify-center" key={url}>
