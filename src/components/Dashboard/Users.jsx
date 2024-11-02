@@ -12,10 +12,9 @@ import toast, { Toaster } from "react-hot-toast";
 const Users = () => {
   const user = VerifyToken();
   const [searchQuery, setSearchQuery] = useState("");
-
   const [open, setOpen] = useState(false);
-  const [id, setId] = useState(null);
   const [username, setUsername] = useState(null);
+console.log(user.role);
 
   const handleClickOpen = (username) => {
     setOpen(true);
@@ -54,23 +53,32 @@ const Users = () => {
         console.log("Error in deleting machine", error);
       }
     } else {
-      toast.error("You can delete your own account");
+      try {
+        await axios.delete(`${baseUrl.users}/${username}`);
+        handleClose();
+        refetch();
+        localStorage.removeItem('token')
+        window.location.reload()
+        toast.success("User deleted successfully");
+      } catch (error) {
+        console.log("Error in deleting machine", error);
+      }
     }
   };
 
-  // const handleMakeAdmin = async (username) => {
-  //   if (username !== user.username) {
-  //     try {
-  //       await axios.put(`${baseUrl.users}/${username}`, { role: "admin" });
-  //       refetch();
-  //       toast.success("Success");
-  //     } catch (error) {
-  //       console.log("Error in deleting machine", error);
-  //     }
-  //   } else {
-  //     toast.error("You can't make any update to your own account");
-  //   }
-  // };
+  const handleMakeAdmin = async (username) => {
+    if (username !== user.username) {
+      try {
+        await axios.put(`${baseUrl.users}/${username}`, { role: "admin" });
+        refetch();
+        toast.success("Success");
+      } catch (error) {
+        console.log("Error in deleting machine", error);
+      }
+    } else {
+      toast.error("You can't make any update to your own account");
+    }
+  };
 
   return (
     <div>
@@ -115,18 +123,19 @@ const Users = () => {
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                     <div className="flex items-center gap-6 h-8">
-                      <button
+                     {(machine?.role === "student" || user?.username == machine?.username)&&  <button
                         onClick={() => handleClickOpen(machine?.username)}
                         className="flex items-center justify-center h-full text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1"
                       >
                         <MdDelete style={{padding:'5px'}} />
                       </button>
-                     {/* {machine?.role !== "admin" &&  <button
+                     }
+                     {(machine?.role === "student") &&  <button
                         onClick={() => handleMakeAdmin(machine?.username)}
                         className="flex items-center justify-center h-full text-green-500 border border-green-500 font-semibold hover:bg-green-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
                       >
                         Make Admin
-                      </button>} */}
+                      </button>}
                     
                     </div>
                   </td>
@@ -149,7 +158,7 @@ const Users = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Confirm Machine Deletion"}
+          {"Are you sure want to delete this role??"}
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -160,7 +169,7 @@ const Users = () => {
             color="error"
             autoFocus
           >
-            Confirm
+            Yes
           </Button>
         </DialogActions>
       </Dialog>

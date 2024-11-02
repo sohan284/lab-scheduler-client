@@ -54,7 +54,7 @@ const TaskList = () => {
         console.log("Error in deleting machine", error);
       }
     } else {
-      toast.error("You can delete your own account");
+      toast.error("You can't delete your own account");
     }
   };
   return (
