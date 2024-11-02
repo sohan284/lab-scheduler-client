@@ -133,24 +133,33 @@ const ScheduleATask = () => {
 
 
   const handleTimeSlotClick = (slot) => {
-    const selectedIndex = timeSlots.indexOf(slot);
-    const durationInSlots = durationMapping[duration] || 0;
-    const isConflict = isSlotBooked(slot, durationInSlots);
-    if (isConflict) {
-      toast.error(
-        "The selected time slot overlaps with an already booked slot."
-      );
-      return;
-    }
-    const newSelectedSlots = [];
-    for (let i = selectedIndex; i < selectedIndex + durationInSlots; i++) {
-      if (i < timeSlots.length) {
-        newSelectedSlots.push(timeSlots[i]);
-      }
-    }
+  const selectedIndex = timeSlots.indexOf(slot);
+  const durationInSlots = durationMapping[duration] || 0;
+  
+  const endIndex = selectedIndex + durationInSlots - 2;
+  
+  if (endIndex >= timeSlots.indexOf("19:00")) {
+    toast.error("For the selected duration, the latest start time is " + 
+                timeSlots[endIndex - durationInSlots + 1] + ".");
+    return;
+  }
 
-    setSelectedTimeSlots(newSelectedSlots);
-  };
+  const isConflict = isSlotBooked(slot, durationInSlots);
+  if (isConflict) {
+    toast.error("The selected time slot overlaps with an already booked slot.");
+    return;
+  }
+
+  const newSelectedSlots = [];
+  for (let i = selectedIndex; i < selectedIndex + durationInSlots; i++) {
+    if (i < timeSlots.length) {
+      newSelectedSlots.push(timeSlots[i]);
+    }
+  }
+
+  setSelectedTimeSlots(newSelectedSlots);
+};
+
 
   const isSlotBooked = (startSlot, durationInSlots) => {
     const startIndex = timeSlots.indexOf(startSlot);
