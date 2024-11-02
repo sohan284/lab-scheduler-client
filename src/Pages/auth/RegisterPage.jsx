@@ -228,9 +228,9 @@ const RegisterPage = () => {
 
         {/* OTP Dialog */}
         <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-          <div className="p-4">
-            <label className="block mt-5 text-gray-500 text-sm">
-              Enter OTP<span className="text-red-500 text-xs">*</span>
+          <div className="p-10">
+            <label className="block my-5 text-gray-500 text-sm">
+              Enter OTP<span className="text-red-500  text-xs">*</span>
             </label>
             <div className="flex justify-between mt-2">
               {otp.map((digit, index) => (
@@ -241,7 +241,7 @@ const RegisterPage = () => {
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="w-[15%] text-sm"
+                  className="w-[15%] text-sm bg-purple-100"
                 />
               ))}
             </div>
