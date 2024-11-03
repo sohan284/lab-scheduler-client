@@ -160,7 +160,7 @@ const Users = () => {
             ) : (
               <tr>
                 <td colSpan="6" className="py-2 px-4 h-[600px] text-center align-middle text-gray-700">
-                  {isLoading ? <CircularProgress /> : "No tasks found"}
+                  {isLoading ? <CircularProgress /> : "No users found"}
                 </td>
               </tr>
             )}
