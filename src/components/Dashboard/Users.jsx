@@ -116,7 +116,7 @@ console.log(user.role);
           <tbody>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((u) => (
-                <tr key={u._id}>
+                <tr key={u._id} className={`${u?.username === user?.username && "bg-zinc-200"}`}>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
                     {u?.username} <p className="inline text-orange-500 ml-3 font-bold">{u?.username === user.username && "(you)"}</p>
                   </td>
