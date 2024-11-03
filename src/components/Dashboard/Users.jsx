@@ -1,7 +1,6 @@
 import axios from "axios";
-import  { useState } from "react";
-import {  FaSearch } from "react-icons/fa";
-
+import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import baseUrl from "../../api/apiConfig";
 import { useQuery } from "@tanstack/react-query";
@@ -9,13 +8,14 @@ import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from "@m
 import VerifyToken from "../../utils/VerifyToken";
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
+import AuthToken from "../../utils/AuthToken";
 
 const Users = () => {
   const user = VerifyToken();
+  const token = AuthToken() 
   const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState(null);
-console.log(user.role);
 
   const handleClickOpen = (username) => {
     setOpen(true);
@@ -33,7 +33,12 @@ console.log(user.role);
   } = useQuery({
     queryKey: ["userOrders"],
     queryFn: async () => {
-      const response = await axios.get(`${baseUrl.users}`);
+     
+      const response = await axios.get(`${baseUrl.users}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
       return response.data.data;
     },
   });
@@ -41,38 +46,40 @@ console.log(user.role);
   const filteredUsers = data.filter((user) =>
     user.username?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
   const handleRemoveUser = async (username) => {
-    if (username !== user.username) {
-      try {
-        await axios.delete(`${baseUrl.users}/${username}`);
-        handleClose();
-        refetch();
-        toast.success("User deleted successfully");
-      } catch (error) {
-        console.log("Error in deleting user", error);
+    try {
+      await axios.delete(`${baseUrl.users}/${username}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the Bearer token
+        },
+      });
+      handleClose();
+      refetch();
+      if (username === user.username) {
+        localStorage.removeItem("token");
+        window.location.reload();
       }
-    } else {
-      try {
-        await axios.delete(`${baseUrl.users}/${username}`);
-        handleClose();
-        refetch();
-        localStorage.removeItem('token')
-        window.location.reload()
-        toast.success("User deleted successfully");
-      } catch (error) {
-        console.log("Error in deleting user", error);
-      }
+      toast.success("User deleted successfully");
+    } catch (error) {
+      console.log("Error in deleting user", error);
     }
   };
+  
+  
 
   const handleMakeAdmin = async (username) => {
     if (username !== user.username) {
       try {
-        await axios.put(`${baseUrl.users}/${username}`, { role: "admin" });
+        await axios.put(`${baseUrl.users}/${username}`, { role: "admin" }, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the Bearer token
+          },
+        });
         refetch();
         toast.success("Success");
       } catch (error) {
-        console.log("Error in deleting user", error);
+        console.log("Error in making admin", error);
       }
     } else {
       toast.error("You can't make any update to your own account");
@@ -128,37 +135,34 @@ console.log(user.role);
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                     <div className="flex items-center gap-6 h-8">
-                    {(u?.username === user.username) &&  <button
+                      {(u?.username === user.username) &&  <button
                         onClick={() => handleClickOpen(u?.username)}
                         className="flex items-center justify-center h-full text-red-400 border border-red-400 font-semibold hover:bg-red-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
                       >
                        Remove Your Account
                       </button>}
-                     {(u?.role === "student")&&  <button
+                     {(u?.role === "student") &&  <button
                         onClick={() => handleClickOpen(u?.username)}
                         className="flex items-center justify-center h-full text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1"
                       >
                         <MdDelete style={{padding:'5px'}} />
-                      </button>
-                     }
+                      </button>}
                      {(u?.role === "student") &&  <button
                         onClick={() => handleMakeAdmin(u?.username)}
                         className="flex items-center justify-center h-full text-green-500 border border-green-500 font-semibold hover:bg-green-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
                       >
                         Make Admin
                       </button>}
-                    
-                    
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-              <td colSpan="6" className="py-2 px-4 h-[600px] text-center align-middle text-gray-700">
-                {isLoading ? <CircularProgress /> : "No tasks found"}
-              </td>
-            </tr>
+                <td colSpan="6" className="py-2 px-4 h-[600px] text-center align-middle text-gray-700">
+                  {isLoading ? <CircularProgress /> : "No tasks found"}
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

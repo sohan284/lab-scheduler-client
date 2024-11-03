@@ -10,6 +10,7 @@ import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
 import { Tooltip } from "@mui/material";
 import axios from "axios";
+import AuthToken from "../../utils/AuthToken";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
@@ -28,6 +29,7 @@ const ScheduleATask = () => {
   const [sendApproval,setSendApproval]=useState(false)
   const [machineForApproval,setMachineForApproval]=useState([])
   const [courses,setCourses]= useState([])
+  const token = AuthToken();
   const timeSlots = [
     "08:30",
     "08:45",
@@ -79,13 +81,21 @@ const ScheduleATask = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const machineResponse = await axios.get(`${baseUrl.machines}`);
+        const machineResponse = await axios.get(`${baseUrl.machines}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         setMachineForApproval(machineResponse.data.data);
-        
+
         const titles = machineResponse.data.data.map(machine => machine.title);
         setMachines(titles);
 
-        const coursesResponse = await axios.get(`${baseUrl.courses}`);
+        const coursesResponse = await axios.get(`${baseUrl.courses}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         setCourses(coursesResponse.data.data); // Process this data as needed
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -93,7 +103,7 @@ const ScheduleATask = () => {
     };
 
     fetchData();
-  }, []);
+  }, [token]);
   // const courses = [
   //   "GC 1041",
   //   "GC 2071",
@@ -257,7 +267,18 @@ const ScheduleATask = () => {
   useEffect(() => {
     const fetchScheduledTasks = async () => {
       try {
-        const response = await fetch(`${baseUrl.scheduledtasks}`);
+        const response = await fetch(`${baseUrl.scheduledtasks}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json', // Optional, based on your API
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
         const data = await response.json();
         const approvedData = data.data.filter(
           (item) => item.approve === "Approved" || item.approve === "Pending"
@@ -270,6 +291,7 @@ const ScheduleATask = () => {
 
     fetchScheduledTasks();
   }, []);
+  
   const handleEstimate = (e) => {
     if (e.target.checked) {
       setDuration("30 minutes");

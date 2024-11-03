@@ -3,22 +3,31 @@ import VerifyToken from "../../utils/VerifyToken";
 import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
+import AuthToken from "../../utils/AuthToken";
 
 const AddedTasks = () => {
   const user = VerifyToken();
   const createdBy = user?.username; // Ensure this is correct based on your token
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = AuthToken()
 
   useEffect(() => {
     const fetchScheduledTasks = async () => {
       try {
-        const response = await fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`);
+        const response = await fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json', 
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         const data = await response.json();
-        
-        // Filter tasks to only include those with status "approve"
         const approvedTasks = data.data.filter(task => task.approve === 'Approved');
-        
         setTasks(approvedTasks);
       } catch (error) {
         console.error("Error fetching scheduled tasks:", error);
@@ -28,7 +37,7 @@ const AddedTasks = () => {
     };
   
     fetchScheduledTasks();
-  }, [createdBy]);
+  }, [createdBy, token]);
   
 
   const formatDate = (dateString) => {

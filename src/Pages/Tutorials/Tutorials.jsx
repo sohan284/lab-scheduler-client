@@ -11,6 +11,7 @@ import { duration } from "@mui/material";
 import baseUrl from "../../api/apiConfig";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import AuthToken from "../../utils/AuthToken";
 
 const Tutorials = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ const Tutorials = () => {
   const [durations, setDurations] = useState({});
   const [search, setSearch] = useState("");
   const [filterSearch, setFilterSearch] = useState("");
+  const token = AuthToken()
 
   const {
     isLoading,
@@ -28,11 +30,15 @@ const Tutorials = () => {
   } = useQuery({
     queryKey: ["userOrders"],
     queryFn: async () => {
-      const response = await axios.get(`${baseUrl.machines}`);
+      const response = await axios.get(`${baseUrl.machines}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json', // Optional, based on your API
+        },
+      });
       return response.data.data;
     },
   });
-  console.log(data);
 
   const formatDuration = (duration) => {
     const minutes = Math.floor(duration / 60);

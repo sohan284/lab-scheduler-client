@@ -7,8 +7,10 @@ import { MdDelete } from 'react-icons/md';
 import baseUrl from '../../api/apiConfig';
 import { useQuery } from '@tanstack/react-query';
 import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import AuthToken from '../../utils/AuthToken';
 
 const Machines = () => {
+    const token = AuthToken()
     const [showForm, setShowForm] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [isEdit, setIsEdit] = useState(false);
@@ -22,10 +24,14 @@ const Machines = () => {
         name: "tutorials"  // Array to store multiple tutorial URLs
     });
 
-    const { isLoading,  data = [],  refetch } = useQuery({
+    const { isLoading, data = [], refetch } = useQuery({
         queryKey: ['userOrders'],
         queryFn: async () => {
-            const response = await axios.get(`${baseUrl.machines}`);
+            const response = await axios.get(`${baseUrl.machines}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add the bearer token here
+                }
+            });
             return response.data.data;
         },
     });
@@ -46,10 +52,18 @@ const Machines = () => {
     const onSubmit = async (formData) => {
         try {
             if (isEdit) {
-                await axios.put(`${baseUrl.machines}/${id}`, formData);
+                await axios.put(`${baseUrl.machines}/${id}`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add the bearer token here
+                    }
+                });
                 setIsEdit(false);
             } else {
-                await axios.post(`${baseUrl.machines}`, formData);
+                await axios.post(`${baseUrl.machines}`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add the bearer token here
+                    }
+                });
             }
             refetch();
             setShowForm(false);
@@ -59,9 +73,14 @@ const Machines = () => {
         }
     };
 
+
     const handleRemoveMachine = async (machineId) => {
         try {
-            await axios.delete(`${baseUrl.machines}/${machineId}`);
+            await axios.delete(`${baseUrl.machines}/${machineId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add the bearer token here
+                }
+            });
             handleClose();
             refetch();
         } catch (error) {

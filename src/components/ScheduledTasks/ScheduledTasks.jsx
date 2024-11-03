@@ -2,21 +2,38 @@ import React, { useEffect, useState } from "react";
 import Loader from "../Loader/Loader";
 import VerifyToken from "../../utils/VerifyToken";
 import baseUrl from "../../api/apiConfig";
+import AuthToken from "../../utils/AuthToken";
 
 const ScheduledTasks = () => {
   const user = VerifyToken();
   const createdBy = user?.username;
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = AuthToken();
 
   useEffect(() => {
-    fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`)
-      .then((res) => res.json())
+    fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`, {
+      method: 'GET', // Optional, as GET is the default
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
       .then((data) => {
         setTasks(data.data);
         setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching scheduled tasks:', error);
+        setLoading(false);
       });
-  }, [createdBy]);
+  }, [createdBy, token]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
