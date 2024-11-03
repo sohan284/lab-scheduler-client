@@ -122,13 +122,13 @@ console.log(user.role);
                   <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                     <div className="flex items-center gap-6 h-8">
                     {(u?.username === user.username) &&  <button
-                        onClick={() => handleClickOpen(user?.username)}
+                        onClick={() => handleClickOpen(u?.username)}
                         className="flex items-center justify-center h-full text-red-400 border border-red-400 font-semibold hover:bg-red-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
                       >
                        Remove Your Account
                       </button>}
                      {(u?.role === "student")&&  <button
-                        onClick={() => handleClickOpen(user?.username)}
+                        onClick={() => handleClickOpen(u?.username)}
                         className="flex items-center justify-center h-full text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1"
                       >
                         <MdDelete style={{padding:'5px'}} />
