@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./styles.css";
@@ -17,7 +17,6 @@ const ScheduleATask = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
-  const [course, setCourse] = useState("");
   const [email, setEmail] = useState("");
   const [selectedMachine, setSelectedMachine] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState([]);
@@ -219,6 +218,7 @@ const ScheduleATask = () => {
       estimatedTime: duration,
       approve: "Pending",
       createdBy: createdBy,
+      createdAt: new Date().toISOString(),
     };
 
     try {
@@ -234,7 +234,6 @@ const ScheduleATask = () => {
         throw new Error("Network response was not ok");
       }
 
-      const result = await response.json();
       toast.success(
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
