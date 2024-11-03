@@ -100,6 +100,7 @@ const RegisterPage = () => {
       username: userEmail,
       password: formData.password,
       role: "student",
+      createdAt: new Date().toISOString(),
     };
 
     try {
@@ -117,7 +118,7 @@ const RegisterPage = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       if (isDialogOpen) {
         handleVerifyOtp();
       } else {
@@ -156,7 +157,7 @@ const RegisterPage = () => {
               className="text-sm"
             />
             <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
-            @g.clemson.edu
+              @g.clemson.edu
             </h1>
           </div>
           <div className="flex items-center mb-4">

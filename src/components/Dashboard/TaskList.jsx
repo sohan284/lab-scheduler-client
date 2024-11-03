@@ -1,7 +1,7 @@
 import axios from "axios";
 import  { useState } from "react";
 import {  FaSearch } from "react-icons/fa";
-
+import moment from 'moment';
 import { MdDelete } from "react-icons/md";
 import baseUrl from "../../api/apiConfig";
 import { useQuery } from "@tanstack/react-query";
@@ -76,7 +76,13 @@ const TaskList = () => {
                 Created By
               </th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
+                Scheduled date
+              </th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
                 Status
+              </th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
+                Created At
               </th>
               <th className="py-2 px-4 border-b border-gray-300 text-center text-sm font-semibold text-gray-700">
                 Action
@@ -92,6 +98,9 @@ const TaskList = () => {
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
                     {task?.createdBy}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
+                    {moment(task?.startDate).format("DD-MM-YYYY")}
                   </td>
                   <td className=" border-b border-gray-300 text-center text-sm text-gray-800">
                     <p
@@ -109,6 +118,9 @@ const TaskList = () => {
                           "bg-blue-500 text-white rounded-xl"
                         }`}
                       >{task?.approve}</p>
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
+                  {moment(task?.createdAt).format("DD/MM/YYYY HH:mm")}
                   </td>
                   <td className=" border-b border-gray-300  text-3xl text-gray-800">
                   <div className="flex justify-center"><MdDelete onClick={() => handleClickOpen(task?._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 m-2 p-1 ease-out rounded' /></div>
