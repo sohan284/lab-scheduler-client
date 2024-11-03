@@ -68,7 +68,9 @@ const ScheduledTasks = () => {
                   <tr key={task?._id} className="bg-white border-b text-[15px]">
                     <td className="px-6 py-4 text-left">{task?.taskName}</td>
                     <td className="px-6 py-4 text-left">
-  {task?.selectedMachine?.map(machine => machine.title).join(", ")}
+                    <p className="py-4 px-10">
+                          {task.selectedMachine.map(machine => machine).join(", ")}
+                        </p>
 </td>
                     <td className="px-6 py-4 text-center">
                       {task?.estimatedTime || "N/A"}
