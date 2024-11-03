@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import VerifyToken from "../../utils/VerifyToken";
 import toast, { Toaster } from "react-hot-toast";
+import moment from "moment";
 
 const Users = () => {
   const user = VerifyToken();
@@ -105,6 +106,9 @@ console.log(user.role);
                 Role
               </th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
+                CreatedAt
+              </th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
                 Action
               </th>
             </tr>
@@ -118,6 +122,9 @@ console.log(user.role);
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
                     {u?.role}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
+                    {moment(u?.createdAt).format("DD/MM/YYYY HH:mm")}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                     <div className="flex items-center gap-6 h-8">
