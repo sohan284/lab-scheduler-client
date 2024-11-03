@@ -100,7 +100,7 @@ const TaskList = () => {
                     {task?.createdBy}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {moment(task?.startDate).format("DD-MM-YYYY")}
+                    {moment(task?.startDate).format("DD/MM/YYYY")}
                   </td>
                   <td className=" border-b border-gray-300 text-center text-sm text-gray-800">
                     <p
@@ -130,10 +130,10 @@ const TaskList = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="py-2 px-4 h-[600px] text-center text-gray-700">
-                  {isLoading ? <CircularProgress/> : "No tasks found"}
-                </td>
-              </tr>
+              <td colSpan="6" className="py-2 px-4 h-[600px] text-center align-middle text-gray-700">
+                {isLoading ? <CircularProgress /> : "No tasks found"}
+              </td>
+            </tr>
             )}
           </tbody>
         </table>

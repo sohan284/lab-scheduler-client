@@ -155,10 +155,10 @@ console.log(user.role);
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="py-2 px-4 h-[600px] text-center text-gray-700">
-                  {isLoading ? <CircularProgress/> : "No users found"}
-                </td>
-              </tr>
+              <td colSpan="6" className="py-2 px-4 h-[600px] text-center align-middle text-gray-700">
+                {isLoading ? <CircularProgress /> : "No tasks found"}
+              </td>
+            </tr>
             )}
           </tbody>
         </table>
