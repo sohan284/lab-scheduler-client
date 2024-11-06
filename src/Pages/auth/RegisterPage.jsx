@@ -53,18 +53,25 @@ const RegisterPage = () => {
     }
   };
 
-  const handleOtpChange = (index, value) => {
+  const handleOtpChange = (index, value, event) => {
     if (value.length > 1) return; // Allow only one character
-
+  
     const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Move to the next input when a digit is entered
-    if (value && index < 5) {
-      document.getElementById(`otp-input-${index + 1}`).focus();
+  
+    if (event.key === "Backspace") {
+      if (!value && index > 0) {
+        document.getElementById(`otp-input-${index - 1}`).focus();
+      }
+    } else {
+      newOtp[index] = value;
+      setOtp(newOtp);
+  
+       if (value && index < 5) {
+        document.getElementById(`otp-input-${index + 1}`).focus();
+      }
     }
   };
+  
 
   const handleVerifyOtp = async () => {
     setErrorMsg(null);
@@ -235,15 +242,16 @@ const RegisterPage = () => {
             </label>
             <div className="flex justify-between mt-2">
               {otp.map((digit, index) => (
-                <TextField
-                  key={index}
-                  id={`otp-input-${index}`}
-                  size="small"
-                  value={digit}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="w-[15%] text-sm bg-purple-100"
-                />
+               <TextField
+               key={index}
+               id={`otp-input-${index}`}
+               size="small"
+               value={digit}
+               onChange={(e) => handleOtpChange(index, e.target.value, e)}
+               onKeyDown={(e) => handleOtpChange(index, e.target.value, e)}
+               className="w-[15%] text-sm bg-purple-100"
+             />
+             
               ))}
             </div>
             {errorMsg && (
