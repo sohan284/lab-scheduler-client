@@ -490,7 +490,7 @@ const ScheduleATask = () => {
                           })
                           : "Date not available"}
                       </p>
-                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium w-[300px] mx-auto">{selectedTimeSlots?.map((time,i)=><p className="bg-green-100 text-sm text-center rounded-full" key={i}>{time}</p>)}</div>
+                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium w-[250px] mx-auto">{selectedTimeSlots?.map((time,i)=><p className="bg-green-100 text-sm text-center px-1 rounded-full" key={i}>{time}</p>)}</div>
                     </div>
                     <div className="flex-1 flex items-center justify-center relative ">
                       <div className="flex flex-col items-start gap-1 text-[15px] absolute -top-12 lg:left-20">
