@@ -80,8 +80,8 @@ const ScheduledTasks = () => {
             </thead>
             <tbody>
               {/* Render tasks only for the current user */}
-              {tasks.length > 0 ? (
-                tasks.map((task) => (
+              {tasks?.length > 0 ? (
+                tasks?.map((task) => (
                   <tr key={task?._id} className="bg-white border-b text-[15px]">
                     <td className="px-6 py-4 text-left">{task?.taskName}</td>
                     <td className="px-6 py-4 text-left">
@@ -125,7 +125,7 @@ const ScheduledTasks = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center px-6 py-4">
+                  <td colSpan="6" className="text-center  px-6 py-24">
                     No tasks available for {createdBy}
                   </td>
                 </tr>

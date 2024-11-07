@@ -481,7 +481,7 @@ const ScheduleATask = () => {
                       </div>
                     </div>
                     <div className="flex-1 text-center lg:hidden lg:text-start mb-20 lg:mt-0 font-semibold">
-                      <p className="text-[15px]">
+                      <p className="text-[24px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
                             year: "numeric",
@@ -490,6 +490,7 @@ const ScheduleATask = () => {
                           })
                           : "Date not available"}
                       </p>
+                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium w-[300px] mx-auto">{selectedTimeSlots?.map((time,i)=><p className="bg-green-100 text-sm text-center rounded-full" key={i}>{time}</p>)}</div>
                     </div>
                     <div className="flex-1 flex items-center justify-center relative ">
                       <div className="flex flex-col items-start gap-1 text-[15px] absolute -top-12 lg:left-20">
@@ -527,8 +528,8 @@ const ScheduleATask = () => {
                         })}
                       </div>
                     </div>
-                    <div className="flex-1 hidden lg:flex text-center lg:text-start mt-5 lg:mt-0 font-semibold">
-                      <p className="text-[15px]">
+                    <div className="flex-1 hidden lg:flex flex-col text-center lg:text-start mt-5 lg:mt-0 font-semibold">
+                      <p className="text-[25px]">
                         {startDate
                           ? startDate.toLocaleDateString(undefined, {
                             year: "numeric",
@@ -537,6 +538,7 @@ const ScheduleATask = () => {
                           })
                           : "Date not available"}
                       </p>
+                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium">{selectedTimeSlots?.map((time,i)=><p className="bg-green-100 text-center text-sm rounded-full" key={i}>{time}</p>)}</div>
                     </div>
                   </div>
                 </div>

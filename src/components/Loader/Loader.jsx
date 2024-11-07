@@ -3,7 +3,7 @@ import tiger from "./../../assets/tiger.gif"
 import "./loader.css";
 const Loader = ({ text }) => {
   return (
-    <div className="min-h-screen overflow-hidden ">
+    <div className="min-h-screen overflow-hidden md:mt-[20%] mt-[50%]">
       <p className=" text-center">{text ? text : ""}</p>
       <img src={tiger} alt="" className="w-[200px] mx-auto" />
     </div>
