@@ -125,7 +125,7 @@ const ScheduledTasks = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center  px-6 py-24">
+                  <td colSpan="6" className="text-center  px-6 py-40">
                     No tasks available for {createdBy}
                   </td>
                 </tr>

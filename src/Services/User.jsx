@@ -50,11 +50,11 @@ const removeAccount = async (username) => {
   }
 };
 
-const sendOtp = async (email) => {
+const sendOtp = async (email,purpose) => {
   try {
     const token = getAuthToken(); // Retrieve the token
     const response = await axios.post(`${baseUrl.login}/send-otp`, {
-      email,
+      email,purpose
     }, {
       headers: {
         Authorization: `Bearer ${token}`, // Add Bearer token to headers

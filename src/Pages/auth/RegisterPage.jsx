@@ -43,7 +43,7 @@ const RegisterPage = () => {
       return;
     }
     try {
-      await UserManagement.sendOtp(`${username}@gmail.com`);
+      await UserManagement.sendOtp(`${username}@gmail.com`,"signup");
       toast.success("OTP sent to your email.");
       setIsDialogOpen(true);
     } catch (error) {

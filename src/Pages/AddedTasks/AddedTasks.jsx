@@ -122,7 +122,7 @@ const AddedTasks = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-red-600 font-bold">No Task Approved</p>
+              <p className="text-red-600 text-center font-bold mt-[20%]">No Task Approved</p>
             )}
           </div>
         )}

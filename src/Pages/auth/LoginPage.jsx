@@ -1,15 +1,21 @@
-import { Button, TextField } from "@mui/material";
+import { Alert, Button, Dialog, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import UserManagement from "../../Services/User";
 import { Visibility, VisibilityOff } from "@mui/icons-material"; // Import icons
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [otpScreen, setOtpScreen] = useState(false);
+  const [passwordScreen,setPasswordScreen] = useState(false)
 
   // Validation function
   const validateForm = () => {
@@ -25,7 +31,14 @@ const LoginPage = () => {
 
     return true; // Return true if all validations pass
   };
-
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setErrorMsg(null);
+    setOtpScreen(false);
+    setPasswordScreen(false);
+    setUsername("");
+    setPassword('');
+  };
   const handleLogin = async () => {
     if (!validateForm()) return; // Stop if form is invalid
 
@@ -45,7 +58,7 @@ const LoginPage = () => {
 
         if (response.message === "Login successful") {
           navigate("/");
-          localStorage.setItem("tab","Users");
+          localStorage.setItem("tab", "Users");
           window.location.reload();
         }
       } else {
@@ -63,7 +76,91 @@ const LoginPage = () => {
       handleLogin();
     }
   };
+  const handleSendOtp = async () => {
+    setLoading(true);
+    setErrorMsg(null);
+    try {
+      await UserManagement.sendOtp(`${username}@gmail.com`,"forgotPassword");
+      toast.success("OTP sent to your email.");
+      setOtpScreen(true);
+      setPassword('');
+    } catch (error) {
+      setErrorMsg(` ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const handleOtpChange = (index, value, event) => {
+    if (value.length > 1) return; // Allow only one character
+
+    const newOtp = [...otp];
+
+    if (event.key === "Backspace") {
+      if (!value && index > 0) {
+        document.getElementById(`otp-input-${index - 1}`).focus();
+      }
+    } else {
+      newOtp[index] = value;
+      setOtp(newOtp);
+
+      if (value && index < 5) {
+        document.getElementById(`otp-input-${index + 1}`).focus();
+      }
+    }
+  };
+  const handleVerifyOtp = async () => {
+    setErrorMsg(null);
+    const otpString = otp.join("");
+
+    if (otpString.length !== 6) {
+      setErrorMsg("Please enter all 6 digits of the OTP.");
+      return;
+    }
+
+    try {
+      const isValid = await UserManagement.verifyOtp(
+        `${username}@gmail.com`,
+        otpString
+      );
+      if (isValid) {
+        setOtpScreen(false)
+        setPasswordScreen(true)
+      } else {
+        setErrorMsg("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      setErrorMsg(`${error.response?.data?.message}`);
+      toast.error(` ${error.response?.data?.message}`);
+    }
+  };
+  const handleChangePassword = async () => {
+    setLoading(true);
+    if (!password) {
+      setErrorMsg("Password cannot be empty.");
+      setLoading(false)
+      return false;
+    }
+    const userEmail = `${username}@gmail.com`;
+    const data = {
+      username: userEmail,
+      password: password,
+    };
+
+    try {
+      const res = await UserManagement.upsertUser(data);
+      if (res.success) {
+        handleCloseDialog()
+        toast.success("Password changed successfully!")
+      } else {
+        setErrorMsg(res.message);
+      }
+    } catch (error) {
+      setErrorMsg("An unexpected error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="flex justify-center">
       <div className="pt-20 text-[#515151]">
@@ -99,7 +196,7 @@ const LoginPage = () => {
             </h1>
             <TextField
               size="small"
-              type={showPassword ? "text" : "password"} // Toggle password visibility
+              type={showPassword ? "text" : "password"} 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -129,6 +226,12 @@ const LoginPage = () => {
               }}
             />
           </div>
+          <p
+            onClick={() => setIsDialogOpen(true)}
+            className="uppercase cursor-pointer underline text-[11px] mt-3 text-right text-blue-500"
+          >
+            Forgot Password?
+          </p>
         </div>
         {errorMsg && (
           <p className="text-center mt-3 text-red-600 text-[15px]">
@@ -159,6 +262,138 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+      <Dialog
+        PaperProps={{
+          style: {
+            width: "600px", // Set custom width
+            height: "300px", // Set custom height
+            padding: "20px",
+            marginTop: "-120px",
+          },
+        }}
+        maxWidth="lg"
+        open={isDialogOpen}
+        onClose={() => handleCloseDialog()}
+      >
+        {otpScreen ? (
+          <div className="p-10">
+            <label className="block my-5 text-gray-500 text-sm">
+              Enter Otp<span className="text-red-500  text-xs">*</span>
+            </label>
+            <div className="flex items-center mb-[6px]">
+              <div className="flex justify-between mt-2">
+                {otp.map((digit, index) => (
+                  <TextField
+                    key={index}
+                    id={`otp-input-${index}`}
+                    size="small"
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value, e)}
+                    onKeyDown={(e) => handleOtpChange(index, e.target.value, e)}
+                    className="w-[15%] text-sm bg-purple-100"
+                  />
+                ))}
+              </div>
+            </div>
+            {errorMsg && (
+              <Alert severity="error" className="mt-3">
+                {errorMsg}
+              </Alert>
+            )}
+            <div
+              className="w-full text-center p-3 hover:opacity-85 cursor-pointer bg-[#522C80] text-white mt-5 rounded"
+              onClick={handleVerifyOtp}
+              onKeyPress={handleKeyPress}
+              tabIndex={0}
+            >
+              {loading ? "Loading..." : "Verify Otp"}
+            </div>
+          </div>
+        ) : passwordScreen ?   <div className="p-10">
+        <label className="block my-5 text-gray-500 text-sm">
+          Enter New Password<span className="text-red-500  text-xs">*</span>
+        </label>
+        <div className="flex items-center mb-[6px]">
+        <TextField
+              size="small"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={handleKeyPress}
+              sx={{
+                height: "35px",
+                width: "100%",
+                "& .MuiInputBase-root": {
+                  height: "35px",
+                },
+              }}
+              className="text-sm" 
+              InputProps={{
+                endAdornment: (
+                  <Button
+                    onClick={() => setShowPassword(!showPassword)} // Toggle function
+                    style={{
+                      padding: 0,
+                      backgroundColor: "transparent",
+                      color: "#522C80",
+                      minWidth: "0", // Ensure no default width
+                    }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}{" "}
+                    {/* Show/Hide icon */}
+                  </Button>
+                ),
+              }}
+            />
+        </div>
+        {errorMsg && (
+              <Alert severity="error" className="mt-3">
+                {errorMsg}
+              </Alert>
+            )}
+        <div
+          className="w-full text-center p-3 hover:opacity-85 cursor-pointer bg-[#522C80] text-white mt-5 rounded"
+          onClick={handleChangePassword}
+          onKeyPress={handleKeyPress}
+          tabIndex={0}
+        >
+          {loading ? "Loading..." : "Change Password"}
+        </div>
+      </div> : (
+          <div className="p-10">
+            <label className="block my-5 text-gray-500 text-sm">
+              Enter Username<span className="text-red-500  text-xs">*</span>
+            </label>
+            <div className="flex items-center mb-[6px]">
+              <TextField
+                size="small"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyPress={handleKeyPress}
+                sx={{
+                  height: "35px",
+                  width: "191px",
+                  "& .MuiInputBase-root": {
+                    height: "35px",
+                  },
+                }}
+                className="text-sm"
+              />
+              <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
+                @g.clemson.edu
+              </h1>
+            </div>
+            <div
+              className="w-full text-center p-3 hover:opacity-85 cursor-pointer bg-[#522C80] text-white mt-5 rounded"
+              onClick={handleSendOtp}
+              onKeyPress={handleKeyPress}
+              tabIndex={0}
+            >
+              {loading ? "Loading..." : "Send OTP"}
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 };
