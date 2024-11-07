@@ -265,8 +265,8 @@ const LoginPage = () => {
       <Dialog
         PaperProps={{
           style: {
-            width: "600px", // Set custom width
-            height: "300px", // Set custom height
+            width: "600px", 
+            height: "300px", 
             padding: "20px",
             marginTop: "-120px",
           },
@@ -276,7 +276,7 @@ const LoginPage = () => {
         onClose={() => handleCloseDialog()}
       >
         {otpScreen ? (
-          <div className="p-10">
+          <div className="p-4">
             <label className="block my-5 text-gray-500 text-sm">
               Enter Otp<span className="text-red-500  text-xs">*</span>
             </label>
@@ -309,7 +309,7 @@ const LoginPage = () => {
               {loading ? "Loading..." : "Verify Otp"}
             </div>
           </div>
-        ) : passwordScreen ?   <div className="p-10">
+        ) : passwordScreen ?   <div className="p-4">
         <label className="block my-5 text-gray-500 text-sm">
           Enter New Password<span className="text-red-500  text-xs">*</span>
         </label>
@@ -360,7 +360,7 @@ const LoginPage = () => {
           {loading ? "Loading..." : "Change Password"}
         </div>
       </div> : (
-          <div className="p-10">
+          <div className="p-4">
             <label className="block my-5 text-gray-500 text-sm">
               Enter Username<span className="text-red-500  text-xs">*</span>
             </label>
@@ -383,6 +383,11 @@ const LoginPage = () => {
                 @g.clemson.edu
               </h1>
             </div>
+            {errorMsg && (
+              <Alert severity="error" className="mt-3">
+                {errorMsg}
+              </Alert>
+            )}
             <div
               className="w-full text-center p-3 hover:opacity-85 cursor-pointer bg-[#522C80] text-white mt-5 rounded"
               onClick={handleSendOtp}
