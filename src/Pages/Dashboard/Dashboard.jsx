@@ -84,10 +84,10 @@ const Dashboard = () => {
 
                 <main className="p-5">
                     {selectedTab === 'Users' && <Users />}
-                    {/* {selectedTab === 'Machines' && <Machines />} */}
-                    {/* {selectedTab === 'Courses' && <Courses />} */}
-                    {/* {selectedTab === 'Task List' && <TaskList />} */}
-                    {/* {selectedTab === 'Tutorials' && <AddTutorial />} */}
+                    {selectedTab === 'Machines' && <Machines />}
+                    {selectedTab === 'Courses' && <Courses />}
+                    {selectedTab === 'Task List' && <TaskList />}
+                    {selectedTab === 'Tutorials' && <AddTutorial />}
                 </main>
             </div>
         </div>
