@@ -69,7 +69,7 @@ const ScheduleATask = () => {
     "18:45",
     "19:00",
   ];
-   
+
   const [machines, setMachines] = useState([]);
 
   useEffect(() => {
@@ -227,7 +227,7 @@ const ScheduleATask = () => {
       setDuration("30 minutes");
     } catch (error) {
       console.log(error);
-      
+
       console.error("Error:", error);
       toast.error("There was a problem scheduling the task.");
     } finally {
