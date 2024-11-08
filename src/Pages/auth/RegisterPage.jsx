@@ -100,6 +100,7 @@ const RegisterPage = () => {
       username: userEmail,
       password: formData.password,
       role: "student",
+      createdAt: new Date().toISOString(),
     };
 
     try {
@@ -117,7 +118,7 @@ const RegisterPage = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       if (isDialogOpen) {
         handleVerifyOtp();
       } else {
@@ -132,7 +133,7 @@ const RegisterPage = () => {
         <p className="uppercase text-center lg:text-start font-bold text-[20px] mb-12">
           Register
         </p>
-        <div className="lg:ml-24 max-w-[300px] lg:max-w-full">
+        <div className="lg:ml-24 max-w-[350px] lg:max-w-full">
           <div className="flex items-center mb-4">
             <h1 className="uppercase text-nowrap font-medium text-[15px] mr-[20px]">
               User Name
@@ -156,7 +157,7 @@ const RegisterPage = () => {
               className="text-sm"
             />
             <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
-              @gmail.com
+              @g.clemson.edu
             </h1>
           </div>
           <div className="flex items-center mb-4">
@@ -228,9 +229,9 @@ const RegisterPage = () => {
 
         {/* OTP Dialog */}
         <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-          <div className="p-4">
-            <label className="block mt-5 text-gray-500 text-sm">
-              Enter OTP<span className="text-red-500 text-xs">*</span>
+          <div className="p-10">
+            <label className="block my-5 text-gray-500 text-sm">
+              Enter OTP<span className="text-red-500  text-xs">*</span>
             </label>
             <div className="flex justify-between mt-2">
               {otp.map((digit, index) => (
@@ -241,7 +242,7 @@ const RegisterPage = () => {
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="w-[15%] text-sm"
+                  className="w-[15%] text-sm bg-purple-100"
                 />
               ))}
             </div>

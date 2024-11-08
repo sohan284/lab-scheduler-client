@@ -61,12 +61,12 @@ const Dashboard = () => {
                     >
                         <FaTasks /><span>Task List</span>
                     </button>
-                    <button
+                    {/* <button
                         onClick={() => handleTabChange('Tutorials')}
                         className={`flex items-center space-x-2 p-2 rounded ${selectedTab === 'Tutorials' ? 'bg-orange-500 text-white font-bold' : 'hover:bg-zinc-300'}`}
                     >
                         <RiVideoFill /><span>Tutorials</span>
-                    </button>
+                    </button> */}
                 </nav>
             </aside>
 
@@ -87,7 +87,7 @@ const Dashboard = () => {
                     {selectedTab === 'Machines' && <Machines />}
                     {selectedTab === 'Courses' && <Courses />}
                     {selectedTab === 'Task List' && <TaskList />}
-                    {selectedTab === 'Tutorials' && <AddTutorial />}
+                    {/* {selectedTab === 'Tutorials' && <AddTutorial />} */}
                 </main>
             </div>
         </div>

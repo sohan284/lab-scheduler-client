@@ -1,6 +1,11 @@
 import axios from "axios";
 import baseUrl from "../api/apiConfig";
 
+// Helper function to get the token from local storage
+const getAuthToken = () => {
+  return localStorage.getItem("token");
+};
+
 const upsertUser = async (userData) => {
   try {
     const response = await axios.post(`${baseUrl.users}`, userData);
@@ -29,19 +34,31 @@ const loginUser = async (username, password) => {
     throw error;
   }
 };
+
 const removeAccount = async (username) => {
   try {
-    const response = await axios.delete(`${baseUrl.users}/${username}`);
+    const token = getAuthToken(); // Retrieve the token
+    const response = await axios.delete(`${baseUrl.users}/${username}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Add Bearer token to headers
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Account Removed:", error);
     throw error;
   }
 };
+
 const sendOtp = async (email) => {
   try {
+    const token = getAuthToken(); // Retrieve the token
     const response = await axios.post(`${baseUrl.login}/send-otp`, {
       email,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Add Bearer token to headers
+      },
     });
     return response.data;
   } catch (error) {
@@ -49,11 +66,17 @@ const sendOtp = async (email) => {
     throw error;
   }
 };
+
 const verifyOtp = async (email, otp) => {
   try {
+    const token = getAuthToken(); // Retrieve the token
     const response = await axios.post(`${baseUrl.login}/verify-otp`, {
       email,
       otp,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Add Bearer token to headers
+      },
     });
     return response.data; // Assuming the API returns a success flag or similar
   } catch (error) {

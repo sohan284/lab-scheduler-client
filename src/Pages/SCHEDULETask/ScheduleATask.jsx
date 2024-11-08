@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./styles.css";
@@ -9,6 +9,8 @@ import Loader from "../../components/Loader/Loader";
 import TabNav from "../../Shared/TabNav";
 import baseUrl from "../../api/apiConfig";
 import { Tooltip } from "@mui/material";
+import axios from "axios";
+import AuthToken from "../../utils/AuthToken";
 
 const ScheduleATask = () => {
   const user = VerifyToken();
@@ -16,7 +18,6 @@ const ScheduleATask = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
   const [taskName, setTaskName] = useState("");
-  const [course, setCourse] = useState("");
   const [email, setEmail] = useState("");
   const [selectedMachine, setSelectedMachine] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState([]);
@@ -27,6 +28,8 @@ const ScheduleATask = () => {
   const [isAuthor,setIsAuthor]= useState(false)
   const [sendApproval,setSendApproval]=useState(false)
   const [machineForApproval,setMachineForApproval]=useState([])
+  const [courses,setCourses]= useState([])
+  const token = AuthToken();
   const timeSlots = [
     "08:30",
     "08:45",
@@ -76,22 +79,39 @@ const ScheduleATask = () => {
   const [machines, setMachines] = useState([]);
 
   useEffect(() => {
-    fetch(`${baseUrl.machines}`)
-      .then(res => res.json())
-      .then(data => {
-        setMachineForApproval(data.data);
-        const titles = data.data.map(machine => machine.title);
+    const fetchData = async () => {
+      try {
+        const machineResponse = await axios.get(`${baseUrl.machines}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        setMachineForApproval(machineResponse.data.data);
+
+        const titles = machineResponse.data.data.map(machine => machine.title);
         setMachines(titles);
-      });
-  }, []);
-  const courses = [
-    "GC 1041",
-    "GC 2071",
-    "GC 3401",
-    "GC 3461",
-    "GC 4061",
-    "GC 4401",
-  ];
+
+        const coursesResponse = await axios.get(`${baseUrl.courses}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        setCourses(coursesResponse.data.data); // Process this data as needed
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+  // const courses = [
+  //   "GC 1041",
+  //   "GC 2071",
+  //   "GC 3401",
+  //   "GC 3461",
+  //   "GC 4061",
+  //   "GC 4401",
+  // ];
   const durationMapping = {
     "15 minutes": 2,
     "30 minutes": 3,
@@ -104,7 +124,7 @@ const ScheduleATask = () => {
     "6 hours": 25,
   };
   const filteredOptions = machines.filter((o) => !selectedMachine.includes(o));
-  const filteredCourse = courses.filter((o) => !selectedCourse.includes(o));
+  const filteredCourse = courses.filter((o) => !selectedCourse.includes(o.course));
   const formatDuration = (duration) => {
     const durationFormatMapping = {
       "15 minutes": "00:15",
@@ -122,24 +142,33 @@ const ScheduleATask = () => {
 
 
   const handleTimeSlotClick = (slot) => {
-    const selectedIndex = timeSlots.indexOf(slot);
-    const durationInSlots = durationMapping[duration] || 0;
-    const isConflict = isSlotBooked(slot, durationInSlots);
-    if (isConflict) {
-      toast.error(
-        "The selected time slot overlaps with an already booked slot."
-      );
-      return;
-    }
-    const newSelectedSlots = [];
-    for (let i = selectedIndex; i < selectedIndex + durationInSlots; i++) {
-      if (i < timeSlots.length) {
-        newSelectedSlots.push(timeSlots[i]);
-      }
-    }
+  const selectedIndex = timeSlots.indexOf(slot);
+  const durationInSlots = durationMapping[duration] || 0;
+  
+  const endIndex = selectedIndex + durationInSlots - 2;
 
-    setSelectedTimeSlots(newSelectedSlots);
-  };
+  if (endIndex >= timeSlots.indexOf("19:00")) {
+    toast.error(`For a duration of ${duration}, please select a start time no later than 19:00.`);
+    return;
+  }
+  
+
+  const isConflict = isSlotBooked(slot, durationInSlots);
+  if (isConflict) {
+    toast.error("The selected time slot overlaps with an already booked slot.");
+    return;
+  }
+
+  const newSelectedSlots = [];
+  for (let i = selectedIndex; i < selectedIndex + durationInSlots; i++) {
+    if (i < timeSlots.length) {
+      newSelectedSlots.push(timeSlots[i]);
+    }
+  }
+
+  setSelectedTimeSlots(newSelectedSlots);
+};
+
 
   const isSlotBooked = (startSlot, durationInSlots) => {
     const startIndex = timeSlots.indexOf(startSlot);
@@ -199,6 +228,7 @@ const ScheduleATask = () => {
       estimatedTime: duration,
       approve: "Pending",
       createdBy: createdBy,
+      createdAt: new Date().toISOString(),
     };
 
     try {
@@ -214,12 +244,11 @@ const ScheduleATask = () => {
         throw new Error("Network response was not ok");
       }
 
-      const result = await response.json();
       toast.success(
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
       setTaskName("");
-      setSelectedCourse("");
+      setSelectedCourse([]);
       setEmail("");
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
@@ -238,10 +267,21 @@ const ScheduleATask = () => {
   useEffect(() => {
     const fetchScheduledTasks = async () => {
       try {
-        const response = await fetch(`${baseUrl.scheduledtasks}`);
+        const response = await fetch(`${baseUrl.scheduledtasks}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json', // Optional, based on your API
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
         const data = await response.json();
         const approvedData = data.data.filter(
-          (item) => item.approve === "Approved"
+          (item) => item.approve === "Approved" || item.approve === "Pending"
         );
         setScheduledTasks(approvedData);
       } catch (error) {
@@ -251,6 +291,7 @@ const ScheduleATask = () => {
 
     fetchScheduledTasks();
   }, []);
+  
   const handleEstimate = (e) => {
     if (e.target.checked) {
       setDuration("30 minutes");
@@ -270,20 +311,16 @@ const ScheduleATask = () => {
       setSendApproval(false);
     }
   };
-  const handleSelectMachine = (event) =>{
-    setSelectedMachine(event)
-    
-    machineForApproval.map(machine => {
-      if((event.includes(machine.title))){
-        if(machine.author){
-          setIsAuthor(true)
-        }else{
-          setIsAuthor(false)
-        }
-      }
-    })
-    
-  }
+  const handleSelectMachine = (event) => {
+    setSelectedMachine(event);
+  
+    const authorExists = machineForApproval.some(machine => 
+      event.includes(machine.title) && machine.author
+    );
+  
+    setIsAuthor(authorExists);
+  };
+  
   
 
   return (
@@ -338,8 +375,8 @@ const ScheduleATask = () => {
                           selectedCourse.length === 0 ? "red" : undefined,
                       }}
                       options={filteredCourse.map((item) => ({
-                        value: item,
-                        label: item,
+                        value: item.course,
+                        label: item.course,
                       }))}
                     />
                   </div>
@@ -419,7 +456,7 @@ const ScheduleATask = () => {
                         : "text-gray-500"
                         }`}
                     >
-                      {duration ? formatDuration(duration) : "00:00"}
+                      {duration ? formatDuration(duration) : "30:00"}
                     </span>
                   </div>
                 </div>
@@ -526,10 +563,10 @@ const ScheduleATask = () => {
                     </div>
                   </Tooltip>
 
-                  <div className="flex items-center gap-4 px-10 text-[15px] py-5">
+                  {/* <div className="flex items-center gap-4 px-10 text-[15px] py-5">
                     <p>I need a tutorial for this job</p>
                     <input type="checkbox" />
-                  </div>
+                  </div> */}
                 </div>
                 <div className="mt-4 px-10">
                   <button

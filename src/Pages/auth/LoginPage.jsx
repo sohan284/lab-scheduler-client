@@ -42,10 +42,10 @@ const LoginPage = () => {
       const response = await UserManagement.loginUser(userEmail, password);
       if (response && response.token) {
         localStorage.setItem("token", response.token);
-        console.log(response);
 
         if (response.message === "Login successful") {
           navigate("/");
+          localStorage.setItem("tab","Users");
           window.location.reload();
         }
       } else {
@@ -70,7 +70,7 @@ const LoginPage = () => {
         <p className="uppercase text-center lg:text-start font-bold text-[20px] mb-12">
           Log in
         </p>
-        <div className="lg:ml-24 max-w-[300px] lg:max-w-full">
+        <div className="lg:ml-24 max-w-[350px] lg:max-w-full">
           <div className="flex items-center mb-[6px]">
             <h1 className="uppercase text-nowrap font-medium text-[15px] mr-[20px]">
               User Name

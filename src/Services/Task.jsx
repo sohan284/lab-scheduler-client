@@ -4,9 +4,8 @@ import baseUrl from "../api/apiConfig";
 const approveStatus = async (id,data) => {
   try {
     const response = await axios.put(`${baseUrl.task}/approve/${id}`,data);
-    return response; // Return the entire response object
+    return response;
   } catch (error) {
-    // Handle errors
     console.error("Error approving the task:", error);
     throw error;
   }
@@ -14,9 +13,8 @@ const approveStatus = async (id,data) => {
 const rejectStatus = async (id,data) => {
   try {
     const response = await axios.put(`${baseUrl.task}/reject/${id}`,data);
-    return response; // Return the entire response object
+    return response;
   } catch (error) {
-    // Handle errors
     console.error("Error rejecting the task:", error);
     throw error;
   }
@@ -27,5 +25,4 @@ const TaskManagement = {
   rejectStatus,
 };
 
-// Export the object
 export default TaskManagement;

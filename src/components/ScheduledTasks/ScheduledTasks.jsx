@@ -2,21 +2,38 @@ import React, { useEffect, useState } from "react";
 import Loader from "../Loader/Loader";
 import VerifyToken from "../../utils/VerifyToken";
 import baseUrl from "../../api/apiConfig";
+import AuthToken from "../../utils/AuthToken";
 
 const ScheduledTasks = () => {
   const user = VerifyToken();
   const createdBy = user?.username;
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = AuthToken();
 
   useEffect(() => {
-    fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`)
-      .then((res) => res.json())
+    fetch(`${baseUrl.scheduledtasks}?username=${createdBy}`, {
+      method: 'GET', // Optional, as GET is the default
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
       .then((data) => {
         setTasks(data.data);
         setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching scheduled tasks:', error);
+        setLoading(false);
       });
-  }, [createdBy]);
+  }, [createdBy, token]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -68,7 +85,9 @@ const ScheduledTasks = () => {
                   <tr key={task?._id} className="bg-white border-b text-[15px]">
                     <td className="px-6 py-4 text-left">{task?.taskName}</td>
                     <td className="px-6 py-4 text-left">
-  {task?.selectedMachine?.map(machine => machine.title).join(", ")}
+                    <p className="py-4 px-10">
+                          {task.selectedMachine.map(machine => machine).join(", ")}
+                        </p>
 </td>
                     <td className="px-6 py-4 text-center">
                       {task?.estimatedTime || "N/A"}
@@ -81,23 +100,25 @@ const ScheduledTasks = () => {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <p
-                        className={`text-nowrap px-2 p-0.5 ${
-                          task?.approve === "Pending" &&
-                          "bg-red-600 text-white rounded-xl"
-                        } ${
-                          task?.approve === "Approved" &&
-                          "bg-green-600 text-white rounded-xl"
-                        } ${
-                          task?.approve === "Rejected" &&
-                          "bg-pink-600 text-white rounded-xl"
-                        }`}
+                     className={`text-nowrap px-2 p-0.5 ${
+                      task?.approve === "Pending"
+                        ? "bg-red-600 text-white rounded-xl"
+                        : task?.approve === "Approved"
+                        ? "bg-green-600 text-white rounded-xl"
+                        : task?.approve === "Rejected"
+                        ? "bg-pink-600 text-white rounded-xl"
+                        : "bg-blue-500 text-white rounded-xl"
+                    }`}
+                    
                       >
                         {" "}
                         {task?.approve === "Pending"
                           ? "In Progress"
                           : task?.approve === "Approved"
-                          ? "Scheduled"
-                          : "Rejected"}
+                          ? "Scheduled" 
+                          : task?.approve === "Rejected"
+                          ? "Rejected"
+                          : "Completed"}
                       </p>
                     </td>
                   </tr>

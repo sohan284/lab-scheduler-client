@@ -8,8 +8,8 @@ import axios from 'axios';
 const AddTutorial = () => {
     const [showForm, setShowForm] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
-
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+let id;
     const onSubmit = async (data) => {
         try {
             if (isEdit) {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPen, FaPlus, FaSearch } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
@@ -11,7 +11,7 @@ import { Button, CircularProgress, Dialog, DialogActions, DialogTitle } from '@m
 const Courses = () => {
     const [showForm, setShowForm] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [isEdit, setIsEdit] = useState(false); 
+    const [isEdit, setIsEdit] = useState(false);
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
@@ -25,10 +25,17 @@ const Courses = () => {
         setOpen(false);
     };
 
-    const { isLoading, isError, data = [], error, refetch } = useQuery({
+    // Retrieve the token
+    const token = localStorage.getItem('token'); // Adjust if your token is stored differently
+
+    const { isLoading, data = [], refetch } = useQuery({
         queryKey: ['userOrders'],
         queryFn: async () => {
-            const response = await axios.get(`${baseUrl.courses}`);
+            const response = await axios.get(`${baseUrl.courses}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add the bearer token here
+                },
+            });
             return response.data.data;
         },
     });
@@ -40,10 +47,18 @@ const Courses = () => {
     const onSubmit = async (data) => {
         try {
             if (isEdit) {
-                await axios.put(`${baseUrl.courses}/${id}`, data);
+                await axios.put(`${baseUrl.courses}/${id}`, data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add the bearer token here
+                    },
+                });
                 setIsEdit(false);
             } else {
-                await axios.post(`${baseUrl.courses}`, data);
+                await axios.post(`${baseUrl.courses}`, data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add the bearer token here
+                    },
+                });
             }
             refetch();
             setShowForm(false);
@@ -55,7 +70,11 @@ const Courses = () => {
 
     const handleRemoveCourse = async (id) => {
         try {
-            await axios.delete(`${baseUrl.courses}/${id}`);
+            await axios.delete(`${baseUrl.courses}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add the bearer token here
+                },
+            });
             handleClose();
             refetch();
         } catch (error) {
@@ -113,7 +132,7 @@ const Courses = () => {
                                     {...register("course", { required: "Course name is required" })}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                                 />
-                                {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
+                                {errors.course && <p className="text-red-500 text-sm">{errors.course.message}</p>}
                             </div>
                             <button
                                 type="submit"
@@ -127,47 +146,47 @@ const Courses = () => {
             )}
 
             <div className="mt-10 overflow-auto max-w-sm md:max-w-full max-h-[80vh] custom-scroll">
-            <table className="min-w-full bg-white border border-gray-300 rounded-md">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
-                No
-              </th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
-                Course
-              </th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCourses?.length > 0 ? (
-              filteredCourses?.map((course,i) => (
-                <tr key={course._id}>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {i+1}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
-                    {course?.course}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
+                <table className="min-w-full bg-white border border-gray-300 rounded-md">
+                    <thead>
+                        <tr className="bg-gray-100">
+                            <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
+                                No
+                            </th>
+                            <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
+                                Course
+                            </th>
+                            <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredCourses?.length > 0 ? (
+                            filteredCourses?.map((course, i) => (
+                                <tr key={course._id}>
+                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
+                                        {i + 1}
+                                    </td>
+                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">
+                                        {course?.course}
+                                    </td>
+                                    <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                                         <button className='flex gap-6'>
                                             <MdDelete onClick={() => handleClickOpen(course?._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1' />
                                             <FaPen onClick={() => handleEditCourse(course)} className='text-green-500 border border-green-500 hover:bg-green-200 duration-300 ease-out rounded p-2' />
                                         </button>
                                     </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" className="py-2 px-4 h-[600px] text-center text-gray-700">
-                  {isLoading ? <CircularProgress/> : "No users found"}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="py-2 px-4 h-[600px] text-center text-gray-700">
+                                    {isLoading ? <CircularProgress /> : "No users found"}
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
             <Dialog
                 open={open}
