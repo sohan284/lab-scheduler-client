@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-// import tutorialsJson from "./tutorials.json";
 import TabNav from "../../Shared/TabNav";
 import ReactPlayer from "react-player";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
-import VideoLink from "../../assets/tutorials/wall_printing.mp4";
-import "./tutorial.css";
-import { duration } from "@mui/material";
-import baseUrl from "../../api/apiConfig";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import baseUrl from "../../api/apiConfig";
 import AuthToken from "../../utils/AuthToken";
 
 const Tutorials = () => {
@@ -18,32 +13,45 @@ const Tutorials = () => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState("");
   const [durations, setDurations] = useState({});
   const [search, setSearch] = useState("");
-  const [filterSearch, setFilterSearch] = useState("");
-  const token = AuthToken()
+  const [machines, setMachines] = useState([]);
+  const token = AuthToken();
 
-  const {
-    isLoading,
-    isError,
-    data = [],
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["userOrders"],
-    queryFn: async () => {
+  const fetchMachines = async () => {
+    try {
       const response = await axios.get(`${baseUrl.machines}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json', // Optional, based on your API
-        },
+          Authorization: `Bearer ${token}`
+        }
       });
-      return response.data.data;
-    },
-  });
+      const machinesData = Array.isArray(response.data) ? response.data : response.data.data || [];
+
+      // Sort machines alphabetically by title
+      machinesData.sort((a, b) => a.title.localeCompare(b.title));
+
+      setMachines(machinesData);
+    } catch (error) {
+      console.error("Error fetching machines:", error);
+      setMachines([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchMachines();
+  }, []);
+
+  const handleOpenModal = (videoUrl) => {
+    if (!videoUrl) {
+      console.error("Invalid video URL!");
+      return;
+    }
+    setCurrentVideoUrl(videoUrl);
+    setIsOpen(true);
+  };
 
   const formatDuration = (duration) => {
     const minutes = Math.floor(duration / 60);
     const seconds = Math.floor(duration % 60);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
   const handleDuration = (duration, videoUrl) => {
@@ -57,93 +65,117 @@ const Tutorials = () => {
     setSearch(e.target.value);
   };
 
-  const handleSearchButton = () => {
-    setFilterSearch(search);
-  };
+  const filteredMachines = machines
+    .filter((machine) => machine?.title?.toLowerCase().includes(search.toLowerCase()) && machine?.tutorials?.length > 0) || [];
 
-  const filterTutorialsBySearch = data.filter((tutorial) =>
-    tutorial.title.toLowerCase().includes(filterSearch.toLowerCase())
-  );
+
   return (
-    <>
+    <div className="min-h-screen">
       <TabNav />
-      <div className="max-w-[1200px] mx-auto">
-        <div className="text-xl font-bold text-[#515151] uppercase my-10 mx-4 :mx-0">
-          Tutorials
+      <div className="max-w-[1200px] mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-bold text-gray-800">
+            Machine Tutorials
+          </h1>
         </div>
-        <div className="flex gap-3 items-center justify-center mx-4 md:mx-0">
-          <div className="relative mt-1 w-full md:w-2/5">
+
+        <div className="flex justify-center mb-8">
+          <div className="relative w-full md:w-2/5">
             <input
               type="text"
-              id="password"
-              className="w-full pl-3 pr-10 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 hover:border-blue-500 transition-colors"
+              placeholder="Search machines..."
+              className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
               onChange={handleSearch}
             />
-            <div className="grid items-center w-7 h-7 text-center text-xl leading-0 absolute top-2 right-2 text-gray-400 focus:outline-none hover:text-gray-900 transition-colors">
-              <CiSearch />
+            <div className="absolute right-4 top-3.5 text-gray-400">
+              <CiSearch className="w-5 h-5" />
             </div>
           </div>
-          <div>
-            <button
-              className="px-5 py-[6px] bg-[#522c80] text-white rounded-lg"
-              onClick={handleSearchButton}
-            >
-              Search
-            </button>
-          </div>
         </div>
-        <div className="grid my-12 px-4">
-          {filterTutorialsBySearch
-            .filter((tutorial) => tutorial.tutorials)
-            .map((tutorial) => (
-              <>
-                {tutorial.tutorials.length > 0 && (
+
+        <div className="space-y-8">
+          {filteredMachines.map((machine) => (
+            <div
+              key={machine._id || Math.random()}
+              className="bg-white rounded-xl shadow-sm overflow-hidden p-6"
+            >
+              <h2 className="text-xl font-bold text-gray-800 mb-6 pb-3 border-b">
+                {machine.title}
+              </h2>
+              <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
+                {machine.tutorials?.map((tutorial, index) => (
                   <div
-                    key={tutorial?.id}
-                    className="mt-12 md:mt-20 flex flex-col items-center"
+                    key={index}
+                    className="bg-gray-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 p-4"
+                    style={{ width: '100%', aspectRatio: '4 / 3' }} // Larger preview with 4:3 aspect ratio
                   >
-                    <div className="flex flex-col items-center">
-                      <div className="text-[20px] font-bold text-center overflow-hidden text-ellipsis text-blue-500 whitespace-nowrap w-full max-w-[300px]">
-                        {tutorial?.title}
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="text-sm font-semibold text-gray-700">
+                        Tutorial {index + 1}
                       </div>
-                      <div className="grid md:grid-cols-3 grid-cols-1 gap-5">
-                        {tutorial?.tutorials?.map((url) => {
-                          return (
-                            <div className="mt-4 flex justify-center" key={url}>
-                              <div>
-                                <ReactPlayer
-                                  url={url.url}
-                                  width="100%"
-                                  height="auto"
-                                  controls={false}
-                                  onDuration={(duration) =>
-                                    handleDuration(duration, url)
-                                  }
-                                  className="rounded-lg shadow-md cursor-pointer"
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
+                      <div className="text-sm font-medium text-gray-500">
+                        {durations[tutorial.url]}
                       </div>
                     </div>
+                    <div className="relative rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => handleOpenModal(tutorial.url)}
+                        className="w-full relative group"
+                      >
+                        <ReactPlayer
+                          url={tutorial.url}
+                          width="100%"
+                          height="200px" // Adjust height to make preview larger
+                          controls={false}
+                          onDuration={(duration) =>
+                            handleDuration(duration, tutorial.url)
+                          }
+                          light={true}
+                          className="rounded-lg"
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 flex items-center justify-center transition-all duration-200">
+                          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-95 group-hover:scale-100 transition-all duration-200">
+                            <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[12px] border-l-blue-600 border-b-[8px] border-b-transparent ml-1"></div>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
                   </div>
-                )}
-              </>
-            ))}
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {filteredMachines.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-gray-500 text-lg">
+                No machines found matching your search.
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Modal Video */}
-      <Modal open={isOpen} onClose={() => setIsOpen(false)} center>
-        <ReactPlayer
-          url={currentVideoUrl}
-          controls
-          width="100%"
-          height="auto"
-        />
+      <Modal
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        center
+        classNames={{
+          modal: 'rounded-lg overflow-hidden lg:w-full ',
+          overlay: 'bg-black'
+        }}
+      >
+        <div className="aspect-video flex justify-center items-center">
+          <ReactPlayer
+            url={currentVideoUrl}
+            controls
+            width="100%"
+            height="100%"
+            className="rounded-lg"
+          />
+        </div>
       </Modal>
-    </>
+    </div>
   );
 };
 
