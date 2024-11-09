@@ -384,9 +384,7 @@ const ScheduleATask = () => {
                     >
                       <option value="">Select Duration</option>
                       <option value="15 minutes">15 minutes</option>
-                      <option selected="selected" value="30 minutes">
-                        30 minutes
-                      </option>
+                      <option selected="selected" value="30 minutes">30 minutes</option>
                       <option value="45 minutes">45 minutes</option>
                       <option value="1 hour">1 hour</option>
                       <option value="2 hours">2 hours</option>
