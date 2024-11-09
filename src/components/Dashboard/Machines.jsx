@@ -47,7 +47,7 @@ const Machines = () => {
 
     const handleClose = () => {
         setOpen(false);
-         
+
     };
 
     const onSubmit = async (formData) => {

@@ -26,6 +26,10 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute element={<Tutorials />} role="student" />,
       },
       {
+        path: "/tutorials/:machineName",
+        element: <ProtectedRoute element={<Tutorials />} role="student" />,
+      },
+      {
         path: "/ScheduleATask",
         element: <ProtectedRoute element={<ScheduleATask />} role="student" />,
       },

@@ -29,6 +29,7 @@ const ScheduleATask = () => {
   const [sendApproval, setSendApproval] = useState(false)
   const [machineForApproval, setMachineForApproval] = useState([])
   const [courses, setCourses] = useState([])
+
   const token = AuthToken();
   const timeSlots = [
     "08:30", "08:45", "09:00", "09:15", "09:30", "09:45", "10:00", "10:15", "10:30", "10:45", "11:00", "11:15", "11:30", "11:45", "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30", "14:45", "15:00", "15:15", "15:30", "15:45", "16:00", "16:15", "16:30", "16:45", "17:00", "17:15", "17:30", "17:45", "18:00", "18:15", "18:30", "18:45", "19:00",
@@ -197,13 +198,16 @@ const ScheduleATask = () => {
       toast.success(
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
+      const nextValidDate = isWeekend(startDate) ? getNextWeekday() : startDate;
+      setStartDate(nextValidDate);
+
       setTaskName("");
       setSelectedCourse([]);
       setEmail("");
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
-      setStartDate(new Date());
       setDuration("30 minutes");
+      window.location.reload();
     } catch (error) {
       console.log(error);
 
@@ -253,10 +257,32 @@ const ScheduleATask = () => {
     }
   }
 
-  const isWeekday = (date) => {
+
+  const isWeekend = (date) => {
     const day = date.getDay();
-    return day !== 0 && day !== 6;
+    return day === 0 || day === 6;
   };
+  const getNextWeekday = () => {
+    const today = new Date();
+    const day = today.getDay();
+    const nextWeekday = new Date(today);
+    if (day === 6) {
+      nextWeekday.setDate(today.getDate() + 2);
+    } else if (day === 0) {
+      nextWeekday.setDate(today.getDate() + 1);
+    }
+    return nextWeekday;
+  };
+  useEffect(() => {
+    if (isWeekend(new Date())) {
+      setStartDate(getNextWeekday());
+    } else {
+      setStartDate(new Date());
+    }
+  }, []);
+
+
+
   const handleSendApproval = (e) => {
     if (e.target.checked) {
       setSendApproval(true);
@@ -428,10 +454,10 @@ const ScheduleATask = () => {
                           selected={startDate}
                           onChange={(date) => setStartDate(date)}
                           inline
-                          minDate={new Date()}
-                          filterDate={isWeekday}
-                          className="border-gray-300 rounded"
+                          minDate={isWeekend(new Date()) ? getNextWeekday() : new Date()} // Make sure weekends aren't selected
+                          filterDate={(date) => !isWeekend(date)} // Disable weekends
                         />
+
                       </div>
                     </div>
                     <div className="flex-1 text-center lg:hidden lg:text-start mb-20 lg:mt-0 font-semibold">
