@@ -21,7 +21,7 @@ const Machines = () => {
 
     const { fields, append, remove } = useFieldArray({
         control,
-        name: "tutorials"  // Array to store multiple tutorial URLs
+        name: "tutorials"
     });
 
     const { isLoading, data = [], refetch } = useQuery({
@@ -47,6 +47,7 @@ const Machines = () => {
 
     const handleClose = () => {
         setOpen(false);
+
     };
 
     const onSubmit = async (formData) => {
@@ -164,26 +165,15 @@ const Machines = () => {
                                 ))}
                                 <button type="button" onClick={() => append({})} className="text-blue-500 mt-2">Add URL</button>
                             </div>
-
-                            <div>
-                                <label className="block mb-2 text-gray-700">Author Email</label>
-                                <input
-                                    type="email"
-                                    {...register("author")}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
-                                />
-                                {errors.author && <p className="text-red-500 text-sm">{errors.author.message}</p>}
-                            </div>
-
-                            {/* <div className="flex items-center gap-5">
-                                <label htmlFor="duration" className="block font-medium text-[15px] px-10">
-                                    Duration:
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="duration" className="block font-medium text-[15px]   ">
+                                    Estimated Time for This Machine:
                                 </label>
                                 <select
-                                    {...register("duration")}
+                                    {...register("duration", { required: "Estimated Time is required" })}
                                     className="border text-[15px] border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <option value="">Select Duration</option>
+                                    <option value="">Select Estimated Time for This Machine</option>
                                     <option value="15 minutes">15 minutes</option>
                                     <option value="30 minutes">30 minutes</option>
                                     <option value="45 minutes">45 minutes</option>
@@ -195,7 +185,18 @@ const Machines = () => {
                                     <option value="6 hours">6 hours</option>
                                 </select>
                                 {errors.duration && <p className="text-red-500 text-sm">{errors.duration.message}</p>}
-                            </div> */}
+                            </div>
+                            <div>
+                                <label className="block mb-2 text-gray-700">Author Email</label>
+                                <input
+                                    type="email"
+                                    {...register("author")}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
+                                />
+                                {errors.author && <p className="text-red-500 text-sm">{errors.author.message}</p>}
+                            </div>
+
+
 
                             <button
                                 type="submit"
@@ -214,7 +215,7 @@ const Machines = () => {
                         <tr className="bg-gray-100">
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Machine</th>
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Author Email</th>
-                            {/* <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Duration</th> */}
+                            <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Estimated Time</th>
                             <th className="py-2 px-4 border-b border-gray-300 text-left text-sm font-semibold text-gray-700">Action</th>
                         </tr>
                     </thead>
@@ -224,7 +225,7 @@ const Machines = () => {
                                 <tr key={machine._id}>
                                     <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.title}</td>
                                     <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.author}</td>
-                                    {/* <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.duration}</td> */}
+                                    <td className="py-2 px-4 border-b border-gray-300 text-sm text-gray-800">{machine?.duration}</td>
                                     <td className="py-2 px-4 border-b border-gray-300 text-3xl text-white">
                                         <button className='flex gap-6'>
                                             <MdDelete onClick={() => handleClickOpen(machine?._id)} className='text-red-500 border border-red-500 hover:bg-red-200 duration-300 ease-out rounded p-1' />
