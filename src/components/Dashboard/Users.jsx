@@ -196,7 +196,7 @@ const Users = () => {
                       {u?.role === "admin" && user?.role === "super admin" && (
                         <button
                           onClick={() => handleRemoveAdmin(u?.username)}
-                          className="flex items-center justify-center h-full text-green-500 border border-green-500 font-semibold hover:bg-green-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
+                          className="flex items-center justify-center h-full text-orange-500 border border-orange-500 font-semibold hover:bg-orange-200 duration-300 ease-out rounded px-1 text-[10px] text-nowrap"
                         >
                           Remove Admin
                         </button>
