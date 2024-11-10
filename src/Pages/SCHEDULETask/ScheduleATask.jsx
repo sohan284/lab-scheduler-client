@@ -25,57 +25,16 @@ const ScheduleATask = () => {
   const [duration, setDuration] = useState("30 minutes");
   const [Loading, setLoading] = useState(false);
   const [isEstimate, setIsEstimate] = useState(false);
-  const [isAuthor,setIsAuthor]= useState(false)
-  const [sendApproval,setSendApproval]=useState(false)
-  const [machineForApproval,setMachineForApproval]=useState([])
-  const [courses,setCourses]= useState([])
+  const [isAuthor, setIsAuthor] = useState(false)
+  const [sendApproval, setSendApproval] = useState(false)
+  const [machineForApproval, setMachineForApproval] = useState([])
+  const [courses, setCourses] = useState([])
+
   const token = AuthToken();
   const timeSlots = [
-    "08:30",
-    "08:45",
-    "09:00",
-    "09:15",
-    "09:30",
-    "09:45",
-    "10:00",
-    "10:15",
-    "10:30",
-    "10:45",
-    "11:00",
-    "11:15",
-    "11:30",
-    "11:45",
-    "12:00",
-    "12:15",
-    "12:30",
-    "12:45",
-    "13:00",
-    "13:15",
-    "13:30",
-    "13:45",
-    "14:00",
-    "14:15",
-    "14:30",
-    "14:45",
-    "15:00",
-    "15:15",
-    "15:30",
-    "15:45",
-    "16:00",
-    "16:15",
-    "16:30",
-    "16:45",
-    "17:00",
-    "17:15",
-    "17:30",
-    "17:45",
-    "18:00",
-    "18:15",
-    "18:30",
-    "18:45",
-    "19:00",
+    "08:30", "08:45", "09:00", "09:15", "09:30", "09:45", "10:00", "10:15", "10:30", "10:45", "11:00", "11:15", "11:30", "11:45", "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30", "14:45", "15:00", "15:15", "15:30", "15:45", "16:00", "16:15", "16:30", "16:45", "17:00", "17:15", "17:30", "17:45", "18:00", "18:15", "18:30", "18:45", "19:00",
   ];
-   
+
   const [machines, setMachines] = useState([]);
 
   useEffect(() => {
@@ -104,14 +63,6 @@ const ScheduleATask = () => {
 
     fetchData();
   }, [token]);
-  // const courses = [
-  //   "GC 1041",
-  //   "GC 2071",
-  //   "GC 3401",
-  //   "GC 3461",
-  //   "GC 4061",
-  //   "GC 4401",
-  // ];
   const durationMapping = {
     "15 minutes": 2,
     "30 minutes": 3,
@@ -142,32 +93,32 @@ const ScheduleATask = () => {
 
 
   const handleTimeSlotClick = (slot) => {
-  const selectedIndex = timeSlots.indexOf(slot);
-  const durationInSlots = durationMapping[duration] || 0;
-  
-  const endIndex = selectedIndex + durationInSlots - 2;
+    const selectedIndex = timeSlots.indexOf(slot);
+    const durationInSlots = durationMapping[duration] || 0;
 
-  if (endIndex >= timeSlots.indexOf("19:00")) {
-    toast.error(`For a duration of ${duration}, please select a start time no later than 19:00.`);
-    return;
-  }
-  
+    const endIndex = selectedIndex + durationInSlots - 2;
 
-  const isConflict = isSlotBooked(slot, durationInSlots);
-  if (isConflict) {
-    toast.error("The selected time slot overlaps with an already booked slot.");
-    return;
-  }
-
-  const newSelectedSlots = [];
-  for (let i = selectedIndex; i < selectedIndex + durationInSlots; i++) {
-    if (i < timeSlots.length) {
-      newSelectedSlots.push(timeSlots[i]);
+    if (endIndex >= timeSlots.indexOf("19:00")) {
+      toast.error(`For a duration of ${duration}, please select a start time no later than 19:00.`);
+      return;
     }
-  }
 
-  setSelectedTimeSlots(newSelectedSlots);
-};
+
+    const isConflict = isSlotBooked(slot, durationInSlots);
+    if (isConflict) {
+      toast.error("The selected time slot overlaps with an already booked slot.");
+      return;
+    }
+
+    const newSelectedSlots = [];
+    for (let i = selectedIndex; i < selectedIndex + durationInSlots; i++) {
+      if (i < timeSlots.length) {
+        newSelectedSlots.push(timeSlots[i]);
+      }
+    }
+
+    setSelectedTimeSlots(newSelectedSlots);
+  };
 
 
   const isSlotBooked = (startSlot, durationInSlots) => {
@@ -247,16 +198,19 @@ const ScheduleATask = () => {
       toast.success(
         "Task Sent to Faculty successfully! Wait for their Approval."
       );
+      const nextValidDate = isWeekend(startDate) ? getNextWeekday() : startDate;
+      setStartDate(nextValidDate);
+
       setTaskName("");
       setSelectedCourse([]);
       setEmail("");
       setSelectedMachine([]);
       setSelectedTimeSlots([]);
-      setStartDate(new Date());
       setDuration("30 minutes");
+      window.location.reload();
     } catch (error) {
       console.log(error);
-      
+
       console.error("Error:", error);
       toast.error("There was a problem scheduling the task.");
     } finally {
@@ -291,19 +245,44 @@ const ScheduleATask = () => {
 
     fetchScheduledTasks();
   }, []);
-  
+
   const handleEstimate = (e) => {
     if (e.target.checked) {
-      setDuration("30 minutes");
+
+      const selectedMachineData = machineForApproval.find(machine => selectedMachine.includes(machine.title));
+      setDuration(selectedMachineData?.duration || "30 minutes");
       setIsEstimate(true);
     } else {
       setIsEstimate(false);
     }
-  };
-  const isWeekday = (date) => {
+  }
+
+
+  const isWeekend = (date) => {
     const day = date.getDay();
-    return day !== 0 && day !== 6;
+    return day === 0 || day === 6;
   };
+  const getNextWeekday = () => {
+    const today = new Date();
+    const day = today.getDay();
+    const nextWeekday = new Date(today);
+    if (day === 6) {
+      nextWeekday.setDate(today.getDate() + 2);
+    } else if (day === 0) {
+      nextWeekday.setDate(today.getDate() + 1);
+    }
+    return nextWeekday;
+  };
+  useEffect(() => {
+    if (isWeekend(new Date())) {
+      setStartDate(getNextWeekday());
+    } else {
+      setStartDate(new Date());
+    }
+  }, []);
+
+
+
   const handleSendApproval = (e) => {
     if (e.target.checked) {
       setSendApproval(true);
@@ -313,15 +292,21 @@ const ScheduleATask = () => {
   };
   const handleSelectMachine = (event) => {
     setSelectedMachine(event);
-  
-    const authorExists = machineForApproval.some(machine => 
+    const selectedMachineData = machineForApproval.find(machine => event.includes(machine.title));
+    if (selectedMachineData && selectedMachineData.duration) {
+      setDuration(selectedMachineData.duration);
+    } else {
+      setDuration("30 minutes");
+    }
+
+    const authorExists = machineForApproval.some(machine =>
       event.includes(machine.title) && machine.author
     );
-  
+
     setIsAuthor(authorExists);
   };
-  
-  
+
+
 
   return (
     <>
@@ -425,9 +410,7 @@ const ScheduleATask = () => {
                     >
                       <option value="">Select Duration</option>
                       <option value="15 minutes">15 minutes</option>
-                      <option selected="selected" value="30 minutes">
-                        30 minutes
-                      </option>
+                      <option selected="selected" value="30 minutes">30 minutes</option>
                       <option value="45 minutes">45 minutes</option>
                       <option value="1 hour">1 hour</option>
                       <option value="2 hours">2 hours</option>
@@ -437,28 +420,25 @@ const ScheduleATask = () => {
                       <option value="6 hours">6 hours</option>
                     </select>
                   </div>
+
                   <div className="flex items-center gap-5 bg-[#FAFAFA] ">
                     <label
                       htmlFor="estimatedTime"
-                      className=" flex items-center gap-5 font-medium text-[15px] px-10"
+                      className="flex items-center gap-5 font-medium text-[15px] px-10"
                     >
-                      Estimate it for me{" "}
-                      <input
-                        onClick={(e) => handleEstimate(e)}
-                        type="checkbox"
-                        name=""
-                        id=""
-                      />
+                      Estimated Time:
+                      <span className="ml-2 text-[15px]">
+                        {duration ? formatDuration(duration) : "30:00"}
+                      </span>
                     </label>
-                    <span
-                      className={`ml-2 text-[15px] ${selectedTimeSlots.length > 0
-                        ? "text-blue-600"
-                        : "text-gray-500"
-                        }`}
-                    >
-                      {duration ? formatDuration(duration) : "30:00"}
-                    </span>
+                    <input
+                      type="checkbox"
+                      checked={isEstimate}
+                      onChange={handleEstimate}
+                    />
+                    <label htmlFor="estimatedTime">Estimate it for me</label>
                   </div>
+
                 </div>
                 <div className="lg:px-10 pt-6">
                   <h2 className="text-[15px] text-center lg:text-start font-semibold">
@@ -474,10 +454,10 @@ const ScheduleATask = () => {
                           selected={startDate}
                           onChange={(date) => setStartDate(date)}
                           inline
-                          minDate={new Date()}
-                          filterDate={isWeekday}
-                          className="border-gray-300 rounded"
+                          minDate={isWeekend(new Date()) ? getNextWeekday() : new Date()} // Make sure weekends aren't selected
+                          filterDate={(date) => !isWeekend(date)} // Disable weekends
                         />
+
                       </div>
                     </div>
                     <div className="flex-1 text-center lg:hidden lg:text-start mb-20 lg:mt-0 font-semibold">
@@ -490,7 +470,7 @@ const ScheduleATask = () => {
                           })
                           : "Date not available"}
                       </p>
-                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium w-[250px] mx-auto">{selectedTimeSlots?.map((time,i)=><p className="bg-green-100 text-sm text-center px-1 rounded-full" key={i}>{time}</p>)}</div>
+                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium w-[250px] mx-auto">{selectedTimeSlots?.map((time, i) => <p className="bg-green-100 text-sm text-center px-1 rounded-full" key={i}>{time}</p>)}</div>
                     </div>
                     <div className="flex-1 flex items-center justify-center relative ">
                       <div className="flex flex-col items-start gap-1 text-[15px] absolute -top-12 lg:left-20">
@@ -538,12 +518,12 @@ const ScheduleATask = () => {
                           })
                           : "Date not available"}
                       </p>
-                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium">{selectedTimeSlots?.map((time,i)=><p className="bg-green-100 text-center text-sm rounded-full" key={i}>{time}</p>)}</div>
+                      <div className="grid grid-cols-5 gap-3 mt-3 font-medium">{selectedTimeSlots?.map((time, i) => <p className="bg-green-100 text-center text-sm rounded-full" key={i}>{time}</p>)}</div>
                     </div>
                   </div>
                 </div>
                 <div className="">
-                <Tooltip
+                  <Tooltip
                     title={
                       isAuthor
                         ? "Please check this box if you want to proceed"
