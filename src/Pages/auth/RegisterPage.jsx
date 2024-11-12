@@ -43,7 +43,7 @@ const RegisterPage = () => {
       return;
     }
     try {
-      await UserManagement.sendOtp(`${username}@gmail.com`,"signup");
+      await UserManagement.sendOtp(`${username}@g.clemson.edu`,"signup");
       toast.success("OTP sent to your email.");
       setIsDialogOpen(true);
     } catch (error) {
@@ -84,7 +84,7 @@ const RegisterPage = () => {
 
     try {
       const isValid = await UserManagement.verifyOtp(
-        `${formData.username}@gmail.com`,
+        `${formData.username}@g.clemson.edu`,
         otpString
       );
       if (isValid) {
@@ -101,7 +101,7 @@ const RegisterPage = () => {
 
   const handleRegister = async () => {
     setLoading(true);
-    const userEmail = `${formData.username}@gmail.com`;
+    const userEmail = `${formData.username}@g.clemson.edu`;
 
     const data = {
       username: userEmail,

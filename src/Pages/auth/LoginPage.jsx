@@ -45,9 +45,9 @@ const LoginPage = () => {
     // const userEmail = username.includes("@g.clemson.edu")
     //   ? username
     //   : `${username}@g.clemson.edu`;
-    const userEmail = username.includes("@gmail.com")
+    const userEmail = username.includes("@g.clemson.edu")
       ? username
-      : `${username}@gmail.com`;
+      : `${username}@g.clemson.edu`;
 
     setErrorMsg(null);
 
@@ -80,7 +80,7 @@ const LoginPage = () => {
     setLoading(true);
     setErrorMsg(null);
     try {
-      await UserManagement.sendOtp(`${username}@gmail.com`,"forgotPassword");
+      await UserManagement.sendOtp(`${username}@g.clemson.edu`,"forgotPassword");
       toast.success("OTP sent to your email.");
       setOtpScreen(true);
       setPassword('');
@@ -120,7 +120,7 @@ const LoginPage = () => {
 
     try {
       const isValid = await UserManagement.verifyOtp(
-        `${username}@gmail.com`,
+        `${username}@g.clemson.edu`,
         otpString
       );
       if (isValid) {
@@ -141,7 +141,7 @@ const LoginPage = () => {
       setLoading(false)
       return false;
     }
-    const userEmail = `${username}@gmail.com`;
+    const userEmail = `${username}@g.clemson.edu`;
     const data = {
       username: userEmail,
       password: password,
