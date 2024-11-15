@@ -7,6 +7,7 @@ import "react-responsive-modal/styles.css";
 import axios from "axios";
 import baseUrl from "../../api/apiConfig";
 import AuthToken from "../../utils/AuthToken";
+import Loader from "../../components/Loader/Loader";
 
 const Tutorials = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -131,11 +132,7 @@ const Tutorials = () => {
         </div>
 
         {/* Loader */}
-        {loading && (
-          <div className="flex justify-center items-center py-16">
-            <div className="w-16 h-16 border-4 border-t-4 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
-          </div>
-        )}
+        {loading && <Loader text={""} />}
 
         {/* Conditional rendering based on viewMode */}
         {!loading && (viewMode === "machines" ? (

@@ -196,7 +196,7 @@ const ScheduleATask = () => {
       }
 
       toast.success(
-        "Task Sent to Faculty successfully! Wait for their Approval."
+        "Done!"
       );
       const nextValidDate = isWeekend(startDate) ? getNextWeekday() : startDate;
       setStartDate(nextValidDate);
@@ -314,7 +314,7 @@ const ScheduleATask = () => {
       <div className="max-w-[1200px] mx-auto mt-5 lg:p-6 bg-white rounded-lg">
         <Toaster position="top-center" reverseOrder={false} />
 
-        {Loading && <Loader text={"Your Task is sending to faculty"} />}
+        {Loading && <Loader text={""} />}
 
         {!Loading && (
           <div className="">
