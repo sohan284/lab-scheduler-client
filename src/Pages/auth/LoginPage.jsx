@@ -42,12 +42,12 @@ const LoginPage = () => {
   const handleLogin = async () => {
     if (!validateForm()) return; // Stop if form is invalid
 
-    // const userEmail = username.includes("@g.clemson.edu")
+    // const userEmail = username.includes("@gmail.com")
     //   ? username
-    //   : `${username}@g.clemson.edu`;
-    const userEmail = username.includes("@g.clemson.edu")
+    //   : `${username}@gmail.com`;
+    const userEmail = username.includes("@gmail.com")
       ? username
-      : `${username}@g.clemson.edu`;
+      : `${username}@gmail.com`;
 
     setErrorMsg(null);
 
@@ -80,7 +80,7 @@ const LoginPage = () => {
     setLoading(true);
     setErrorMsg(null);
     try {
-      await UserManagement.sendOtp(`${username}@g.clemson.edu`,"forgotPassword");
+      await UserManagement.sendOtp(`${username}@gmail.com`,"forgotPassword");
       toast.success("OTP sent to your email.");
       setOtpScreen(true);
       setPassword('');
@@ -120,7 +120,7 @@ const LoginPage = () => {
 
     try {
       const isValid = await UserManagement.verifyOtp(
-        `${username}@g.clemson.edu`,
+        `${username}@gmail.com`,
         otpString
       );
       if (isValid) {
@@ -141,7 +141,7 @@ const LoginPage = () => {
       setLoading(false)
       return false;
     }
-    const userEmail = `${username}@g.clemson.edu`;
+    const userEmail = `${username}@gmail.com`;
     const data = {
       username: userEmail,
       password: password,
@@ -187,7 +187,7 @@ const LoginPage = () => {
               className="text-sm"
             />
             <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
-              @g.clemson.edu
+              @gmail.com
             </h1>
           </div>
           <div className="flex items-center mb-4">
@@ -380,7 +380,7 @@ const LoginPage = () => {
                 className="text-sm"
               />
               <h1 className="text-nowrap font-medium text-[15px] ml-[10px]">
-                @g.clemson.edu
+                @gmail.com
               </h1>
             </div>
             {errorMsg && (
